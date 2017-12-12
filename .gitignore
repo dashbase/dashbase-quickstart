@@ -1,0 +1,5 @@
+*.pem
+*.backup
+keystore
+*_cmd
+dashbase-license.yml
