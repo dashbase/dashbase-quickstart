@@ -52,7 +52,7 @@ services:
       KAFKA_ADVERTISED_PORT: 9094
 
   proxy:
-    image: dashbase/proxy:1.0.0-rc12-SNAPSHOT
+    image: dashbase/proxy:latest
     depends_on:
       - kafka
     networks:
@@ -74,7 +74,7 @@ services:
       - env
 
   warg:
-    image: dashbase/warg:1.0.0-rc12-SNAPSHOT
+    image: dashbase/warg:latest
     depends_on:
       - kafka
     networks:
@@ -94,7 +94,7 @@ services:
       - env
 
   table:
-    image: dashbase/table:1.0.0-rc12-SNAPSHOT
+    image: dashbase/table:latest
     depends_on:
       - warg
       - zipkin
@@ -131,7 +131,7 @@ services:
     #   retries: 3
 
   api:
-    image: dashbase/api:1.0.0-rc12-SNAPSHOT
+    image: dashbase/api:latest
     depends_on:
       - zookeeper
       - table
@@ -169,7 +169,7 @@ services:
     #   retries: 3
 
   web:
-    image: dashbase/web:1.0.0-rc12-SNAPSHOT
+    image: dashbase/web:latest
     depends_on:
       - api
       - zipkin
@@ -204,7 +204,7 @@ services:
     #   retries: 3
 
   zipkin:
-    image: dashbase/zipkin:1.0.0-SNAPSHOT
+    image: dashbase/zipkin:latest
     depends_on:
       - kafka
     secrets:
@@ -350,7 +350,7 @@ services:
       mode: global
 
   monitor_warg:
-    image: dashbase/warg:1.0.0-rc12-SNAPSHOT
+    image: dashbase/warg:latest
     configs:
       - source: monitor_warg_config
         target: /app/config.yml
@@ -363,7 +363,7 @@ services:
       - env
 
   monitor_logs:
-    image: dashbase/table:1.0.0-rc12-SNAPSHOT
+    image: dashbase/table:latest
     configs:
       - source: monitor_table_config
         target: /app/config.yml
@@ -390,7 +390,7 @@ services:
     command: ["server", "/app/config.yml"]
 
   monitor_metrics:
-    image: dashbase/table:1.0.0-rc12-SNAPSHOT
+    image: dashbase/table:latest
     configs:
       - source: monitor_table_config
         target: /app/config.yml
@@ -417,7 +417,7 @@ services:
     command: ["server", "/app/config.yml"]
 
   monitor_traces:
-    image: dashbase/table:1.0.0-rc12-SNAPSHOT
+    image: dashbase/table:latest
     configs:
       - source: monitor_table_config
         target: /app/config.yml

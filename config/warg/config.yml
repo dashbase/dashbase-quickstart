@@ -4,9 +4,9 @@ kafkaBootstrapServers: kafka:9092
 
 kafkaProps:
   security.protocol: SSL
-  ssl.truststore.location: /app/keystore
+  ssl.truststore.location: /run/secrets/keystore
   ssl.truststore.password: ${KEYSTORE_PASSWORD}
-  ssl.keystore.location: /app/keystore
+  ssl.keystore.location: /run/secrets/keystore
   ssl.keystore.password: ${KEYSTORE_PASSWORD}
   ssl.key.password: ${KEYSTORE_PASSWORD}
 
