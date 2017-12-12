@@ -30,8 +30,7 @@ services:
     networks:
       - backend
     secrets:
-      - source: keystore
-        target: /app/keystore
+      - keystore
     volumes:
       - kafka_data:/dashbase/kafka
       - kafka_logs:/opt/kafka/logs
@@ -41,8 +40,8 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:SSL,OUTSIDE:SSL
       KAFKA_ADVERTISED_PROTOCOL_NAME: OUTSIDE
       KAFKA_PROTOCOL_NAME: INSIDE
-      KAFKA_SSL_KEYSTORE_LOCATION: /app/keystore
-      KAFKA_SSL_TRUSTSTORE_LOCATION: /app/keystore
+      KAFKA_SSL_KEYSTORE_LOCATION: /run/secrets/keystore
+      KAFKA_SSL_TRUSTSTORE_LOCATION: /run/secrets/keystore
       KAFKA_SSL_CLIENT_AUTH: required
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LOG_DIRS: /dashbase/kafka
@@ -62,8 +61,7 @@ services:
       - source: proxy_config
         target: /app/config.yml
     secrets:
-      - source: keystore
-        target: /app/keystore
+      - keystore
     ports:
       - "9200:9200"
     command: ["server", "/app/config.yml"]
@@ -85,8 +83,7 @@ services:
       - source: warg_config
         target: /app/config.yml
     secrets:
-      - source: keystore
-        target: /app/keystore
+      - keystore
     command: ["server", "/app/config.yml"]
     deploy:
       placement:
@@ -107,8 +104,7 @@ services:
       - source: table_config
         target: /app/config.yml
     secrets:
-      - source: keystore
-        target: /app/keystore
+      - keystore
     ports:
       - "7888:7888"
     command: ["server", "/app/config.yml"]
@@ -149,8 +145,7 @@ services:
       - source: dashbase-license
         target: /app/dashbase-license.yml
     secrets:
-      - source: keystore
-        target: /app/keystore
+      - keystore
     ports:
       - "9876:9876"
     command: ["server", "/app/config.yml"]
@@ -184,8 +179,7 @@ services:
       - source: web_config
         target: /app/config.yml
     secrets:
-      - source: keystore
-        target: /app/keystore
+      - keystore
     ports:
       - "8080:8080"
     command: ["server", "/app/config.yml"]
@@ -213,13 +207,18 @@ services:
     image: dashbase/zipkin:1.0.0-SNAPSHOT
     depends_on:
       - kafka
+    secrets:
+      - keystore
+    env_file:
+      - env
     environment:
       KAFKA_URL: monitor_kafka:9092
       KAFKA_TOPIC: _traces_avro
+      KAFKA_SSL: "true"
+      KEYSTORE_LOCATION: /run/secrets/keystore
       API_URL: https://api:9876
       TABLE: _traces
       MAX_RESULTS_NUM: 100
-      COMMAND: "java -Djavax.net.ssl.trustStore=/keystore -Dloader.path=/dashbase-zipkin.jar -cp /zipkin.jar org.springframework.boot.loader.PropertiesLauncher"
     ports:
       - "9411:9411"
     networks:
@@ -280,11 +279,22 @@ services:
       - 9092
     volumes:
       - monitor_kafka_data:/opt/kafka/data
+    secrets:
+      - keystore
+    env_file:
+      - env
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: monitor_kafka
       KAFKA_ZOOKEEPER_CONNECT: monitor_zookeeper:2181
-      KAFKA_CREATE_TOPICS: "_logs:1:1,_logs_avro:1:1,_metrics:1:1,_metrics_avro:1:1"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:SSL,OUTSIDE:SSL
+      KAFKA_ADVERTISED_PROTOCOL_NAME: OUTSIDE
+      KAFKA_PROTOCOL_NAME: INSIDE
+      KAFKA_SSL_KEYSTORE_LOCATION: /run/secrets/keystore
+      KAFKA_SSL_TRUSTSTORE_LOCATION: /run/secrets/keystore
+      KAFKA_SSL_CLIENT_AUTH: required
+      KAFKA_ADVERTISED_HOST_NAME: monitor_kafka
+      KAFKA_ADVERTISED_PORT: 9094
       KAFKA_LOG_DIRS: /opt/kafka/data
+      KAFKA_CREATE_TOPICS: "_logs:1:1,_logs_avro:1:1,_metrics:1:1,_metrics_avro:1:1"
       KAFKA_LOG_RETENTION_HOURS: 1
 
   monitor_filebeat:
@@ -297,6 +307,10 @@ services:
     volumes:
       - logs:/app/logs
       - kafka_logs:/app/kafka/logs
+    secrets:
+      - ca_cert_pem
+      - client_cert_pem
+      - client_key_pem
     deploy:
       mode: global
 
@@ -308,6 +322,10 @@ services:
         target: /usr/share/metricbeat/metricbeat.yml
     networks:
       - backend
+    secrets:
+      - ca_cert_pem
+      - client_cert_pem
+      - client_key_pem
 
   # global (= per host) metricbeat
   monitor_metricbeat_global:
@@ -323,6 +341,10 @@ services:
       - /:/hostfs:ro
     networks:
       - backend
+    secrets:
+      - ca_cert_pem
+      - client_cert_pem
+      - client_key_pem
     command: -e --system.hostfs=/hostfs
     deploy:
       mode: global
@@ -332,9 +354,13 @@ services:
     configs:
       - source: monitor_warg_config
         target: /app/config.yml
+    secrets:
+      - keystore
     command: ["server", "/app/config.yml"]
     networks:
       - backend
+    env_file:
+      - env
 
   monitor_logs:
     image: dashbase/table:1.0.0-rc12-SNAPSHOT
@@ -342,8 +368,7 @@ services:
       - source: monitor_table_config
         target: /app/config.yml
     secrets:
-      - source: keystore
-        target: /app/keystore
+      - keystore
     ports:
       - "8888"
       - "8988"
@@ -370,8 +395,7 @@ services:
       - source: monitor_table_config
         target: /app/config.yml
     secrets:
-      - source: keystore
-        target: /app/keystore
+      - keystore
     ports:
       - "10888"
       - "10988"
@@ -398,8 +422,7 @@ services:
       - source: monitor_table_config
         target: /app/config.yml
     secrets:
-      - source: keystore
-        target: /app/keystore
+      - keystore
     ports:
       - "11888"
       - "11988"
@@ -474,3 +497,9 @@ secrets:
     file: ./key.pem
   keystore:
     file: ./keystore
+  ca_cert_pem:
+    file: ./ca-cert.pem
+  client_cert_pem:
+    file: ./client-cert.pem
+  client_key_pem:
+    file: ./client-key.pem

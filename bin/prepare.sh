@@ -3,6 +3,8 @@
 # This scripts extracts User ID from dashbase-license.yml and sets it as KAFKA_TOPIC,
 # and also generates keystore and sets its password in KEYSTORE_PASSWORD.
 
+set -e
+
 if [[ -z "$1" ]]
 then
   echo "
@@ -54,6 +56,10 @@ if [ -z "$USER_ID" ]; then
   exit -1
 fi
 export KEYSTORE_PATH="${BASEDIR}/keystore"
+export CA_KEY_PATH="${BASEDIR}/ca-key.pem"
+export CA_CERT_PATH="${BASEDIR}/ca-cert.pem"
+export CLIENT_CERT_PATH="${BASEDIR}/client-cert.pem"
+export CLIENT_KEY_PATH="${BASEDIR}/client-key.pem"
 export KEYSTORE_ENV="${BASEDIR}/env"
 export P12KEYSTORE_PATH="${BASEDIR}/keystore.p12"
 
@@ -73,7 +79,12 @@ echo "Generated keystore password, values saved in '${KEYSTORE_ENV}' and 'docker
 echo "Deleting previous generated self signed SSL cert"
 rm $KEYSTORE_PATH
 
-echo "Generating SSL cert"
+echo "Get SSL cert and private key"
+# Check for keytool
+if ! command -v keytool >/dev/null; then
+  echo "`keytool` command not found."
+  exit 1
+fi
 # Create keystore (self signed certificate)
 keytool -genkey -noprompt \
  -alias dashbase \
@@ -85,13 +96,8 @@ keytool -genkey -noprompt \
  -validity 3650 \
  -keysize 2048
 
-echo "Get SSL cert and private key"
-# Check for keytool
-if ! command -v keytool >/dev/null; then
-  echo "`keytool` command not found."
-  exit 1
-fi
-keytool -importkeystore -srckeystore $KEYSTORE_PATH -destkeystore $P12KEYSTORE_PATH -deststoretype PKCS12 \
+keytool -importkeystore -srckeystore $KEYSTORE_PATH \
+  -destkeystore $P12KEYSTORE_PATH -deststoretype PKCS12 \
   -deststorepass $KEYSTORE_PASSWORD -srcstorepass $KEYSTORE_PASSWORD
 
 # Check for openssl
@@ -99,6 +105,38 @@ if ! command -v openssl >/dev/null; then
   echo "`openssl` command not found."
   exit 1
 fi
+
+# Generate CA cert and key
+openssl req -new -x509 -keyout ${CA_KEY_PATH} -out ${CA_CERT_PATH} \
+ -days 3650 -config ${BASEDIR}/bin/openssl.conf \
+ -passout pass:${KEYSTORE_PASSWORD}
+
+# export cert file from keystore
+keytool -keystore ${KEYSTORE_PATH} -alias dashbase -certreq \
+ -file tmp-cert-file -storepass ${KEYSTORE_PASSWORD}
+
+# sign the cert with CA key
+openssl x509 -req -CA ${CA_CERT_PATH} -CAkey ${CA_KEY_PATH} \
+ -in tmp-cert-file -out tmp-cert-signed -days 3650 \
+ -CAcreateserial -passin pass:${KEYSTORE_PASSWORD}
+
+# import back unsigned and signed cert
+keytool -importcert -keystore ${KEYSTORE_PATH} -alias CARoot \
+ -file ${CA_CERT_PATH} -storepass ${KEYSTORE_PASSWORD} -noprompt -trustcacerts
+keytool -importcert -keystore ${KEYSTORE_PATH} -alias dashbase \
+ -file tmp-cert-signed -storepass ${KEYSTORE_PASSWORD}
+
+# generate key and cert for client (e.g., filebeat)
+openssl req -nodes -new -keyout $CLIENT_KEY_PATH -out tmp-client-cert.pem \
+ -days 3650 -config ${BASEDIR}/bin/openssl.conf
+
+openssl x509 -req -CA ${CA_CERT_PATH} -CAkey ${CA_KEY_PATH} \
+ -in tmp-client-cert.pem -out $CLIENT_CERT_PATH -days 3650 \
+ -CAcreateserial -passin pass:${KEYSTORE_PASSWORD}
+
+# remove unnecessary files
+rm tmp-* ca-cert.srl
+
 openssl pkcs12 -in $P12KEYSTORE_PATH -nokeys -out $BASEDIR/cert.pem -passin pass:$KEYSTORE_PASSWORD
 openssl pkcs12 -in $P12KEYSTORE_PATH -nodes -nocerts -out $BASEDIR/key.pem -passin pass:$KEYSTORE_PASSWORD
 # Cleanup

@@ -3,13 +3,13 @@ zipkinFactory:
   collector: http
   baseUrl: ${ZIPKIN_URL}
   servicePort: ${PORT}
-  serviceName: "table/${TABLE_NAME}"
+  serviceName: "web"
 
 server:
   applicationConnectors:
     - type: https
       port: ${PORT}
-      keyStorePath: /app/keystore
+      keyStorePath: /run/secrets/keystore
       keyStorePassword: ${KEYSTORE_PASSWORD}
       validateCerts: false
   applicationContextPath: /
