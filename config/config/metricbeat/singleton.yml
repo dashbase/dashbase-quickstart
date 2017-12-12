@@ -1,0 +1,95 @@
+# Only one instance per swarm
+metricbeat.modules:
+
+#---------------------------- Zookeeper ---------------------------
+- module: zookeeper
+  metricsets: ["mntr"]
+  period: 10s
+  hosts: ["zookeeper:2181"]
+
+#---------------------------- Kafka ---------------------------
+# TODO(keita): enable this?
+#- module: kafka
+#  metricsets: ["partition"]
+#  period: 10s
+#  hosts: ["kafka:9092"]
+#  ssl:
+#    certificate_authorities: ["/app/ca-cert.pem"]
+#    certificate: /app/client-cert.pem
+#    key: /app/client-key.pem
+#    verification_mode: none
+
+#---------------------------- Dashbase components ---------------------------
+- module: dropwizard
+  metricsets: ["collector"]
+  period: 10s
+  hosts: ["api:9976"]
+  metrics_path: /admin/metrics
+  namespace: dashbase
+  fields:
+    service: api
+- module: dropwizard
+  metricsets: ["collector"]
+  period: 10s
+  hosts: ["web:8180"]
+  metrics_path: /admin/metrics
+  namespace: dashbase
+  fields:
+    service: web
+- module: dropwizard
+  metricsets: ["collector"]
+  period: 10s
+  hosts: ["monitor_logs:8988"]
+  metrics_path: /admin/metrics
+  namespace: dashbase
+  fields:
+    service: table
+    table_name: _logs
+    partition: "0"
+- module: dropwizard
+  metricsets: ["collector"]
+  period: 10s
+  hosts: ["monitor_metrics:10988"]
+  metrics_path: /admin/metrics
+  namespace: dashbase
+  fields:
+    service: table
+    table_name: _metrics
+    partition: "0"
+
+# The following dashbase components might be replicated.
+# TODO: support replicated services
+- module: dropwizard
+  metricsets: ["collector"]
+  period: 10s
+  hosts: ["table:7988"]
+  metrics_path: /admin/metrics
+  namespace: dashbase
+  fields:
+    service: table
+    table_name: table
+    partition: "0"
+- module: dropwizard
+  metricsets: ["collector"]
+  period: 10s
+  hosts: ["warg:8081"]
+  metrics_path: /metrics
+  namespace: dashbase
+  fields:
+    service: warg
+- module: dropwizard
+  metricsets: ["collector"]
+  period: 10s
+  hosts: ["proxy:9201"]
+  metrics_path: /metrics
+  namespace: dashbase
+  fields:
+    service: proxy
+
+output.console:
+  enabled: false # change to true for debugging
+  pretty: true
+
+output.kafka:
+  hosts: ['monitor_kafka:9092']
+  topic: _metrics

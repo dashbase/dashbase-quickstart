@@ -100,6 +100,7 @@ services:
     image: dashbase/table:1.0.0-rc12-SNAPSHOT
     depends_on:
       - warg
+      - zipkin
     networks:
       - backend
     configs:
@@ -121,6 +122,7 @@ services:
       DASHBASE_PARTITION: 0
       KAFKA_PARTITIONS: 0 # CSV
       ZOOKEEPER_URL: zookeeper:2181
+      ZIPKIN_URL: http://zipkin:9411/
       PORT: 7888
       ADMINPORT: 7988
       JAVA_OPTS: -Xmx8g -Xms4g -XX:NewSize=2g
@@ -137,6 +139,7 @@ services:
     depends_on:
       - zookeeper
       - table
+      - zipkin
     networks:
       - frontend
       - backend
@@ -163,6 +166,7 @@ services:
       ADMINPORT: 9976
       ZOOKEEPER_URL: zookeeper:2181
       JAVA_OPTS: -Xmx1g -Xms512m -XX:NewSize=512m
+      ZIPKIN_URL: http://zipkin:9411/
     # healthcheck:
     #   test: ["CMD", "curl", "-f", "https://api:9976", "--insecure"]
     #   interval: 3m
@@ -173,6 +177,7 @@ services:
     image: dashbase/web:1.0.0-rc12-SNAPSHOT
     depends_on:
       - api
+      - zipkin
     networks:
       - frontend
     configs:
@@ -196,12 +201,38 @@ services:
       ADMINPORT: 8180
       API_PORT: 9876
       API_HOST: api
+      ZIPKIN_URL: http://zipkin:9411/
       JAVA_OPTS: -Xmx512m -Xms512m -XX:NewSize=512m
     # healthcheck:
     #   test: ["CMD", "curl", "-f", "https://web:8180", "--insecure"]
     #   interval: 3m
     #   timeout: 20s
     #   retries: 3
+
+  zipkin:
+    image: dashbase/zipkin:1.0.0-SNAPSHOT
+    depends_on:
+      - kafka
+    environment:
+      KAFKA_URL: monitor_kafka:9092
+      KAFKA_TOPIC: _traces_avro
+      API_URL: https://api:9876
+      TABLE: _traces
+      MAX_RESULTS_NUM: 100
+      COMMAND: "java -Djavax.net.ssl.trustStore=/keystore -Dloader.path=/dashbase-zipkin.jar -cp /zipkin.jar org.springframework.boot.loader.PropertiesLauncher"
+    ports:
+      - "9411:9411"
+    networks:
+      - frontend
+      - backend
+    volumes:
+      - logs:/app/logs:rw
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://zipkin:9411"]
+#      interval: 3m
+#      timeout: 20s
+#      retries: 3
+
 
   grafana:
     image: dashbase/grafana
@@ -327,6 +358,7 @@ services:
       TABLE_NAME: _logs
       KAFKA_TOPIC: _logs
       ZOOKEEPER_URL: zookeeper:2181
+      ZIPKIN_URL: http://zipkin:9411/
       PORT: 8888
       ADMINPORT: 8988
       JAVA_OPTS: -Xmx1g -Xms512m -XX:NewSize=512m
@@ -354,8 +386,37 @@ services:
       TABLE_NAME: _metrics
       KAFKA_TOPIC: _metrics
       ZOOKEEPER_URL: zookeeper:2181
+      ZIPKIN_URL: http://zipkin:9411/
       PORT: 10888
       ADMINPORT: 10988
+      JAVA_OPTS: -Xmx2g -Xms1g -XX:NewSize=512m
+    command: ["server", "/app/config.yml"]
+
+  monitor_traces:
+    image: dashbase/table:1.0.0-rc12-SNAPSHOT
+    configs:
+      - source: monitor_table_config
+        target: /app/config.yml
+    secrets:
+      - source: keystore
+        target: /app/keystore
+    ports:
+      - "11888"
+      - "11988"
+    networks:
+      - backend
+    volumes:
+      - logs:/app/logs:rw
+      - monitor_traces_index:/dashbase/index:rw
+    env_file:
+      - env
+    environment:
+      TABLE_NAME: _traces
+      KAFKA_TOPIC: _traces
+      ZOOKEEPER_URL: zookeeper:2181
+      ZIPKIN_URL: http://zipkin:9411/
+      PORT: 11888
+      ADMINPORT: 11988
       JAVA_OPTS: -Xmx2g -Xms1g -XX:NewSize=512m
     command: ["server", "/app/config.yml"]
 
@@ -364,6 +425,7 @@ volumes:
   kafka_data:
   monitor_logs_index:
   monitor_metrics_index:
+  monitor_traces_index:
   monitor_kafka_data:
   kafka_logs:
   logs:
@@ -371,8 +433,6 @@ volumes:
 configs:
   table_config:
     file: ./config/dashbase-tables/table/conf/config.yml
-  monitor_config:
-    file: ./config/dashbase-tables/_system/conf/config.yml
   web_config:
     file: ./config/dashbase-web/conf/config.yml
   api_config:

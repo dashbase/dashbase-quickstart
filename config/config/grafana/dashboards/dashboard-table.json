@@ -1,0 +1,2024 @@
+{
+    "style": "dark", 
+    "rows": [
+        {
+            "repeat": null, 
+            "titleSize": "h4", 
+            "repeatIteration": null, 
+            "title": "CPU", 
+            "height": 262, 
+            "repeatRowId": null, 
+            "panels": [
+                {
+                    "mappingTypes": [
+                        {
+                            "name": "value to text", 
+                            "value": 1
+                        }, 
+                        {
+                            "name": "range to text", 
+                            "value": 2
+                        }
+                    ], 
+                    "timeFrom": "1m", 
+                    "links": [], 
+                    "valueMaps": [
+                        {
+                            "text": "N/A", 
+                            "value": "null", 
+                            "op": "="
+                        }
+                    ], 
+                    "tableColumn": "", 
+                    "thresholds": "", 
+                    "rangeMaps": [
+                        {
+                            "text": "N/A", 
+                            "from": "null", 
+                            "to": "null"
+                        }
+                    ], 
+                    "nullPointMode": "connected", 
+                    "prefix": "", 
+                    "gauge": {
+                        "thresholdLabels": false, 
+                        "show": true, 
+                        "thresholdMarkers": true, 
+                        "maxValue": 100, 
+                        "minValue": 0
+                    }, 
+                    "id": 1, 
+                    "maxDataPoints": 100, 
+                    "mappingType": 1, 
+                    "span": 4, 
+                    "colorBackground": false, 
+                    "title": "CPU Usage ($table-p$partition)", 
+                    "sparkline": {
+                        "full": false, 
+                        "fillColor": "rgba(31, 118, 189, 0.18)", 
+                        "lineColor": "rgb(31, 120, 193)", 
+                        "show": false
+                    }, 
+                    "targets": [
+                        {
+                            "from": "_metrics", 
+                            "target": "avg('dropwizard.dashbase.jvm.cpu.usage.percent.value')", 
+                            "alias": "CPU usage", 
+                            "limit": "0", 
+                            "query": "'partition'=$partition@split@AND@split@'table_name'=$table@split@AND@split@service=table", 
+                            "type": "timeseries", 
+                            "refId": "A"
+                        }
+                    ], 
+                    "prefixFontSize": "50%", 
+                    "valueName": "avg", 
+                    "type": "singlestat", 
+                    "valueFontSize": "80%", 
+                    "format": "percent", 
+                    "cacheTimeout": null, 
+                    "postfix": "", 
+                    "decimals": 2, 
+                    "interval": null, 
+                    "colors": [
+                        "rgba(50, 172, 45, 0.97)", 
+                        "rgba(237, 129, 40, 0.89)", 
+                        "rgba(245, 54, 54, 0.9)"
+                    ], 
+                    "datasource": null, 
+                    "nullText": null, 
+                    "postfixFontSize": "50%", 
+                    "colorValue": false
+                }, 
+                {
+                    "bars": false, 
+                    "timeFrom": null, 
+                    "links": [], 
+                    "thresholds": [], 
+                    "spaceLength": 10, 
+                    "nullPointMode": "null", 
+                    "renderer": "flot", 
+                    "id": 12, 
+                    "linewidth": 1, 
+                    "steppedLine": false, 
+                    "targets": [
+                        {
+                            "from": "_metrics", 
+                            "target": "ts($granularity,avg('dropwizard.dashbase.jvm.cpu.usage.percent.value'))", 
+                            "alias": "cpu_ts_p0", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'table_name'=$table@split@AND@split@'partition'=$partition", 
+                            "type": "timeseries", 
+                            "refId": "A"
+                        }
+                    ], 
+                    "fill": 1, 
+                    "span": 5, 
+                    "title": "CPU over time ($table-p$partition) per $granularity", 
+                    "tooltip": {
+                        "sort": 0, 
+                        "shared": true, 
+                        "value_type": "individual"
+                    }, 
+                    "legend": {
+                        "total": false, 
+                        "show": true, 
+                        "max": false, 
+                        "min": false, 
+                        "current": false, 
+                        "values": false, 
+                        "avg": false
+                    }, 
+                    "yaxes": [
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "percent", 
+                            "min": null, 
+                            "label": ""
+                        }, 
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "short", 
+                            "min": null, 
+                            "label": null
+                        }
+                    ], 
+                    "xaxis": {
+                        "buckets": null, 
+                        "show": true, 
+                        "values": [], 
+                        "mode": "time", 
+                        "name": null
+                    }, 
+                    "seriesOverrides": [], 
+                    "percentage": false, 
+                    "type": "graph", 
+                    "dashes": false, 
+                    "dashLength": 10, 
+                    "stack": false, 
+                    "timeShift": null, 
+                    "aliasColors": {}, 
+                    "lines": true, 
+                    "points": false, 
+                    "datasource": null, 
+                    "pointradius": 5
+                }, 
+                {
+                    "mappingTypes": [
+                        {
+                            "name": "value to text", 
+                            "value": 1
+                        }, 
+                        {
+                            "name": "range to text", 
+                            "value": 2
+                        }
+                    ], 
+                    "timeFrom": "1m", 
+                    "links": [], 
+                    "valueMaps": [
+                        {
+                            "text": "N/A", 
+                            "value": "null", 
+                            "op": "="
+                        }
+                    ], 
+                    "tableColumn": "", 
+                    "thresholds": "", 
+                    "rangeMaps": [
+                        {
+                            "text": "N/A", 
+                            "from": "null", 
+                            "to": "null"
+                        }
+                    ], 
+                    "nullPointMode": "connected", 
+                    "prefix": "", 
+                    "gauge": {
+                        "thresholdLabels": false, 
+                        "show": false, 
+                        "thresholdMarkers": true, 
+                        "maxValue": 100, 
+                        "minValue": 0
+                    }, 
+                    "id": 29, 
+                    "maxDataPoints": 100, 
+                    "mappingType": 1, 
+                    "span": 3, 
+                    "colorBackground": false, 
+                    "title": "Uptime", 
+                    "sparkline": {
+                        "full": false, 
+                        "fillColor": "rgba(31, 118, 189, 0.18)", 
+                        "lineColor": "rgb(31, 120, 193)", 
+                        "show": false
+                    }, 
+                    "targets": [
+                        {
+                            "from": "_metrics", 
+                            "target": "max('dropwizard.dashbase.jvm.attribute.uptime.value')", 
+                            "alias": "uptime", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "A"
+                        }
+                    ], 
+                    "prefixFontSize": "50%", 
+                    "valueName": "avg", 
+                    "type": "singlestat", 
+                    "valueFontSize": "80%", 
+                    "format": "ms", 
+                    "cacheTimeout": null, 
+                    "postfix": "", 
+                    "interval": null, 
+                    "colors": [
+                        "rgba(245, 54, 54, 0.9)", 
+                        "rgba(237, 129, 40, 0.89)", 
+                        "rgba(50, 172, 45, 0.97)"
+                    ], 
+                    "datasource": null, 
+                    "nullText": null, 
+                    "postfixFontSize": "50%", 
+                    "colorValue": false
+                }
+            ], 
+            "showTitle": true, 
+            "collapse": false
+        }, 
+        {
+            "repeat": null, 
+            "titleSize": "h4", 
+            "repeatIteration": null, 
+            "title": "Heap", 
+            "height": 261, 
+            "repeatRowId": null, 
+            "panels": [
+                {
+                    "bars": false, 
+                    "timeFrom": null, 
+                    "links": [], 
+                    "thresholds": [], 
+                    "spaceLength": 10, 
+                    "nullPointMode": "null", 
+                    "renderer": "flot", 
+                    "id": 15, 
+                    "linewidth": 1, 
+                    "steppedLine": false, 
+                    "targets": [
+                        {
+                            "from": "_metrics", 
+                            "target": "ts($granularity,avg('dropwizard.dashbase.jvm.memory.non-heap.used.value'))", 
+                            "alias": "offheap usage", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "A"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts($granularity,avg('dropwizard.dashbase.jvm.memory.heap.used.value'))", 
+                            "alias": "heap usage", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "B"
+                        }
+                    ], 
+                    "fill": 1, 
+                    "span": 12, 
+                    "title": "Memory Usage", 
+                    "tooltip": {
+                        "sort": 0, 
+                        "shared": true, 
+                        "value_type": "individual"
+                    }, 
+                    "legend": {
+                        "total": false, 
+                        "show": true, 
+                        "max": false, 
+                        "min": false, 
+                        "current": false, 
+                        "values": false, 
+                        "avg": false
+                    }, 
+                    "yaxes": [
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "bytes", 
+                            "min": null, 
+                            "label": null
+                        }, 
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "short", 
+                            "min": null, 
+                            "label": null
+                        }
+                    ], 
+                    "xaxis": {
+                        "buckets": null, 
+                        "show": true, 
+                        "values": [], 
+                        "mode": "time", 
+                        "name": null
+                    }, 
+                    "seriesOverrides": [], 
+                    "percentage": false, 
+                    "type": "graph", 
+                    "dashes": false, 
+                    "dashLength": 10, 
+                    "stack": false, 
+                    "timeShift": null, 
+                    "aliasColors": {}, 
+                    "lines": true, 
+                    "points": false, 
+                    "datasource": null, 
+                    "pointradius": 5
+                }
+            ], 
+            "showTitle": true, 
+            "collapse": false
+        }, 
+        {
+            "repeat": null, 
+            "titleSize": "h4", 
+            "repeatIteration": null, 
+            "title": "Timeslice Management", 
+            "height": 250, 
+            "repeatRowId": null, 
+            "panels": [
+                {
+                    "bars": false, 
+                    "timeFrom": null, 
+                    "links": [], 
+                    "thresholds": [], 
+                    "spaceLength": 10, 
+                    "nullPointMode": "null", 
+                    "renderer": "flot", 
+                    "id": 30, 
+                    "linewidth": 1, 
+                    "steppedLine": false, 
+                    "targets": [
+                        {
+                            "from": "_metrics", 
+                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.search.reader.cache.count.value'))", 
+                            "alias": "reader (cached)", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'table_name'=$table@split@AND@split@'partition'=$partition", 
+                            "type": "timeseries", 
+                            "refId": "A"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.search.payload.cache.count.value'))", 
+                            "alias": "payload (cache)", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'table_name'=$table@split@AND@split@'partition'=$partition", 
+                            "type": "timeseries", 
+                            "refId": "B"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.index.timeslice.count.value'))", 
+                            "alias": "timeslice (total)", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'table_name'=$table@split@AND@split@'partition'=$partition", 
+                            "type": "timeseries", 
+                            "refId": "C"
+                        }
+                    ], 
+                    "fill": 1, 
+                    "span": 6, 
+                    "title": "Cached Counts", 
+                    "tooltip": {
+                        "sort": 0, 
+                        "shared": true, 
+                        "value_type": "individual"
+                    }, 
+                    "legend": {
+                        "total": false, 
+                        "show": true, 
+                        "max": false, 
+                        "min": false, 
+                        "current": false, 
+                        "values": false, 
+                        "avg": false
+                    }, 
+                    "yaxes": [
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "short", 
+                            "min": null, 
+                            "label": null
+                        }, 
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "short", 
+                            "min": null, 
+                            "label": null
+                        }
+                    ], 
+                    "xaxis": {
+                        "buckets": null, 
+                        "show": true, 
+                        "values": [], 
+                        "mode": "time", 
+                        "name": null
+                    }, 
+                    "seriesOverrides": [], 
+                    "percentage": false, 
+                    "type": "graph", 
+                    "dashes": false, 
+                    "dashLength": 10, 
+                    "stack": false, 
+                    "timeShift": null, 
+                    "aliasColors": {}, 
+                    "lines": true, 
+                    "points": false, 
+                    "datasource": null, 
+                    "pointradius": 5
+                }, 
+                {
+                    "bars": false, 
+                    "timeFrom": null, 
+                    "links": [], 
+                    "thresholds": [], 
+                    "spaceLength": 10, 
+                    "nullPointMode": "null", 
+                    "renderer": "flot", 
+                    "id": 31, 
+                    "linewidth": 1, 
+                    "steppedLine": false, 
+                    "targets": [
+                        {
+                            "from": "_metrics", 
+                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.search.reader.cache.mem.total.bytes.value'))", 
+                            "alias": "reader cache", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'table_name'=$table@split@AND@split@'partition'=$partition", 
+                            "type": "timeseries", 
+                            "refId": "A"
+                        }
+                    ], 
+                    "fill": 1, 
+                    "span": 6, 
+                    "title": "Reader Cache Mem Usage", 
+                    "tooltip": {
+                        "sort": 0, 
+                        "shared": true, 
+                        "value_type": "individual"
+                    }, 
+                    "legend": {
+                        "total": false, 
+                        "show": true, 
+                        "max": false, 
+                        "min": false, 
+                        "current": false, 
+                        "values": false, 
+                        "avg": false
+                    }, 
+                    "yaxes": [
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "bytes", 
+                            "min": null, 
+                            "label": null
+                        }, 
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "short", 
+                            "min": null, 
+                            "label": null
+                        }
+                    ], 
+                    "xaxis": {
+                        "buckets": null, 
+                        "show": true, 
+                        "values": [], 
+                        "mode": "time", 
+                        "name": null
+                    }, 
+                    "seriesOverrides": [], 
+                    "percentage": false, 
+                    "type": "graph", 
+                    "dashes": false, 
+                    "dashLength": 10, 
+                    "stack": false, 
+                    "timeShift": null, 
+                    "aliasColors": {}, 
+                    "lines": true, 
+                    "points": false, 
+                    "datasource": null, 
+                    "pointradius": 5
+                }
+            ], 
+            "showTitle": true, 
+            "collapse": false
+        }, 
+        {
+            "repeat": null, 
+            "titleSize": "h4", 
+            "repeatIteration": null, 
+            "title": "Disk", 
+            "height": 299, 
+            "repeatRowId": null, 
+            "panels": [
+                {
+                    "mappingTypes": [
+                        {
+                            "name": "value to text", 
+                            "value": 1
+                        }, 
+                        {
+                            "name": "range to text", 
+                            "value": 2
+                        }
+                    ], 
+                    "timeFrom": "1m", 
+                    "links": [], 
+                    "valueMaps": [
+                        {
+                            "text": "N/A", 
+                            "value": "null", 
+                            "op": "="
+                        }
+                    ], 
+                    "tableColumn": "", 
+                    "thresholds": "", 
+                    "rangeMaps": [
+                        {
+                            "text": "N/A", 
+                            "from": "null", 
+                            "to": "null"
+                        }
+                    ], 
+                    "nullPointMode": "connected", 
+                    "prefix": "", 
+                    "gauge": {
+                        "thresholdLabels": false, 
+                        "show": true, 
+                        "thresholdMarkers": true, 
+                        "maxValue": 100, 
+                        "minValue": 0
+                    }, 
+                    "id": 9, 
+                    "maxDataPoints": 100, 
+                    "mappingType": 1, 
+                    "span": 6, 
+                    "colorBackground": false, 
+                    "title": "Disk Availability Percent", 
+                    "sparkline": {
+                        "full": false, 
+                        "fillColor": "rgba(31, 118, 189, 0.18)", 
+                        "lineColor": "rgb(31, 120, 193)", 
+                        "show": false
+                    }, 
+                    "targets": [
+                        {
+                            "from": "_metrics", 
+                            "target": "min('dropwizard.dashbase.dashbase.disk.available.bytes.percent.value')", 
+                            "alias": "disk availability", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition", 
+                            "type": "timeseries", 
+                            "refId": "A"
+                        }
+                    ], 
+                    "prefixFontSize": "50%", 
+                    "valueName": "avg", 
+                    "type": "singlestat", 
+                    "valueFontSize": "80%", 
+                    "format": "percent", 
+                    "cacheTimeout": null, 
+                    "postfix": "", 
+                    "decimals": 2, 
+                    "interval": null, 
+                    "colors": [
+                        "rgba(245, 54, 54, 0.9)", 
+                        "rgba(237, 129, 40, 0.89)", 
+                        "rgba(50, 172, 45, 0.97)"
+                    ], 
+                    "datasource": null, 
+                    "nullText": null, 
+                    "postfixFontSize": "50%", 
+                    "colorValue": false
+                }, 
+                {
+                    "bars": false, 
+                    "timeFrom": null, 
+                    "links": [], 
+                    "thresholds": [], 
+                    "spaceLength": 10, 
+                    "nullPointMode": "null", 
+                    "renderer": "flot", 
+                    "id": 13, 
+                    "linewidth": 1, 
+                    "steppedLine": false, 
+                    "targets": [
+                        {
+                            "hide": false, 
+                            "target": "ts(minute,avg('dropwizard.dashbase.dashbase.index.total.usage.bytes.value'))", 
+                            "alias": "used (total)", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'table_name'=$table@split@AND@split@'partition'=$partition", 
+                            "from": "_metrics", 
+                            "type": "timeseries", 
+                            "refId": "A"
+                        }, 
+                        {
+                            "hide": false, 
+                            "target": "ts(minute,avg('dropwizard.dashbase.dashbase.index.store.usage.bytes.value'))", 
+                            "alias": "used (index)", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'table_name'=$table@split@AND@split@'partition'=$partition", 
+                            "from": "_metrics", 
+                            "type": "timeseries", 
+                            "refId": "B"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts(minute,avg('dropwizard.dashbase.dashbase.index.payload.usage.bytes.value'))", 
+                            "alias": "used (raw)", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'table_name'=$table@split@AND@split@'partition'=$partition", 
+                            "type": "timeseries", 
+                            "refId": "C"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts(minute,avg('dropwizard.dashbase.dashbase.index.temp.usage.bytes.value'))", 
+                            "alias": "used (temp)", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'table_name'=$table@split@AND@split@'partition'=$partition@split@AND@split@partition=$partition", 
+                            "type": "timeseries", 
+                            "refId": "D"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts(minute,avg('dropwizard.dashbase.dashbase.disk.total.bytes.value'))", 
+                            "alias": "total disk", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'table_name'=$table@split@AND@split@'partition'=$partition", 
+                            "type": "timeseries", 
+                            "refId": "E"
+                        }
+                    ], 
+                    "fill": 1, 
+                    "span": 6, 
+                    "title": "Disk Usage", 
+                    "tooltip": {
+                        "sort": 0, 
+                        "shared": true, 
+                        "value_type": "individual"
+                    }, 
+                    "legend": {
+                        "total": false, 
+                        "show": true, 
+                        "max": false, 
+                        "min": false, 
+                        "current": false, 
+                        "values": false, 
+                        "avg": false
+                    }, 
+                    "yaxes": [
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "decbytes", 
+                            "min": null, 
+                            "label": null
+                        }, 
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "short", 
+                            "min": null, 
+                            "label": null
+                        }
+                    ], 
+                    "xaxis": {
+                        "buckets": null, 
+                        "show": true, 
+                        "values": [], 
+                        "mode": "time", 
+                        "name": null
+                    }, 
+                    "seriesOverrides": [], 
+                    "percentage": false, 
+                    "type": "graph", 
+                    "dashes": false, 
+                    "dashLength": 10, 
+                    "stack": false, 
+                    "timeShift": null, 
+                    "aliasColors": {}, 
+                    "lines": true, 
+                    "points": false, 
+                    "datasource": null, 
+                    "pointradius": 5
+                }
+            ], 
+            "showTitle": true, 
+            "collapse": false
+        }, 
+        {
+            "repeat": null, 
+            "titleSize": "h4", 
+            "repeatIteration": null, 
+            "title": "Ingestion", 
+            "height": 247, 
+            "repeatRowId": null, 
+            "panels": [
+                {
+                    "bars": false, 
+                    "timeFrom": null, 
+                    "links": [], 
+                    "thresholds": [], 
+                    "spaceLength": 10, 
+                    "nullPointMode": "null", 
+                    "renderer": "flot", 
+                    "id": 11, 
+                    "linewidth": 1, 
+                    "steppedLine": false, 
+                    "targets": [
+                        {
+                            "from": "_metrics", 
+                            "target": "ts(minute,avg('dropwizard.dashbase.dashbase.ingestion.event.bytes.m1_rate'))", 
+                            "alias": "1min rate", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "A"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts(minute,avg('dropwizard.dashbse.dashbase.ingestion.event.bytes.m5_rate'))", 
+                            "alias": "5 min rate", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "B"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts(minute,avg('dropwizard.dashbase.dashbase.ingestion.event.bytes.m15_rate'))", 
+                            "alias": "15 min rate", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "C"
+                        }
+                    ], 
+                    "fill": 1, 
+                    "span": 6, 
+                    "title": "Ingestion Bytes Per Second ($table-p$partition)", 
+                    "tooltip": {
+                        "sort": 0, 
+                        "shared": true, 
+                        "value_type": "individual"
+                    }, 
+                    "legend": {
+                        "total": false, 
+                        "show": true, 
+                        "max": false, 
+                        "min": false, 
+                        "current": false, 
+                        "values": false, 
+                        "avg": false
+                    }, 
+                    "yaxes": [
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "bytes", 
+                            "min": null, 
+                            "label": null
+                        }, 
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "short", 
+                            "min": null, 
+                            "label": null
+                        }
+                    ], 
+                    "xaxis": {
+                        "buckets": null, 
+                        "show": true, 
+                        "values": [], 
+                        "mode": "time", 
+                        "name": null
+                    }, 
+                    "seriesOverrides": [], 
+                    "percentage": false, 
+                    "type": "graph", 
+                    "dashes": false, 
+                    "dashLength": 10, 
+                    "stack": false, 
+                    "timeShift": null, 
+                    "aliasColors": {}, 
+                    "lines": true, 
+                    "points": false, 
+                    "datasource": null, 
+                    "pointradius": 5
+                }, 
+                {
+                    "bars": false, 
+                    "timeFrom": null, 
+                    "links": [], 
+                    "thresholds": [], 
+                    "spaceLength": 10, 
+                    "nullPointMode": "null", 
+                    "renderer": "flot", 
+                    "id": 16, 
+                    "linewidth": 1, 
+                    "steppedLine": false, 
+                    "targets": [
+                        {
+                            "from": "_metrics", 
+                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.ingestion.events.m1_rate'))", 
+                            "alias": "1 min rate", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "A"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.ingestion.events.m5_rate'))", 
+                            "alias": "5 min rate", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "B"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.ingestion.events.m15_rate'))", 
+                            "alias": "15 min rate", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "C"
+                        }
+                    ], 
+                    "fill": 1, 
+                    "span": 6, 
+                    "title": "Ingestion Count Per Second Rate ($table-p$partition)", 
+                    "tooltip": {
+                        "sort": 0, 
+                        "shared": true, 
+                        "value_type": "individual"
+                    }, 
+                    "legend": {
+                        "total": false, 
+                        "show": true, 
+                        "max": false, 
+                        "min": false, 
+                        "current": false, 
+                        "values": false, 
+                        "avg": false
+                    }, 
+                    "yaxes": [
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "short", 
+                            "min": null, 
+                            "label": null
+                        }, 
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "short", 
+                            "min": null, 
+                            "label": null
+                        }
+                    ], 
+                    "xaxis": {
+                        "buckets": null, 
+                        "show": true, 
+                        "values": [], 
+                        "mode": "time", 
+                        "name": null
+                    }, 
+                    "seriesOverrides": [], 
+                    "percentage": false, 
+                    "type": "graph", 
+                    "dashes": false, 
+                    "dashLength": 10, 
+                    "stack": false, 
+                    "timeShift": null, 
+                    "aliasColors": {}, 
+                    "lines": true, 
+                    "points": false, 
+                    "datasource": null, 
+                    "pointradius": 5
+                }, 
+                {
+                    "mappingTypes": [
+                        {
+                            "name": "value to text", 
+                            "value": 1
+                        }, 
+                        {
+                            "name": "range to text", 
+                            "value": 2
+                        }
+                    ], 
+                    "timeFrom": "1m", 
+                    "colorBackground": false, 
+                    "valueMaps": [
+                        {
+                            "text": "N/A", 
+                            "value": "null", 
+                            "op": "="
+                        }
+                    ], 
+                    "tableColumn": "", 
+                    "thresholds": "", 
+                    "rangeMaps": [
+                        {
+                            "text": "N/A", 
+                            "from": "null", 
+                            "to": "null"
+                        }
+                    ], 
+                    "nullPointMode": "connected", 
+                    "prefix": "", 
+                    "gauge": {
+                        "thresholdLabels": false, 
+                        "show": false, 
+                        "thresholdMarkers": true, 
+                        "maxValue": 100, 
+                        "minValue": 0
+                    }, 
+                    "id": 34, 
+                    "maxDataPoints": 100, 
+                    "mappingType": 1, 
+                    "span": 3, 
+                    "links": [], 
+                    "title": "Ingestion Delay", 
+                    "sparkline": {
+                        "full": false, 
+                        "fillColor": "rgba(31, 118, 189, 0.18)", 
+                        "lineColor": "rgb(31, 120, 193)", 
+                        "show": false
+                    }, 
+                    "targets": [
+                        {
+                            "from": "_metrics", 
+                            "target": "min('dropwizard.dashbase.dashbase.indexer.delayInSec.value')", 
+                            "alias": "", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "A"
+                        }
+                    ], 
+                    "prefixFontSize": "50%", 
+                    "valueName": "avg", 
+                    "type": "singlestat", 
+                    "valueFontSize": "80%", 
+                    "description": "Delay from actual event timestamp to when they are read", 
+                    "format": "s", 
+                    "cacheTimeout": null, 
+                    "postfix": "", 
+                    "interval": null, 
+                    "colors": [
+                        "rgba(245, 54, 54, 0.9)", 
+                        "rgba(237, 129, 40, 0.89)", 
+                        "rgba(50, 172, 45, 0.97)"
+                    ], 
+                    "datasource": null, 
+                    "nullText": null, 
+                    "postfixFontSize": "50%", 
+                    "colorValue": false
+                }, 
+                {
+                    "mappingTypes": [
+                        {
+                            "name": "value to text", 
+                            "value": 1
+                        }, 
+                        {
+                            "name": "range to text", 
+                            "value": 2
+                        }
+                    ], 
+                    "timeFrom": "1m", 
+                    "colorBackground": false, 
+                    "valueMaps": [
+                        {
+                            "text": "N/A", 
+                            "value": "null", 
+                            "op": "="
+                        }
+                    ], 
+                    "tableColumn": "", 
+                    "thresholds": "", 
+                    "rangeMaps": [
+                        {
+                            "text": "N/A", 
+                            "from": "null", 
+                            "to": "null"
+                        }
+                    ], 
+                    "nullPointMode": "connected", 
+                    "prefix": "", 
+                    "gauge": {
+                        "thresholdLabels": false, 
+                        "show": false, 
+                        "thresholdMarkers": true, 
+                        "maxValue": 100, 
+                        "minValue": 0
+                    }, 
+                    "id": 38, 
+                    "maxDataPoints": 100, 
+                    "mappingType": 1, 
+                    "span": 3, 
+                    "links": [], 
+                    "title": "Indexer Delay", 
+                    "sparkline": {
+                        "full": false, 
+                        "fillColor": "rgba(31, 118, 189, 0.18)", 
+                        "lineColor": "rgb(31, 120, 193)", 
+                        "show": false
+                    }, 
+                    "targets": [
+                        {
+                            "from": "_metrics", 
+                            "target": "min('dropwizard.dashbase.dashbase.search.reader.delayInSec.value')", 
+                            "alias": "", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "A"
+                        }
+                    ], 
+                    "prefixFontSize": "50%", 
+                    "valueName": "avg", 
+                    "type": "singlestat", 
+                    "valueFontSize": "80%", 
+                    "description": "Delay from actual event timestamp to when they are searchable", 
+                    "format": "s", 
+                    "cacheTimeout": null, 
+                    "postfix": "", 
+                    "interval": null, 
+                    "colors": [
+                        "rgba(245, 54, 54, 0.9)", 
+                        "rgba(237, 129, 40, 0.89)", 
+                        "rgba(50, 172, 45, 0.97)"
+                    ], 
+                    "datasource": null, 
+                    "nullText": null, 
+                    "postfixFontSize": "50%", 
+                    "colorValue": false
+                }, 
+                {
+                    "bars": false, 
+                    "timeFrom": null, 
+                    "links": [], 
+                    "thresholds": [], 
+                    "spaceLength": 10, 
+                    "nullPointMode": "null", 
+                    "renderer": "flot", 
+                    "id": 35, 
+                    "linewidth": 1, 
+                    "steppedLine": false, 
+                    "targets": [
+                        {
+                            "from": "_metrics", 
+                            "target": "ts(minute,min('dropwizard.dashbase.dashbase.indexer.delayInSec.value'))", 
+                            "alias": "ingestion delay", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "A"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts(minute,min('dropwizard.dashbase.dashbase.search.reader.delayInSec.value'))", 
+                            "alias": "indexing delay", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "B"
+                        }
+                    ], 
+                    "fill": 1, 
+                    "span": 6, 
+                    "title": "Delay ($table-p$partition)", 
+                    "tooltip": {
+                        "sort": 0, 
+                        "shared": true, 
+                        "value_type": "individual"
+                    }, 
+                    "legend": {
+                        "total": false, 
+                        "show": true, 
+                        "max": false, 
+                        "min": false, 
+                        "current": false, 
+                        "values": false, 
+                        "avg": false
+                    }, 
+                    "yaxes": [
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "s", 
+                            "min": null, 
+                            "label": null
+                        }, 
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "short", 
+                            "min": null, 
+                            "label": null
+                        }
+                    ], 
+                    "xaxis": {
+                        "buckets": null, 
+                        "show": true, 
+                        "values": [], 
+                        "mode": "time", 
+                        "name": null
+                    }, 
+                    "seriesOverrides": [], 
+                    "percentage": false, 
+                    "type": "graph", 
+                    "dashes": false, 
+                    "dashLength": 10, 
+                    "stack": false, 
+                    "timeShift": null, 
+                    "aliasColors": {}, 
+                    "lines": true, 
+                    "points": false, 
+                    "datasource": null, 
+                    "pointradius": 5
+                }
+            ], 
+            "showTitle": true, 
+            "collapse": false
+        }, 
+        {
+            "repeat": null, 
+            "titleSize": "h4", 
+            "repeatIteration": null, 
+            "title": "Indexing Metrics", 
+            "height": 250, 
+            "repeatRowId": null, 
+            "panels": [
+                {
+                    "bars": false, 
+                    "timeFrom": null, 
+                    "links": [], 
+                    "thresholds": [], 
+                    "spaceLength": 10, 
+                    "nullPointMode": "null", 
+                    "renderer": "flot", 
+                    "id": 23, 
+                    "linewidth": 1, 
+                    "steppedLine": false, 
+                    "targets": [
+                        {
+                            "from": "_metrics", 
+                            "target": "ts(minute,avg('dropwizard.dashbase.dashbase.indexing.duration.m1_rate'))", 
+                            "alias": "1 min rate", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "A"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts(minute,avg('dropwizard.dashbase.dashbase.indexing.duration.m5_rate'))", 
+                            "alias": "5 min rate", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "B"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts(minute,avg('dropwizard.dashbase.dashbase.indexing.duration.m15_rate'))", 
+                            "alias": "15 min rate", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "C"
+                        }
+                    ], 
+                    "fill": 1, 
+                    "span": 6, 
+                    "title": "Indexing Rate ($table-p$partition)", 
+                    "tooltip": {
+                        "sort": 0, 
+                        "shared": true, 
+                        "value_type": "individual"
+                    }, 
+                    "legend": {
+                        "total": false, 
+                        "show": true, 
+                        "max": false, 
+                        "min": false, 
+                        "current": false, 
+                        "values": false, 
+                        "avg": false
+                    }, 
+                    "yaxes": [
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "short", 
+                            "min": null, 
+                            "label": null
+                        }, 
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "short", 
+                            "min": null, 
+                            "label": null
+                        }
+                    ], 
+                    "xaxis": {
+                        "buckets": null, 
+                        "show": true, 
+                        "values": [], 
+                        "mode": "time", 
+                        "name": null
+                    }, 
+                    "seriesOverrides": [], 
+                    "percentage": false, 
+                    "type": "graph", 
+                    "dashes": false, 
+                    "dashLength": 10, 
+                    "stack": false, 
+                    "timeShift": null, 
+                    "aliasColors": {}, 
+                    "lines": true, 
+                    "points": false, 
+                    "datasource": null, 
+                    "pointradius": 5
+                }, 
+                {
+                    "bars": false, 
+                    "timeFrom": null, 
+                    "links": [], 
+                    "thresholds": [], 
+                    "spaceLength": 10, 
+                    "nullPointMode": "null", 
+                    "renderer": "flot", 
+                    "id": 24, 
+                    "linewidth": 1, 
+                    "steppedLine": false, 
+                    "targets": [
+                        {
+                            "from": "_metrics", 
+                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.indexing.duration.mean'))", 
+                            "alias": "mean", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "A"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.indexing.duration.min'))", 
+                            "alias": "min", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "B"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.indexing.duration.max'))", 
+                            "alias": "max", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "C"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.indexing.duration.median'))", 
+                            "alias": "median", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "D"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.indexing.duration.p99'))", 
+                            "alias": "p99", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "E"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.indexing.duration.p999'))", 
+                            "alias": "p999", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "F"
+                        }
+                    ], 
+                    "fill": 1, 
+                    "span": 6, 
+                    "title": "Indexing Latency ($table-p$partition)", 
+                    "tooltip": {
+                        "sort": 0, 
+                        "shared": true, 
+                        "value_type": "individual"
+                    }, 
+                    "legend": {
+                        "total": false, 
+                        "show": true, 
+                        "max": false, 
+                        "min": false, 
+                        "current": false, 
+                        "values": false, 
+                        "avg": false
+                    }, 
+                    "yaxes": [
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "ns", 
+                            "min": null, 
+                            "label": null
+                        }, 
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "short", 
+                            "min": null, 
+                            "label": null
+                        }
+                    ], 
+                    "xaxis": {
+                        "buckets": null, 
+                        "show": true, 
+                        "values": [], 
+                        "mode": "time", 
+                        "name": null
+                    }, 
+                    "seriesOverrides": [], 
+                    "percentage": false, 
+                    "type": "graph", 
+                    "dashes": false, 
+                    "dashLength": 10, 
+                    "stack": false, 
+                    "timeShift": null, 
+                    "aliasColors": {}, 
+                    "lines": true, 
+                    "points": false, 
+                    "datasource": null, 
+                    "pointradius": 5
+                }
+            ], 
+            "showTitle": true, 
+            "collapse": false
+        }, 
+        {
+            "repeat": null, 
+            "titleSize": "h4", 
+            "repeatIteration": null, 
+            "title": "Parsing Anomalies", 
+            "height": 265, 
+            "repeatRowId": null, 
+            "panels": [
+                {
+                    "bars": false, 
+                    "timeFrom": null, 
+                    "links": [], 
+                    "thresholds": [], 
+                    "spaceLength": 10, 
+                    "nullPointMode": "null", 
+                    "renderer": "flot", 
+                    "id": 26, 
+                    "linewidth": 1, 
+                    "steppedLine": false, 
+                    "targets": [
+                        {
+                            "from": "_metrics", 
+                            "target": "ts(minute,avg('dropwizard.dashbase.dashbase.ingestion.parse.error.m1_rate'))", 
+                            "alias": "errors", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "A"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts(minute,avg('dropwizard.dashbase.dashbase.ingestion.parse.skipped.m5_rate'))", 
+                            "alias": "failed", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "B"
+                        }
+                    ], 
+                    "fill": 1, 
+                    "span": 12, 
+                    "title": "Parse Error", 
+                    "tooltip": {
+                        "sort": 0, 
+                        "shared": true, 
+                        "value_type": "individual"
+                    }, 
+                    "legend": {
+                        "total": false, 
+                        "show": true, 
+                        "max": false, 
+                        "min": false, 
+                        "current": false, 
+                        "values": false, 
+                        "avg": false
+                    }, 
+                    "yaxes": [
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "short", 
+                            "min": null, 
+                            "label": null
+                        }, 
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "short", 
+                            "min": null, 
+                            "label": null
+                        }
+                    ], 
+                    "xaxis": {
+                        "buckets": null, 
+                        "show": true, 
+                        "values": [], 
+                        "mode": "time", 
+                        "name": null
+                    }, 
+                    "seriesOverrides": [], 
+                    "percentage": false, 
+                    "type": "graph", 
+                    "dashes": false, 
+                    "dashLength": 10, 
+                    "stack": false, 
+                    "timeShift": null, 
+                    "aliasColors": {}, 
+                    "lines": true, 
+                    "points": false, 
+                    "datasource": null, 
+                    "pointradius": 5
+                }
+            ], 
+            "showTitle": true, 
+            "collapse": false
+        }, 
+        {
+            "repeat": null, 
+            "titleSize": "h4", 
+            "repeatIteration": null, 
+            "title": "Query Latency", 
+            "height": 286, 
+            "repeatRowId": null, 
+            "panels": [
+                {
+                    "bars": false, 
+                    "timeFrom": null, 
+                    "links": [], 
+                    "thresholds": [], 
+                    "spaceLength": 10, 
+                    "nullPointMode": "null", 
+                    "renderer": "flot", 
+                    "id": 20, 
+                    "linewidth": 1, 
+                    "steppedLine": false, 
+                    "targets": [
+                        {
+                            "hide": false, 
+                            "target": "ts($granularity,avg('dashbase.search.query.latency.max'))", 
+                            "alias": "max", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "from": "_metrics", 
+                            "type": "timeseries", 
+                            "refId": "A"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.search.query.latency.min'))", 
+                            "alias": "min", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "B"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.search.query.latency.median'))", 
+                            "alias": "median", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "C"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.search.query.latency.p99'))", 
+                            "alias": "p99", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "D"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.search.query.latency.p999'))", 
+                            "alias": "p999", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "E"
+                        }
+                    ], 
+                    "fill": 1, 
+                    "span": 6, 
+                    "title": "Query Latency ($table-p$partition)", 
+                    "tooltip": {
+                        "sort": 0, 
+                        "shared": true, 
+                        "value_type": "individual"
+                    }, 
+                    "legend": {
+                        "total": false, 
+                        "show": true, 
+                        "max": false, 
+                        "min": false, 
+                        "current": false, 
+                        "values": false, 
+                        "avg": false
+                    }, 
+                    "yaxes": [
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "ns", 
+                            "min": null, 
+                            "label": null
+                        }, 
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "short", 
+                            "min": null, 
+                            "label": null
+                        }
+                    ], 
+                    "xaxis": {
+                        "buckets": null, 
+                        "show": true, 
+                        "values": [], 
+                        "mode": "time", 
+                        "name": null
+                    }, 
+                    "seriesOverrides": [], 
+                    "percentage": false, 
+                    "type": "graph", 
+                    "dashes": false, 
+                    "dashLength": 10, 
+                    "stack": false, 
+                    "timeShift": null, 
+                    "aliasColors": {}, 
+                    "lines": true, 
+                    "points": false, 
+                    "datasource": null, 
+                    "pointradius": 5
+                }, 
+                {
+                    "bars": false, 
+                    "timeFrom": null, 
+                    "links": [], 
+                    "thresholds": [], 
+                    "spaceLength": 10, 
+                    "nullPointMode": "null", 
+                    "renderer": "flot", 
+                    "id": 17, 
+                    "linewidth": 1, 
+                    "steppedLine": false, 
+                    "targets": [
+                        {
+                            "from": "_metrics", 
+                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.search.query.latency.m1_rate'))", 
+                            "alias": "1 min rate", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "A"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.search.query.latency.m5_rate'))", 
+                            "alias": "5 min rate", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "B"
+                        }, 
+                        {
+                            "from": "_metrics", 
+                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.search.query.latency.m15_rate'))", 
+                            "alias": "15 min rate", 
+                            "limit": "0", 
+                            "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table", 
+                            "type": "timeseries", 
+                            "refId": "C"
+                        }
+                    ], 
+                    "fill": 1, 
+                    "span": 6, 
+                    "title": "Queries Per Second ($table-p$partition)", 
+                    "tooltip": {
+                        "sort": 0, 
+                        "shared": true, 
+                        "value_type": "individual"
+                    }, 
+                    "legend": {
+                        "total": false, 
+                        "show": true, 
+                        "max": false, 
+                        "min": false, 
+                        "current": false, 
+                        "values": false, 
+                        "avg": false
+                    }, 
+                    "yaxes": [
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "short", 
+                            "min": null, 
+                            "label": null
+                        }, 
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "short", 
+                            "min": null, 
+                            "label": null
+                        }
+                    ], 
+                    "xaxis": {
+                        "buckets": null, 
+                        "show": true, 
+                        "values": [], 
+                        "mode": "time", 
+                        "name": null
+                    }, 
+                    "seriesOverrides": [], 
+                    "percentage": false, 
+                    "type": "graph", 
+                    "dashes": false, 
+                    "dashLength": 10, 
+                    "stack": false, 
+                    "timeShift": null, 
+                    "aliasColors": {}, 
+                    "lines": true, 
+                    "points": false, 
+                    "datasource": null, 
+                    "pointradius": 5
+                }
+            ], 
+            "showTitle": true, 
+            "collapse": false
+        }, 
+        {
+            "repeat": null, 
+            "titleSize": "h4", 
+            "repeatIteration": null, 
+            "title": "Logs", 
+            "height": 250, 
+            "repeatRowId": null, 
+            "panels": [
+                {
+                    "bars": true, 
+                    "timeFrom": null, 
+                    "links": [], 
+                    "thresholds": [], 
+                    "spaceLength": 10, 
+                    "nullPointMode": "null", 
+                    "renderer": "flot", 
+                    "id": 22, 
+                    "linewidth": 1, 
+                    "steppedLine": false, 
+                    "targets": [
+                        {
+                            "from": "_logs", 
+                            "target": "ts($granularity)", 
+                            "alias": "logs", 
+                            "limit": "0", 
+                            "query": "partition=$partition@split@AND@split@table_name=$table@split@AND@split@service=table", 
+                            "type": "timeseries", 
+                            "refId": "A"
+                        }
+                    ], 
+                    "fill": 1, 
+                    "span": 12, 
+                    "title": "Log Histogram ($table-p$partition)", 
+                    "tooltip": {
+                        "sort": 0, 
+                        "shared": true, 
+                        "value_type": "individual"
+                    }, 
+                    "legend": {
+                        "total": false, 
+                        "show": true, 
+                        "max": false, 
+                        "min": false, 
+                        "current": false, 
+                        "values": false, 
+                        "avg": false
+                    }, 
+                    "yaxes": [
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "short", 
+                            "min": null, 
+                            "label": null
+                        }, 
+                        {
+                            "logBase": 1, 
+                            "show": true, 
+                            "max": null, 
+                            "format": "short", 
+                            "min": null, 
+                            "label": null
+                        }
+                    ], 
+                    "xaxis": {
+                        "buckets": null, 
+                        "show": true, 
+                        "values": [], 
+                        "mode": "time", 
+                        "name": null
+                    }, 
+                    "seriesOverrides": [], 
+                    "percentage": false, 
+                    "type": "graph", 
+                    "dashes": false, 
+                    "dashLength": 10, 
+                    "stack": false, 
+                    "timeShift": null, 
+                    "aliasColors": {}, 
+                    "lines": false, 
+                    "points": false, 
+                    "datasource": null, 
+                    "pointradius": 5
+                }, 
+                {
+                    "sort": {
+                        "col": null, 
+                        "desc": false
+                    }, 
+                    "styles": [
+                        {
+                            "pattern": "DATE", 
+                            "type": "date", 
+                            "dateFormat": "MM/DD/YY h:mm:ss a"
+                        }, 
+                        {
+                            "colorMode": null, 
+                            "thresholds": [], 
+                            "colors": [
+                                "rgba(245, 54, 54, 0.9)", 
+                                "rgba(237, 129, 40, 0.89)", 
+                                "rgba(50, 172, 45, 0.97)"
+                            ], 
+                            "type": "string", 
+                            "pattern": "LOG_NAME", 
+                            "decimals": 2, 
+                            "unit": "short"
+                        }, 
+                        {
+                            "type": "string", 
+                            "dateFormat": "YYYY-MM-DD HH:mm:ss", 
+                            "colorMode": null, 
+                            "thresholds": [], 
+                            "colors": [
+                                "rgba(245, 54, 54, 0.9)", 
+                                "rgba(237, 129, 40, 0.89)", 
+                                "rgba(50, 172, 45, 0.97)"
+                            ], 
+                            "pattern": "LOG_LEVEL", 
+                            "decimals": 2, 
+                            "unit": "short"
+                        }, 
+                        {
+                            "type": "string", 
+                            "dateFormat": "YYYY-MM-DD HH:mm:ss", 
+                            "colorMode": null, 
+                            "thresholds": [], 
+                            "colors": [
+                                "rgba(245, 54, 54, 0.9)", 
+                                "rgba(237, 129, 40, 0.89)", 
+                                "rgba(50, 172, 45, 0.97)"
+                            ], 
+                            "pattern": "HOST", 
+                            "decimals": 2, 
+                            "unit": "short"
+                        }
+                    ], 
+                    "span": 12, 
+                    "pageSize": null, 
+                    "links": [], 
+                    "title": "Logs ($table-p$partition)", 
+                    "transform": "table", 
+                    "showHeader": true, 
+                    "scroll": false, 
+                    "targets": [
+                        {
+                            "from": "_logs", 
+                            "target": "level,message", 
+                            "alias": "", 
+                            "limit": "10", 
+                            "query": "service=table@split@AND@split@partition=$partition@split@AND@split@table_name=$table", 
+                            "type": "table", 
+                            "refId": "A"
+                        }
+                    ], 
+                    "fontSize": "80%", 
+                    "datasource": null, 
+                    "filterNull": false, 
+                    "type": "table", 
+                    "id": 21, 
+                    "columns": []
+                }
+            ], 
+            "showTitle": true, 
+            "collapse": false
+        }
+    ], 
+    "templating": {
+        "list": [
+            {
+                "regex": "", 
+                "sort": 0, 
+                "multi": false, 
+                "hide": 0, 
+                "name": "table", 
+                "tags": [], 
+                "allValue": null, 
+                "tagValuesQuery": "", 
+                "refresh": 1, 
+                "label": null, 
+                "current": {}, 
+                "datasource": null, 
+                "type": "query", 
+                "query": "show tables", 
+                "useTags": false, 
+                "tagsQuery": "", 
+                "options": [], 
+                "includeAll": false
+            }, 
+            {
+                "regex": "", 
+                "sort": 0, 
+                "multi": false, 
+                "hide": 0, 
+                "name": "partition", 
+                "tags": [], 
+                "allValue": null, 
+                "tagValuesQuery": "", 
+                "refresh": 1, 
+                "label": null, 
+                "current": {}, 
+                "datasource": null, 
+                "type": "query", 
+                "query": "show partition from $table", 
+                "useTags": false, 
+                "tagsQuery": "", 
+                "options": [], 
+                "includeAll": false
+            }, 
+            {
+                "multi": false, 
+                "hide": 0, 
+                "name": "granularity", 
+                "allValue": null, 
+                "label": null, 
+                "current": {
+                    "text": "minute", 
+                    "selected": true, 
+                    "value": "minute"
+                }, 
+                "datasource": null, 
+                "query": "minute,hour", 
+                "type": "custom", 
+                "options": [
+                    {
+                        "text": "minute", 
+                        "selected": true, 
+                        "value": "minute"
+                    }, 
+                    {
+                        "text": "hour", 
+                        "selected": false, 
+                        "value": "hour"
+                    }
+                ], 
+                "includeAll": false
+            }
+        ]
+    }, 
+    "links": [], 
+    "gnetId": null, 
+    "graphTooltip": 0, 
+    "hideControls": false, 
+    "tags": [
+        "dashbase-app", 
+        "imported"
+    ], 
+    "editable": true, 
+    "refresh": "10s", 
+    "id": null, 
+    "timepicker": {
+        "time_options": [
+            "5m", 
+            "15m", 
+            "1h", 
+            "6h", 
+            "12h", 
+            "24h", 
+            "2d", 
+            "7d", 
+            "30d"
+        ], 
+        "refresh_intervals": [
+            "5s", 
+            "10s", 
+            "30s", 
+            "1m", 
+            "5m", 
+            "15m", 
+            "30m", 
+            "1h", 
+            "2h", 
+            "1d"
+        ]
+    }, 
+    "title": "Dashbase Tables Monitor", 
+    "version": 0, 
+    "time": {
+        "to": "now", 
+        "from": "now-5m"
+    }, 
+    "timezone": "browser", 
+    "schemaVersion": 14, 
+    "annotations": {
+        "list": []
+    }
+}

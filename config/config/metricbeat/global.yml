@@ -1,0 +1,33 @@
+# Should be run on all hosts
+metricbeat.modules:
+- module: system
+  period: 10s
+  metricsets:
+    - cpu
+    - load
+    - memory
+    - network
+    - process
+    - process_summary
+    - core
+    - diskio
+    #- socket
+  processes: ['.*java.*'] # only monitor java processes
+  process.include_top_n:
+    by_cpu: 5      # include top 5 processes by CPU
+    by_memory: 5   # include top 5 processes by memory
+
+- module: system
+  period: 1m
+  metricsets:
+    - filesystem
+    - fsstat
+  filesystem.ignore_types: [nfs, smbfs, autofs, tmpfs, proc, overlay]
+
+output.console:
+  enabled: false # change to true for debugging
+  pretty: true
+
+output.kafka:
+  hosts: ['monitor_kafka:9092']
+  topic: _metrics

@@ -13,15 +13,6 @@ Usage:
   exit 1
 fi
 
-if ! command -v docker >/dev/null; then
-  echo "`docker` command not found. Please install Docker first."
-  exit 1
-fi
-
-# Login to docker
-echo "Running 'docker login'."
-docker login
-
 BASEDIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd)"
 
 # Prepare the license file by curling dashbase.io/license/get
