@@ -1,0 +1,65 @@
+zipkinFactory:
+  enabled: true
+  collector: http
+  baseUrl: ${ZIPKIN_URL}
+  servicePort: ${PORT}
+  serviceName: "table/${TABLE_NAME}"
+  
+dashbase:
+  # cluster configuration
+  cluster:
+    url: zk://zookeeper:2181/dashbase/docker/${TABLE_NAME}
+
+  # following configurations only applies to server mode
+
+  # base directory
+  baseDir: /dashbase/index/${TABLE_NAME}
+
+  # indexing parameters (optional)
+  indexer:
+    minBufferedSizeMB: 50
+    maxBufferDelayInSec: 10
+
+  retention:
+    expirationHandler:
+      params:
+      type: purge
+    numDays: 7
+
+  firehose:
+      type: kafka_10
+      params:
+        hosts: monitor_kafka:9092
+        groupId: dashbase
+        topic: ${KAFKA_TOPIC}_avro
+        partitions: 0
+
+  parser:
+    type: avro_native
+
+
+server:
+  applicationConnectors:
+    - type: https
+      port: ${PORT}
+      keyStorePath: /app/keystore
+      keyStorePassword: ${KEYSTORE_PASSWORD}
+      validateCerts: false
+  applicationContextPath: /
+  adminContextPath: /admin
+  adminConnectors:
+    - type: http
+      port: ${ADMINPORT}
+  requestLog:
+    appenders: []
+
+logging:
+  level: INFO
+  appenders:
+      - type: file
+        currentLogFilename: /app/logs/${TABLE_NAME}-logs.log
+        archive: true
+        archivedLogFilenamePattern: /app/logs/${TABLE_NAME}-logs-%d.log
+        archivedFileCount: 9
+        timeZone: UTC
+      - type: console

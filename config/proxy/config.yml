@@ -1,0 +1,38 @@
+server:
+  applicationConnectors:
+    - type: https
+      port: 9200
+      keyStorePath: /app/keystore
+      keyStorePassword: ${KEYSTORE_PASSWORD}
+      validateCerts: false
+  adminConnectors:
+    - type: http
+      port: 9201
+
+kafka:
+    hosts: kafka:9092
+    clientId: dashbase
+    kafkaProps:
+      security.protocol: SSL
+      ssl.truststore.location: /app/keystore
+      ssl.truststore.password: ${KEYSTORE_PASSWORD}
+      ssl.keystore.location: /app/keystore
+      ssl.keystore.password: ${KEYSTORE_PASSWORD}
+      ssl.key.password: ${KEYSTORE_PASSWORD}
+
+# Specify the output format
+# 'raw': pass the raw input JSON
+# 'avro': parse the filebeat JSON into Avro DashbaseEvent and sends its binary
+outputFormat: raw
+
+logging:
+  level: INFO
+  appenders:
+      - type: file
+        currentLogFilename: /app/logs/proxy.log
+        archive: true
+        archivedLogFilenamePattern: /app/logs/proxy-%d-%i.log.gz
+        archivedFileCount: 9
+        timeZone: UTC
+        maxFileSize: 100MB
+      - type: console

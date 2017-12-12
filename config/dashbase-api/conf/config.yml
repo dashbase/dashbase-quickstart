@@ -1,0 +1,35 @@
+zipkinFactory:
+  enabled: true
+  collector: http
+  baseUrl: ${ZIPKIN_URL}
+  servicePort: ${PORT}
+  serviceName: "api"
+
+cluster:
+  url: zk://${ZOOKEEPER_URL}/dashbase/docker
+
+license: /app/dashbase-license.yml
+https: true
+
+server:
+  applicationConnectors:
+    - type: https
+      port: ${PORT}
+      keyStorePath: /app/keystore
+      keyStorePassword: ${KEYSTORE_PASSWORD}
+      validateCerts: false
+  applicationContextPath: /
+  adminContextPath: /admin
+  adminConnectors:
+      - type: http
+        port: ${ADMINPORT}
+logging:
+  level: INFO
+  appenders:
+      - type: file
+        currentLogFilename: /app/logs/dashbase-api.log
+        archive: true
+        archivedLogFilenamePattern: /app/logs/dashbase-api-%d.log
+        archivedFileCount: 9
+        timeZone: UTC
+      - type: console

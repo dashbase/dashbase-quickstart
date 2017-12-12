@@ -1,0 +1,105 @@
+name: filebeat_dashbase
+
+filebeat.prospectors:
+- type: log
+  paths: [/app/kafka/logs/*.log]
+  fields:
+    service: kafka
+    log_type: log4j
+    log_pattern: "[%d] %p %m (%c)%n"
+  multiline.pattern: '^[^\[]'
+  multiline.negate: false
+  multiline.match: after
+
+- type: log
+  paths: [/app/logs/proxy.log]
+  fields:
+    service: proxy
+    log_type: logback
+    log_pattern: "%-5p [%d{ISO8601}] %c: %m%n"
+  multiline.pattern: '^[^A-Z]|^$'
+  multiline.negate: false
+  multiline.match: after
+
+- type: log
+  paths: [/app/logs/warg*.log]
+  exclude_files: ['[0-9-]+.log$']
+  fields:
+    service: warg
+    log_type: logback
+    log_pattern: "%-5p [%d{ISO8601}] %c: %m%n"
+  multiline.pattern: '^[^A-Z]|^$'
+  multiline.negate: false
+  multiline.match: after
+
+- type: log
+  paths: [/app/logs/dashbase-api.log]
+  fields:
+    service: api
+    log_type: logback
+    log_pattern: "%-5p [%d{ISO8601}] %c: %m%n"
+  multiline.pattern: '^[^A-Z]|^$'
+  multiline.negate: false
+  multiline.match: after
+
+- type: log
+  paths: [/app/logs/dashbase-web.log]
+  fields:
+    service: web
+    log_type: logback
+    log_pattern: "%-5p [%d{ISO8601}] %c: %m%n"
+  multiline.pattern: '^[^A-Z]|^$'
+  multiline.negate: false
+  multiline.match: after
+
+- type: log
+  paths: [/app/logs/dashbase-table.log]
+  fields:
+    service: table
+    log_type: logback
+    log_pattern: "%-5p [%d{ISO8601}] %c: %m%n"
+    table_name: table
+    partition: "0"
+  multiline.pattern: '^[^A-Z]|^$'
+  multiline.negate: false
+  multiline.match: after
+
+- type: log
+  paths: [/app/logs/system-monitor.log]
+  fields:
+    service: table
+    log_type: logback
+    log_pattern: "%-5p [%d{ISO8601}] %c: %m%n"
+    table_name: _system
+    partition: "0"
+  multiline.pattern: '^[^A-Z]|^$'
+  multiline.negate: false
+  multiline.match: after
+
+- type: log
+  paths: [/app/logs/_logs-logs.log]
+  fields:
+    service: table
+    log_type: logback
+    log_pattern: "%-5p [%d{ISO8601}] %c: %m%n"
+    table_name: _logs
+    partition: "0"
+  multiline.pattern: '^[^A-Z]|^$'
+  multiline.negate: false
+  multiline.match: after
+
+- type: log
+  paths: [/app/logs/_metrics-logs.log]
+  fields:
+    service: table
+    log_type: logback
+    log_pattern: "%-5p [%d{ISO8601}] %c: %m%n"
+    table_name: _metrics
+    partition: "0"
+  multiline.pattern: '^[^A-Z]|^$'
+  multiline.negate: false
+  multiline.match: after
+
+output.kafka:
+  hosts: ['monitor_kafka:9092']
+  topic: _logs

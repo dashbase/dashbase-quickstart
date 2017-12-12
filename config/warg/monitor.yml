@@ -1,0 +1,17 @@
+applicationId: warg-monitor
+
+kafkaBootstrapServers: monitor_kafka:9092
+
+topics: _logs,_metrics
+
+outputTopicSuffix: _avro
+
+useLocalTimestamp: true
+
+parser:
+  type: filebeat
+
+logging:
+  level: INFO
+  appenders:
+      - type: console
