@@ -3,8 +3,6 @@
 # This scripts extracts User ID from dashbase-license.yml and sets it as KAFKA_TOPIC,
 # and also generates keystore and sets its password in KEYSTORE_PASSWORD.
 
-set -e
-
 if [[ -z "$1" ]]
 then
   echo "
