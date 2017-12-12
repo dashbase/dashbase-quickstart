@@ -6,7 +6,7 @@ Use this guide to start Dashbase locally and familiarize yourself with a few con
 ### Requirements
 
 - [Docker Engine 17.06.0+](https://www.docker.com/community-edition#/download)
-- Optionally [Docker Compose 1.17.0](https://docs.docker.com/compose/install)
+- Optionally [Docker Compose 1.17.0+](https://docs.docker.com/compose/install)
 
 ### Start
 
