@@ -1,0 +1,18 @@
+version: '3.3'
+
+volumes:
+  table_index:
+    driver: rexray/ebs
+    driver_opts:
+      volumetype: "st1"
+      size: 1500
+  monitor_index:
+    driver: rexray/ebs
+    driver_opts:
+      volumetype: "st1"
+      size: 500
+  kafka_data:
+    driver: rexray/ebs
+    driver_opts:
+      volumetype: "st1"
+      size: 500

@@ -1,0 +1,4 @@
+#cloud-config
+
+runcmd:
+- sysctl -w vm.max_map_count=300000
