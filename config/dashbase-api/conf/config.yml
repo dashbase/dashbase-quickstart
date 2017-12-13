@@ -23,6 +23,18 @@ server:
   adminConnectors:
       - type: http
         port: ${ADMINPORT}
+metrics:
+  reporters:
+    - type: dashbase
+      url: ${MONITOR_URL}
+      meta:
+        name: dashbase-internal
+        type: dashbase-api
+      includes:
+        - ^jvm.*$
+        - ^dashbase.*$
+      useRegexFilters: true
+      frequency: 5 seconds
 logging:
   level: INFO
   appenders:
@@ -31,5 +43,11 @@ logging:
         archive: true
         archivedLogFilenamePattern: /app/logs/dashbase-api-%d.log
         archivedFileCount: 9
+        timeZone: UTC
+      - type: dashbase
+        url: ${MONITOR_URL}
+        meta:
+          name: dashbase-api
+          type: dashbase-api
         timeZone: UTC
       - type: console
