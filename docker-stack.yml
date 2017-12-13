@@ -82,7 +82,7 @@ services:
       KAFKA_TOPIC: ''
       KEYSTORE_PASSWORD: ''
       PORT: 9898
-    image: dashbase/alerts:1.0.0-rc12-SNAPSHOT
+    image: dashbase/alerts:latest
     networks:
       backend: null
     ports:
@@ -123,7 +123,7 @@ services:
       PORT: 9876
       ZIPKIN_URL: http://zipkin:9411/
       ZOOKEEPER_URL: zookeeper:2181
-    image: dashbase/api:1.0.0-rc12-SNAPSHOT
+    image: dashbase/api:latest
     networks:
       backend: null
       frontend: null
@@ -218,7 +218,7 @@ services:
       MONITOR_URL: https://monitor:9888
       PORT: 9888
       ZOOKEEPER_URL: zookeeper:2181
-    image: dashbase/table:1.0.0-rc12-SNAPSHOT
+    image: dashbase/table:latest
     networks:
       backend: null
     ports:
@@ -293,7 +293,7 @@ services:
       TABLE_NAME: _logs
       ZIPKIN_URL: http://zipkin:9411/
       ZOOKEEPER_URL: zookeeper:2181
-    image: dashbase/table:1.0.0-rc12-SNAPSHOT
+    image: dashbase/table:latest
     networks:
       backend: null
     ports:
@@ -352,7 +352,7 @@ services:
       TABLE_NAME: _metrics
       ZIPKIN_URL: http://zipkin:9411/
       ZOOKEEPER_URL: zookeeper:2181
-    image: dashbase/table:1.0.0-rc12-SNAPSHOT
+    image: dashbase/table:latest
     networks:
       backend: null
     ports:
@@ -382,7 +382,7 @@ services:
       TABLE_NAME: _traces
       ZIPKIN_URL: http://zipkin:9411/
       ZOOKEEPER_URL: zookeeper:2181
-    image: dashbase/table:1.0.0-rc12-SNAPSHOT
+    image: dashbase/table:latest
     networks:
       backend: null
     ports:
@@ -406,7 +406,7 @@ services:
       KAFKA_SSL_TRUSTSTORE_PASSWORD: ''
       KAFKA_TOPIC: ''
       KEYSTORE_PASSWORD: ''
-    image: dashbase/warg:1.0.0-rc12-SNAPSHOT
+    image: dashbase/warg:latest
     networks:
       backend: null
     secrets:
@@ -436,7 +436,7 @@ services:
       KAFKA_SSL_TRUSTSTORE_PASSWORD: ''
       KAFKA_TOPIC: ''
       KEYSTORE_PASSWORD: ''
-    image: dashbase/proxy:1.0.0-rc12-SNAPSHOT
+    image: dashbase/proxy:latest
     networks:
       backend: null
     ports:
@@ -472,7 +472,7 @@ services:
       PORT: 7888
       ZIPKIN_URL: http://zipkin:9411/
       ZOOKEEPER_URL: zookeeper:2181
-    image: dashbase/table:1.0.0-rc12-SNAPSHOT
+    image: dashbase/table:latest
     networks:
       backend: null
     ports:
@@ -502,7 +502,7 @@ services:
       KAFKA_SSL_TRUSTSTORE_PASSWORD: ''
       KAFKA_TOPIC: ''
       KEYSTORE_PASSWORD: ''
-    image: dashbase/warg:1.0.0-rc12-SNAPSHOT
+    image: dashbase/warg:latest
     networks:
       backend: null
     secrets:
@@ -535,7 +535,7 @@ services:
       KEYSTORE_PASSWORD: ''
       PORT: 8080
       ZIPKIN_URL: http://zipkin:9411/
-    image: dashbase/web:1.0.0-rc12-SNAPSHOT
+    image: dashbase/web:latest
     networks:
       frontend: null
     ports:
@@ -560,7 +560,7 @@ services:
       KEYSTORE_PASSWORD: ''
       MAX_RESULTS_NUM: 100
       TABLE: _traces
-    image: dashbase/zipkin:1.0.0-SNAPSHOT
+    image: dashbase/zipkin:latest
     networks:
       backend: null
       frontend: null
