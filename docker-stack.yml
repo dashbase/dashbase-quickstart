@@ -1,0 +1,606 @@
+configs:
+  alerts_config:
+    file: /home/circleci/dashbase-quickstart/config/dashbase-alerts/conf/config.yml
+  api_config:
+    file: /home/circleci/dashbase-quickstart/config/dashbase-api/conf/config.yml
+  dashbase-license:
+    file: /home/circleci/dashbase-quickstart/dashbase-license.yml
+  grafana_api_config:
+    file: /home/circleci/dashbase-quickstart/config/grafana/dashboards/dashboard-api.json
+  grafana_config:
+    file: /home/circleci/dashbase-quickstart/config/grafana/custom.ini
+  grafana_kafka_config:
+    file: /home/circleci/dashbase-quickstart/config/grafana/dashboards/dashboard-kafka.json
+  grafana_plugin_config:
+    file: /home/circleci/dashbase-quickstart/config/grafana/plugin.json
+  grafana_table_config:
+    file: /home/circleci/dashbase-quickstart/config/grafana/dashboards/dashboard-table.json
+  grafana_zk_config:
+    file: /home/circleci/dashbase-quickstart/config/grafana/dashboards/dashboard-zookeeper.json
+  monitor_config:
+    file: /home/circleci/dashbase-quickstart/config/dashbase-tables/_system/conf/config.yml
+  monitor_filebeat_config:
+    file: /home/circleci/dashbase-quickstart/config/filebeat/filebeat.yml
+  monitor_metricbeat_global_config:
+    file: /home/circleci/dashbase-quickstart/config/metricbeat/global.yml
+  monitor_metricbeat_singleton_config:
+    file: /home/circleci/dashbase-quickstart/config/metricbeat/singleton.yml
+  monitor_table_config:
+    file: /home/circleci/dashbase-quickstart/config/dashbase-tables/monitor/config.yml
+  monitor_warg_config:
+    file: /home/circleci/dashbase-quickstart/config/warg/monitor.yml
+  proxy_config:
+    file: /home/circleci/dashbase-quickstart/config/proxy/config.yml
+  table_config:
+    file: /home/circleci/dashbase-quickstart/config/dashbase-tables/table/conf/config.yml
+  warg_config:
+    file: /home/circleci/dashbase-quickstart/config/warg/config.yml
+  web_config:
+    file: /home/circleci/dashbase-quickstart/config/dashbase-web/conf/config.yml
+networks:
+  backend:
+    attachable: true
+    driver: overlay
+  frontend:
+    attachable: true
+    driver: overlay
+secrets:
+  ca_cert_pem:
+    file: /home/circleci/dashbase-quickstart/ca-cert.pem
+  cert_pem:
+    file: /home/circleci/dashbase-quickstart/cert.pem
+  client_cert_pem:
+    file: /home/circleci/dashbase-quickstart/client-cert.pem
+  client_key_pem:
+    file: /home/circleci/dashbase-quickstart/client-key.pem
+  key_pem:
+    file: /home/circleci/dashbase-quickstart/key.pem
+  keystore:
+    file: /home/circleci/dashbase-quickstart/keystore
+services:
+  alerts:
+    command:
+    - server
+    - /app/config.yml
+    configs:
+    - source: alerts_config
+      target: /app/config.yml
+    depends_on:
+    - api
+    deploy:
+      placement:
+        constraints:
+        - node.role == manager
+    environment:
+      ADMINPORT: 9998
+      API_HOST: api
+      API_PORT: 9876
+      JAVA_OPTS: -Xmx512m -Xms256m -XX:NewSize=256m
+      KAFKA_SSL_KEYSTORE_PASSWORD: ''
+      KAFKA_SSL_KEY_PASSWORD: ''
+      KAFKA_SSL_TRUSTSTORE_PASSWORD: ''
+      KAFKA_TOPIC: ''
+      KEYSTORE_PASSWORD: ''
+      PORT: 9898
+    image: dashbase/alerts:1.0.0-rc12-SNAPSHOT
+    networks:
+      backend: null
+    ports:
+    - published: 9898
+      target: 9898
+    secrets:
+    - source: keystore
+      target: /app/keystore
+    volumes:
+    - logs:/app/logs:rw
+  api:
+    command:
+    - server
+    - /app/config.yml
+    configs:
+    - source: api_config
+      target: /app/config.yml
+    - source: dashbase-license
+      target: /app/dashbase-license.yml
+    depends_on:
+    - monitor
+    - table
+    - zipkin
+    - zookeeper
+    deploy:
+      placement:
+        constraints:
+        - node.role == manager
+    environment:
+      ADMINPORT: 9976
+      JAVA_OPTS: -Xmx1g -Xms512m -XX:NewSize=512m
+      KAFKA_SSL_KEYSTORE_PASSWORD: ''
+      KAFKA_SSL_KEY_PASSWORD: ''
+      KAFKA_SSL_TRUSTSTORE_PASSWORD: ''
+      KAFKA_TOPIC: ''
+      KEYSTORE_PASSWORD: ''
+      MONITOR_URL: https://monitor:9888
+      PORT: 9876
+      ZIPKIN_URL: http://zipkin:9411/
+      ZOOKEEPER_URL: zookeeper:2181
+    image: dashbase/api:1.0.0-rc12-SNAPSHOT
+    networks:
+      backend: null
+      frontend: null
+    ports:
+    - published: 9876
+      target: 9876
+    secrets:
+    - source: keystore
+    volumes:
+    - logs:/app/logs:rw
+  grafana:
+    configs:
+    - source: grafana_api_config
+      target: /root/.dashbase/grafana/data/plugins/dashbase/dist/dashboards/dashboard-api.json
+    - source: grafana_config
+      target: /root/.dashbase/grafana/conf/custom.ini
+    - source: grafana_kafka_config
+      target: /root/.dashbase/grafana/data/plugins/dashbase/dist/dashboards/dashboard-kafka.json
+    - source: grafana_plugin_config
+      target: /root/.dashbase/grafana/data/plugins/dashbase/dist/plugin.json
+    - source: grafana_table_config
+      target: /root/.dashbase/grafana/data/plugins/dashbase/dist/dashboards/dashboard-table.json
+    depends_on:
+    - api
+    deploy:
+      placement:
+        constraints:
+        - node.role == manager
+    image: dashbase/grafana
+    networks:
+      frontend: null
+    ports:
+    - published: 3000
+      target: 3000
+    secrets:
+    - source: cert_pem
+      target: /app/cert.pem
+    - source: key_pem
+      target: /app/key.pem
+    volumes:
+    - logs:/root/.dashbase/grafana/data/log:rw
+  kafka:
+    depends_on:
+    - zookeeper
+    environment:
+      JMX_PORT: 9999
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ADVERTISED_PORT: 9094
+      KAFKA_ADVERTISED_PROTOCOL_NAME: OUTSIDE
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:SSL,OUTSIDE:SSL
+      KAFKA_LOG_DIRS: /dashbase/kafka
+      KAFKA_LOG_RETENTION_HOURS: 24
+      KAFKA_PROTOCOL_NAME: INSIDE
+      KAFKA_SSL_CLIENT_AUTH: required
+      KAFKA_SSL_KEYSTORE_LOCATION: /run/secrets/keystore
+      KAFKA_SSL_KEYSTORE_PASSWORD: ''
+      KAFKA_SSL_KEY_PASSWORD: ''
+      KAFKA_SSL_TRUSTSTORE_LOCATION: /run/secrets/keystore
+      KAFKA_SSL_TRUSTSTORE_PASSWORD: ''
+      KAFKA_TOPIC: ''
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KEYSTORE_PASSWORD: ''
+    image: wurstmeister/kafka:0.11.0.1
+    networks:
+      backend: null
+    secrets:
+    - source: keystore
+    volumes:
+    - kafka_data:/dashbase/kafka:rw
+    - kafka_logs:/opt/kafka/logs:rw
+  monitor:
+    command:
+    - server
+    - /app/config.yml
+    configs:
+    - source: monitor_config
+      target: /app/config.yml
+    depends_on:
+    - zookeeper
+    deploy:
+      placement:
+        constraints:
+        - node.role == manager
+    environment:
+      ADMINPORT: 9988
+      JAVA_OPTS: -Xmx2g -Xms1g -XX:NewSize=1g
+      KAFKA_SSL_KEYSTORE_PASSWORD: ''
+      KAFKA_SSL_KEY_PASSWORD: ''
+      KAFKA_SSL_TRUSTSTORE_PASSWORD: ''
+      KAFKA_TOPIC: ''
+      KEYSTORE_PASSWORD: ''
+      MONITOR_URL: https://monitor:9888
+      PORT: 9888
+      ZOOKEEPER_URL: zookeeper:2181
+    image: dashbase/table:1.0.0-rc12-SNAPSHOT
+    networks:
+      backend: null
+    ports:
+    - published: 9888
+      target: 9888
+    secrets:
+    - source: keystore
+      target: /app/keystore
+    volumes:
+    - logs:/app/logs:rw
+    - monitor_index:/dashbase/index:rw
+  monitor_filebeat:
+    configs:
+    - source: monitor_filebeat_config
+      target: /usr/share/filebeat/filebeat.yml
+    deploy:
+      mode: global
+    image: docker.elastic.co/beats/filebeat:6.0.0
+    networks:
+      backend: null
+    secrets:
+    - source: ca_cert_pem
+    - source: client_cert_pem
+    - source: client_key_pem
+    volumes:
+    - kafka_logs:/app/kafka/logs:rw
+    - logs:/app/logs:rw
+  monitor_kafka:
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: monitor_kafka
+      KAFKA_ADVERTISED_PORT: 9094
+      KAFKA_ADVERTISED_PROTOCOL_NAME: OUTSIDE
+      KAFKA_CREATE_TOPICS: _logs:1:1,_logs_avro:1:1,_metrics:1:1,_metrics_avro:1:1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:SSL,OUTSIDE:SSL
+      KAFKA_LOG_DIRS: /opt/kafka/data
+      KAFKA_LOG_RETENTION_HOURS: 1
+      KAFKA_PROTOCOL_NAME: INSIDE
+      KAFKA_SSL_CLIENT_AUTH: required
+      KAFKA_SSL_KEYSTORE_LOCATION: /run/secrets/keystore
+      KAFKA_SSL_KEYSTORE_PASSWORD: ''
+      KAFKA_SSL_KEY_PASSWORD: ''
+      KAFKA_SSL_TRUSTSTORE_LOCATION: /run/secrets/keystore
+      KAFKA_SSL_TRUSTSTORE_PASSWORD: ''
+      KAFKA_TOPIC: ''
+      KAFKA_ZOOKEEPER_CONNECT: monitor_zookeeper:2181
+      KEYSTORE_PASSWORD: ''
+    image: wurstmeister/kafka:0.11.0.1
+    networks:
+      backend: null
+    ports:
+    - target: 9092
+    secrets:
+    - source: keystore
+    volumes:
+    - monitor_kafka_data:/opt/kafka/data:rw
+  monitor_logs:
+    command:
+    - server
+    - /app/config.yml
+    configs:
+    - source: monitor_table_config
+      target: /app/config.yml
+    environment:
+      ADMINPORT: 8988
+      JAVA_OPTS: -Xmx1g -Xms512m -XX:NewSize=512m
+      KAFKA_SSL_KEYSTORE_PASSWORD: ''
+      KAFKA_SSL_KEY_PASSWORD: ''
+      KAFKA_SSL_TRUSTSTORE_PASSWORD: ''
+      KAFKA_TOPIC: _logs
+      KEYSTORE_PASSWORD: ''
+      PORT: 8888
+      TABLE_NAME: _logs
+      ZIPKIN_URL: http://zipkin:9411/
+      ZOOKEEPER_URL: zookeeper:2181
+    image: dashbase/table:1.0.0-rc12-SNAPSHOT
+    networks:
+      backend: null
+    ports:
+    - target: 8888
+    - target: 8988
+    secrets:
+    - source: keystore
+    volumes:
+    - logs:/app/logs:rw
+    - monitor_logs_index:/dashbase/index:rw
+  monitor_metricbeat_global:
+    command: -e --system.hostfs=/hostfs
+    configs:
+    - source: monitor_metricbeat_global_config
+      target: /usr/share/metricbeat/metricbeat.yml
+    deploy:
+      mode: global
+    image: docker.elastic.co/beats/metricbeat:6.0.0
+    networks:
+      backend: null
+    secrets:
+    - source: ca_cert_pem
+    - source: client_cert_pem
+    - source: client_key_pem
+    volumes:
+    - /:/hostfs:ro
+    - /proc:/hostfs/proc:ro
+    - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+  monitor_metricbeat_singleton:
+    configs:
+    - source: monitor_metricbeat_singleton_config
+      target: /usr/share/metricbeat/metricbeat.yml
+    image: docker.elastic.co/beats/metricbeat:6.0.0
+    networks:
+      backend: null
+    secrets:
+    - source: ca_cert_pem
+    - source: client_cert_pem
+    - source: client_key_pem
+  monitor_metrics:
+    command:
+    - server
+    - /app/config.yml
+    configs:
+    - source: monitor_table_config
+      target: /app/config.yml
+    environment:
+      ADMINPORT: 10988
+      JAVA_OPTS: -Xmx2g -Xms1g -XX:NewSize=512m
+      KAFKA_SSL_KEYSTORE_PASSWORD: ''
+      KAFKA_SSL_KEY_PASSWORD: ''
+      KAFKA_SSL_TRUSTSTORE_PASSWORD: ''
+      KAFKA_TOPIC: _metrics
+      KEYSTORE_PASSWORD: ''
+      PORT: 10888
+      TABLE_NAME: _metrics
+      ZIPKIN_URL: http://zipkin:9411/
+      ZOOKEEPER_URL: zookeeper:2181
+    image: dashbase/table:1.0.0-rc12-SNAPSHOT
+    networks:
+      backend: null
+    ports:
+    - target: 10888
+    - target: 10988
+    secrets:
+    - source: keystore
+    volumes:
+    - logs:/app/logs:rw
+    - monitor_metrics_index:/dashbase/index:rw
+  monitor_traces:
+    command:
+    - server
+    - /app/config.yml
+    configs:
+    - source: monitor_table_config
+      target: /app/config.yml
+    environment:
+      ADMINPORT: 11988
+      JAVA_OPTS: -Xmx2g -Xms1g -XX:NewSize=512m
+      KAFKA_SSL_KEYSTORE_PASSWORD: ''
+      KAFKA_SSL_KEY_PASSWORD: ''
+      KAFKA_SSL_TRUSTSTORE_PASSWORD: ''
+      KAFKA_TOPIC: _traces
+      KEYSTORE_PASSWORD: ''
+      PORT: 11888
+      TABLE_NAME: _traces
+      ZIPKIN_URL: http://zipkin:9411/
+      ZOOKEEPER_URL: zookeeper:2181
+    image: dashbase/table:1.0.0-rc12-SNAPSHOT
+    networks:
+      backend: null
+    ports:
+    - target: 11888
+    - target: 11988
+    secrets:
+    - source: keystore
+    volumes:
+    - logs:/app/logs:rw
+    - monitor_traces_index:/dashbase/index:rw
+  monitor_warg:
+    command:
+    - server
+    - /app/config.yml
+    configs:
+    - source: monitor_warg_config
+      target: /app/config.yml
+    environment:
+      KAFKA_SSL_KEYSTORE_PASSWORD: ''
+      KAFKA_SSL_KEY_PASSWORD: ''
+      KAFKA_SSL_TRUSTSTORE_PASSWORD: ''
+      KAFKA_TOPIC: ''
+      KEYSTORE_PASSWORD: ''
+    image: dashbase/warg:1.0.0-rc12-SNAPSHOT
+    networks:
+      backend: null
+    secrets:
+    - source: keystore
+  monitor_zookeeper:
+    image: zookeeper
+    networks:
+      backend: null
+    ports:
+    - target: 2181
+  proxy:
+    command:
+    - server
+    - /app/config.yml
+    configs:
+    - source: proxy_config
+      target: /app/config.yml
+    depends_on:
+    - kafka
+    deploy:
+      placement:
+        constraints:
+        - node.role == manager
+    environment:
+      KAFKA_SSL_KEYSTORE_PASSWORD: ''
+      KAFKA_SSL_KEY_PASSWORD: ''
+      KAFKA_SSL_TRUSTSTORE_PASSWORD: ''
+      KAFKA_TOPIC: ''
+      KEYSTORE_PASSWORD: ''
+    image: dashbase/proxy:1.0.0-rc12-SNAPSHOT
+    networks:
+      backend: null
+    ports:
+    - published: 9200
+      target: 9200
+    secrets:
+    - source: keystore
+    volumes:
+    - logs:/app/logs:rw
+  table:
+    command:
+    - server
+    - /app/config.yml
+    configs:
+    - source: table_config
+      target: /app/config.yml
+    depends_on:
+    - monitor
+    - warg
+    - zipkin
+    environment:
+      ADMINPORT: 7988
+      DASHBASE_PARTITION: 0
+      JAVA_OPTS: -Xmx8g -Xms4g -XX:NewSize=2g
+      KAFKA_GROUPID: dashbase
+      KAFKA_PARTITIONS: 0
+      KAFKA_SSL_KEYSTORE_PASSWORD: ''
+      KAFKA_SSL_KEY_PASSWORD: ''
+      KAFKA_SSL_TRUSTSTORE_PASSWORD: ''
+      KAFKA_TOPIC: ''
+      KEYSTORE_PASSWORD: ''
+      MONITOR_URL: https://monitor:9888
+      PORT: 7888
+      ZIPKIN_URL: http://zipkin:9411/
+      ZOOKEEPER_URL: zookeeper:2181
+    image: dashbase/table:1.0.0-rc12-SNAPSHOT
+    networks:
+      backend: null
+    ports:
+    - published: 7888
+      target: 7888
+    secrets:
+    - source: keystore
+    volumes:
+    - logs:/app/logs:rw
+    - table_index:/dashbase/index:rw
+  warg:
+    command:
+    - server
+    - /app/config.yml
+    configs:
+    - source: warg_config
+      target: /app/config.yml
+    depends_on:
+    - kafka
+    deploy:
+      placement:
+        constraints:
+        - node.role == manager
+    environment:
+      KAFKA_SSL_KEYSTORE_PASSWORD: ''
+      KAFKA_SSL_KEY_PASSWORD: ''
+      KAFKA_SSL_TRUSTSTORE_PASSWORD: ''
+      KAFKA_TOPIC: ''
+      KEYSTORE_PASSWORD: ''
+    image: dashbase/warg:1.0.0-rc12-SNAPSHOT
+    networks:
+      backend: null
+    secrets:
+    - source: keystore
+    volumes:
+    - logs:/app/logs:rw
+  web:
+    command:
+    - server
+    - /app/config.yml
+    configs:
+    - source: web_config
+      target: /app/config.yml
+    depends_on:
+    - api
+    - zipkin
+    deploy:
+      placement:
+        constraints:
+        - node.role == manager
+    environment:
+      ADMINPORT: 8180
+      API_HOST: api
+      API_PORT: 9876
+      JAVA_OPTS: -Xmx512m -Xms512m -XX:NewSize=512m
+      KAFKA_SSL_KEYSTORE_PASSWORD: ''
+      KAFKA_SSL_KEY_PASSWORD: ''
+      KAFKA_SSL_TRUSTSTORE_PASSWORD: ''
+      KAFKA_TOPIC: ''
+      KEYSTORE_PASSWORD: ''
+      PORT: 8080
+      ZIPKIN_URL: http://zipkin:9411/
+    image: dashbase/web:1.0.0-rc12-SNAPSHOT
+    networks:
+      frontend: null
+    ports:
+    - published: 8080
+      target: 8080
+    secrets:
+    - source: keystore
+    volumes:
+    - logs:/app/logs:rw
+  zipkin:
+    depends_on:
+    - kafka
+    environment:
+      API_URL: https://api:9876
+      KAFKA_SSL: "true"
+      KAFKA_SSL_KEYSTORE_PASSWORD: ''
+      KAFKA_SSL_KEY_PASSWORD: ''
+      KAFKA_SSL_TRUSTSTORE_PASSWORD: ''
+      KAFKA_TOPIC: _traces_avro
+      KAFKA_URL: monitor_kafka:9092
+      KEYSTORE_LOCATION: /run/secrets/keystore
+      KEYSTORE_PASSWORD: ''
+      MAX_RESULTS_NUM: 100
+      TABLE: _traces
+    image: dashbase/zipkin:1.0.0-SNAPSHOT
+    networks:
+      backend: null
+      frontend: null
+    ports:
+    - published: 9411
+      target: 9411
+    secrets:
+    - source: keystore
+    volumes:
+    - logs:/app/logs:rw
+  zookeeper:
+    deploy:
+      placement:
+        constraints:
+        - node.role == manager
+    image: zookeeper
+    networks:
+      backend: null
+    ports:
+    - published: 2181
+      target: 2181
+version: '3.3'
+volumes:
+  kafka_data:
+    driver: rexray/ebs
+    driver_opts:
+      encrypted: "true"
+      size: '500'
+      volumetype: st1
+  kafka_logs: {}
+  logs: {}
+  monitor_index: {}
+  monitor_kafka_data: {}
+  monitor_logs_index: {}
+  monitor_metrics_index: {}
+  monitor_traces_index: {}
+  table_index:
+    driver: rexray/ebs
+    driver_opts:
+      encrypted: "true"
+      size: '1500'
+      volumetype: st1
+
