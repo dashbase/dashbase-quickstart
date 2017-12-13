@@ -113,7 +113,7 @@ For inquiries, please reference their documentation.
 # If you used Docker for AWS
 ssh -i {{ PATH/TO/SSH/KEY }} docker@{{ Manager node's IP address }} swarm-exec "$(cat rexray_cmd)"
 
-# If you are using the existing EC2 instance(s)
+# If you are using the existing EC2 instance
 ssh -i {{ PATH/TO/SSH/KEY }} {{ EC2 instance }} "$(cat rexray_cmd)"
 ```
 
@@ -125,7 +125,7 @@ ssh -i {{ PATH/TO/SSH/KEY }} -NL localhost:2374:/var/run/docker.sock docker@{{ M
 export DOCKER_HOST=localhost:2374
 ```
 
-If you created an EC2 instance using docker-machine, you can use `docker-machine env` command to connect to the docker daemon on the manager node.
+If you are using an existing EC2 instance, you can set up SSH tunnel to the Docker daemon running on the instance (see the above example), or you can SCP the contents of the current directory to the instance, and run the next step on the instance. Make sure that the instance have docker-compose installed.
 
 6. Deploy the stack.
 ```
@@ -141,6 +141,6 @@ docker service ls
 
 If you created a swarm cluster using Docker for AWS, then it set up ELB to access to the cluster. The DNS of the ELB is available in the `DefaultDNSTarget` under `Outputs` tab on the CloudFormation page.
 
-If you deployed to the existing EC2 instance (without using Docker for AWS), then you can choose any IP address/hostname of the nodes in the cluster.
+If you deployed to the existing EC2 instance (without using Docker for AWS), then you can use the public IP/hostname of the instance.
 
-You can access to Dashbase Web page via https://{ELB DNS, or IP/hostname of one of the nodes}:8080/.
+You can access to Dashbase Web page via https://{{ ELB DNS, or public IP/hostname }}:8080/.
