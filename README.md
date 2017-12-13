@@ -33,6 +33,8 @@ Once all services are up, let's run a Filebeat locally to start putting in some 
 1. Get [Filebeat](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-installation.html) if you don't have it already.
 
 2. Edit the `filebeat.yml` Elasticsearch output section, as such:
+*Note that your license was retrieved as part of the ./bin/prepare.sh script you executed earlier
+
 ```
 #-------------------------- Elasticsearch output ------------------------------
 output.elasticsearch:
