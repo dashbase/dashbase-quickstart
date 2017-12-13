@@ -68,7 +68,7 @@ Use this guide to start Dashbase on AWS.
 ### Requirements
 
 - [Docker Engine 17.06.0+](https://www.docker.com/community-edition#/download) installed on each host if you already have machines provisioned.
-- [Docker Compose 1.17.0+](https://docs.docker.com/compose/install/)
+- [Docker Compose 1.17.0+](https://docs.docker.com/compose/install/) installed on local machine.
 - Optionally [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html)
 
 ### Setup - Skip this section if you already have instances provisioned and Docker Engine installed.
