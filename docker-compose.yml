@@ -242,34 +242,34 @@ services:
     #   timeout: 20s
     #   retries: 3
 
-  alerts:
-    image: dashbase/alerts:latest
-    depends_on:
-      - api
-    networks:
-      - backend
-    configs:
-      - source: alerts_config
-        target: /app/config.yml
-    secrets:
-      - source: keystore
-        target: /app/keystore
-    ports:
-      - "9898:9898"
-    command: ["server", "/app/config.yml"]
-    deploy:
-      placement:
-       constraints: [node.role == manager]
-    volumes:
-      - logs:/app/logs:rw
-    env_file:
-      - env
-    environment:
-      PORT: 9898
-      ADMINPORT: 9998
-      API_PORT: 9876
-      API_HOST: api
-      JAVA_OPTS: "-Xmx512m -Xms256m -XX:NewSize=256m"
+  #alerts:
+  #  image: dashbase/alerts:latest
+  #  depends_on:
+  #    - api
+  #  networks:
+  #    - backend
+  #  configs:
+  #    - source: alerts_config
+  #      target: /app/config.yml
+  #  secrets:
+  #    - source: keystore
+  #      target: /app/keystore
+  #  ports:
+  #    - "9898:9898"
+  #  command: ["server", "/app/config.yml"]
+  #  deploy:
+  #    placement:
+  #     constraints: [node.role == manager]
+  #  volumes:
+  #    - logs:/app/logs:rw
+  #  env_file:
+  #    - env
+  #  environment:
+  #    PORT: 9898
+  #    ADMINPORT: 9998
+  #    API_PORT: 9876
+  #    API_HOST: api
+  #    JAVA_OPTS: "-Xmx512m -Xms256m -XX:NewSize=256m"
     # healthcheck:
     #   test: ["CMD", "curl", "-f", "https://web:8180", "--insecure"]
     #   interval: 3m
@@ -409,26 +409,26 @@ services:
       - client_key_pem
 
   # global (= per host) metricbeat
-  monitor_metricbeat_global:
-    image: docker.elastic.co/beats/metricbeat:6.0.0
-    configs:
-      - source: monitor_metricbeat_global_config
-        target: /usr/share/metricbeat/metricbeat.yml
-    volumes:
-      ## /proc and /sys are only available on Linux.
-      ## comment out the followings if deploying onto non-Linux machine
-      - /proc:/hostfs/proc:ro
-      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
-      - /:/hostfs:ro
-    networks:
-      - backend
-    secrets:
-      - ca_cert_pem
-      - client_cert_pem
-      - client_key_pem
-    command: -e --system.hostfs=/hostfs
-    deploy:
-      mode: global
+  #monitor_metricbeat_global:
+  #  image: docker.elastic.co/beats/metricbeat:6.0.0
+  #  configs:
+  #    - source: monitor_metricbeat_global_config
+  #      target: /usr/share/metricbeat/metricbeat.yml
+  #  volumes:
+  #    ## /proc and /sys are only available on Linux.
+  #    ## comment out the followings if deploying onto non-Linux machine
+  #    - /proc:/hostfs/proc:ro
+  #    - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+  #    - /:/hostfs:ro
+  #  networks:
+  #    - backend
+  #  secrets:
+  #    - ca_cert_pem
+  #    - client_cert_pem
+  #    - client_key_pem
+  #  command: -e --system.hostfs=/hostfs
+  #  deploy:
+  #    mode: global
 
   monitor_warg:
     image: dashbase/warg:latest
