@@ -143,4 +143,4 @@ If you created a swarm cluster using Docker for AWS, then it set up ELB to acces
 
 If you deployed to the existing EC2 instance (without using Docker for AWS), then you can use the public IP/hostname of the instance.
 
-You can access to Dashbase Web page via https://{ELB DNS, or public IP/hostname}:8080/.
+You can access to Dashbase Web page via https://{{ ELB DNS, or public IP/hostname }}:8080/.
