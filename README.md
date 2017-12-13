@@ -1,15 +1,15 @@
 # Dashbase Quickstart
 
 ## Overview
-Use this guide to start Dashbase and familiarize yourself with a few concepts.
+Use this guide locally to start Dashbase and familiarize yourself with a few concepts.
 
-### Requirements
+## Requirements
 
 - [Docker Engine 17.06.0+](https://www.docker.com/community-edition#/download)
 - Optionally [Docker Compose 1.17.0+](https://docs.docker.com/compose/install)
 - At least 8GB of memory available to the Docker Engine (for macOS)
 
-### Start
+### Instructions
 
 ```bash
 # 1. Clone this git repo.
