@@ -83,7 +83,7 @@ If you want to create a new EC2 instance on AWS, you can use the CloudFormation 
 
 Configuration:
 
-![Docker on AWS configurations](https://i.gyazo.com/abde8b2bf1c036785f52358ebb839f97.png "Docker on AWS")
+![Docker on AWS configurations](https://user-images.githubusercontent.com/847884/33967146-14c2a4da-e017-11e7-9625-d36303096df4.png "Docker on AWS")
 
 If you already have an EC2 instance on AWS that you want to deploy Dashbase onto, then please ssh to the instance and run
 
