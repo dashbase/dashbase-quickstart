@@ -542,6 +542,8 @@ configs:
     file: ./config/warg/config.yml
   dashbase-license:
     file: ./dashbase-license.yml
+  monitor_config:
+    file: config/dashbase-tables/_system/conf/config.yml
   monitor_filebeat_config:
     file: config/filebeat/filebeat.yml
   monitor_metricbeat_singleton_config:
