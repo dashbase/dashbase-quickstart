@@ -111,17 +111,17 @@ For inquiries, please reference their documentation.
 4. Install Rexray volume plugin onto the swarm cluster.
 ```
 # If you used Docker for AWS
-ssh -i {{ PATH/TO/SSH/KEY }} docker@{{Manager node's IP address}} swarm-exec "$(cat rexray_cmd)"
+ssh -i {{ PATH/TO/SSH/KEY }} docker@{{ Manager node's IP address }} swarm-exec "$(cat rexray_cmd)"
 
 # If you are using the existing EC2 instance(s)
-ssh -i {{ PATH/TO/SSH/KEY }} {{EC2 instance}} "$(cat rexray_cmd)"
+ssh -i {{ PATH/TO/SSH/KEY }} {{ EC2 instance }} "$(cat rexray_cmd)"
 ```
 
 5. Configure your docker to use the remote docker daemon running on the swarm cluster
 
 If you use Docker for AWS, please follow [this instruction](https://docs.docker.com/docker-for-aws/deploy/#manager-nodes) to set SSH tunnel and set DOCKER_HOST environmental variable. Here is the example from the instruction.
 ```
-ssh -i {{ PATH/TO/SSH/KEY }} -NL localhost:2374:/var/run/docker.sock docker@{{Manager node's IP address}} &
+ssh -i {{ PATH/TO/SSH/KEY }} -NL localhost:2374:/var/run/docker.sock docker@{{ Manager node's IP address }} &
 export DOCKER_HOST=localhost:2374
 ```
 
@@ -136,3 +136,11 @@ docker-compose -f docker-compose.yml -f docker-compose-rexray-ebs.yml config | d
 ```
 docker service ls
 ```
+
+### How to access
+
+If you created a swarm cluster using Docker for AWS, then it set up ELB to access to the cluster. The DNS of the ELB is available in the `DefaultDNSTarget` under `Outputs` tab on the CloudFormation page.
+
+If you deployed to the existing EC2 instance (without using Docker for AWS), then you can choose any IP address/hostname of the nodes in the cluster.
+
+You can access to Dashbase Web page via https://{ELB DNS, or IP/hostname of one of the nodes}:8080/.
