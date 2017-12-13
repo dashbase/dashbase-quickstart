@@ -336,6 +336,14 @@ services:
       - source: grafana_kafka_config
         target: /root/.dashbase/grafana/data/plugins/dashbase/dist/dashboards/dashboard-kafka.json
 
+  grafana_restart_dashbase_app:
+    image: byrnedo/alpine-curl
+    networks:
+      - frontend
+    configs:
+      - grafana_restart_app_sh
+    entrypoint: /bin/sh /grafana_restart_app_sh
+
 ##### The following services are to monitor the above services #####
   monitor_zookeeper:
     image: zookeeper
@@ -567,6 +575,8 @@ configs:
     file: config/grafana/dashboards/dashboard-kafka.json
   grafana_zk_config:
     file: config/grafana/dashboards/dashboard-zookeeper.json
+  grafana_restart_app_sh:
+    file: config/grafana/restart_dashbase_app.sh
 
 secrets:
   cert_pem:
