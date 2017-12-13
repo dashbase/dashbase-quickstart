@@ -131,7 +131,6 @@ then
   if [[ -z "$AWS_ACCESS_KEY_ID" ]] || [[ -z "$AWS_SECRET_ACCESS_KEY" ]]
   then
     echo "No AWS credentials were found. Please manually enter AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY values into $BASEDIR/rexray_cmd."
-    exit 1
   fi
 fi
 
