@@ -203,6 +203,40 @@ services:
     #   timeout: 20s
     #   retries: 3
 
+  alerts:
+    image: dashbase/alerts:latest
+    depends_on:
+      - api
+    networks:
+      - backend
+    configs:
+      - source: alerts_config
+        target: /app/config.yml
+    secrets:
+      - source: keystore
+        target: /app/keystore
+    ports:
+      - "9898:9898"
+    command: ["server", "/app/config.yml"]
+    deploy:
+      placement:
+       constraints: [node.role == manager]
+    volumes:
+      - logs:/app/logs:rw
+    env_file:
+      - env
+    environment:
+      PORT: 9898
+      ADMINPORT: 9998
+      API_PORT: 9876
+      API_HOST: api
+      JAVA_OPTS: "-Xmx512m -Xms256m -XX:NewSize=256m"
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "https://web:8180", "--insecure"]
+    #   interval: 3m
+    #   timeout: 20s
+    #   retries: 3
+
   zipkin:
     image: dashbase/zipkin:latest
     depends_on:
@@ -458,6 +492,8 @@ configs:
     file: ./config/dashbase-tables/table/conf/config.yml
   web_config:
     file: ./config/dashbase-web/conf/config.yml
+  alerts_config:
+    file: ./config/dashbase-alerts/conf/config.yml
   api_config:
     file: ./config/dashbase-api/conf/config.yml
   proxy_config:

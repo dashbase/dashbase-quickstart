@@ -1,0 +1,49 @@
+dashbaseURL: https://${API_HOST}:${API_PORT}
+
+notifications:
+#  - name: Slack
+#    type: slack
+#    url: 
+
+alerts:
+#  - name: service_cpu_percent
+#    sql: "SELECT avg('metric_data.number_value') as 'value' FROM _metrics WHERE metric_name='jvm.cpu.usage.percent' AND type='dashbase-service' LIMIT 0"
+#    description: "Dashbase Service CPU usage percent"
+#    times: 5
+#    type: higher_than
+#    threshold: 0.80
+#    periodInSeconds: 300
+
+#  - name: table_ingestion_rate
+#    sql: "SELECT avg('metric_data.oneMinuteRate') as 'value' FROM _metrics WHERE name='nginx_json' AND metric_name='dashbase.ingestion.event.bytes' AND type='dashbase-node' AND partition=0 LIMIT 0"
+#    description: "nginx_json table ingested bytes for a one minute rate"
+#    times: 5
+#    type: lower_than
+#    threshold: 100
+#    periodInSeconds: 300
+
+server:
+  applicationConnectors:
+    - type: https
+      port: ${PORT}
+      keyStorePath: /app/keystore
+      keyStorePassword: ${KEYSTORE_PASSWORD}
+      validateCerts: false
+  applicationContextPath: /
+  adminContextPath: /admin
+  adminConnectors:
+    - type: http
+      port: ${ADMINPORT}
+  requestLog:
+    appenders: []
+
+logging:
+  level: INFO
+  appenders:
+    - type: file
+      currentLogFilename: /app/logs/dashbase-alerts.log
+      archive: true
+      archivedLogFilenamePattern: /app/logs/dashbase-alerts-%d.log
+      archivedFileCount: 9
+      timeZone: UTC
+    - type: console
