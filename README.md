@@ -39,7 +39,7 @@ docker service ls
 
 Once all services are up, let's run a Filebeat locally to start putting in some data.
 
-1. Get [Filebeat](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-installation.html) if you don't have it already.
+1. [Get Filebeat](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-installation.html) if you don't have it already.
 
 2. Edit the `filebeat.yml` Elasticsearch output section, as such:
 
@@ -59,7 +59,7 @@ output.elasticsearch:
   password: ${DASHBASE_LICENSE}
 ```
 
-3. Start Filebeat and then visit our Dashbase [Web Interface](https://localhost:8080) to begin searching your logs!
+3. [Start Filebeat](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-starting.html) and then visit our Dashbase [Web Interface](https://localhost:8080) to begin searching your logs!
 
 --------
 # Deploy Dashbase onto AWS
