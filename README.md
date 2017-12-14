@@ -111,7 +111,7 @@ For inquiries, please reference their documentation.
 4. Install Rexray volume plugin onto the swarm cluster.
 ```
 # If you used Docker for AWS
-ssh -i {{ PATH/TO/SSH/KEY }} -o StrictHostKeyChecking=no docker@{{ Manager node's IP address }} swarm-exec "$(cat rexray_cmd)"
+ssh -i {{ PATH/TO/SSH/KEY }} -o StrictHostKeyChecking=no docker@{{ Manager node's IP address }} swarm-exec $(cat rexray_cmd)
 
 # If you are using the existing EC2 instance
 ssh -i {{ PATH/TO/SSH/KEY }} {{ EC2 instance }} "$(cat rexray_cmd)"
@@ -121,7 +121,7 @@ ssh -i {{ PATH/TO/SSH/KEY }} {{ EC2 instance }} "$(cat rexray_cmd)"
 
 If you use Docker for AWS, please follow [this instruction](https://docs.docker.com/docker-for-aws/deploy/#manager-nodes) to set SSH tunnel and set DOCKER_HOST environmental variable. Here is the example from the instruction.
 ```
-ssh -i {{ PATH/TO/SSH/KEY }} -NL localhost:2374:/var/run/docker.sock docker@{{ Manager node's IP address }} &
+ssh -i {{ PATH/TO/SSH/KEY }} -o StrictHostKeyChecking=no -fNL localhost:2374:/var/run/docker.sock docker@{{ Manager node's IP address }}
 export DOCKER_HOST=localhost:2374
 ```
 
