@@ -22,7 +22,7 @@ docker swarm init
 
 3. Run our prepare script to automatically download your license and configure SSL support for Dashbase.
 ```
-# Execute the following from the dashbase-quickstart repo
+# Execute the following from the dashbase-quickstart directory
 ./bin/prepare.sh {{ YOUR REGISTERED DASHBASE.IO EMAIL }}
 # Answer `y` for all prompts if any. Ignore requirement of AWS credentials.
 ```
