@@ -134,5 +134,5 @@ then
   fi
 fi
 
-echo "sudo docker plugin install rexray/ebs EBS_ACCESSKEY=$AWS_ACCESS_KEY_ID EBS_SECRETKEY=$AWS_SECRET_ACCESS_KEY" > $BASEDIR/rexray_cmd
+echo "docker plugin install --grant-all-permissions rexray/ebs EBS_ACCESSKEY=$AWS_ACCESS_KEY_ID EBS_SECRETKEY=$AWS_SECRET_ACCESS_KEY" > $BASEDIR/rexray_cmd
 echo "Prepare script completed."
