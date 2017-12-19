@@ -3,7 +3,7 @@ zipkinFactory:
   collector: http
   baseUrl: ${ZIPKIN_URL}
   servicePort: ${PORT}
-  serviceName: "table"
+  serviceName: "${TABLE_NAME}"
 
 dashbase:
   baseDir: /dashbase/index
@@ -25,7 +25,7 @@ dashbase:
           ssl.key.password: ${KEYSTORE_PASSWORD}
 
   cluster:
-    url: zk://${ZOOKEEPER_URL}/dashbase/docker/table
+    url: zk://${ZOOKEEPER_URL}/dashbase/docker/${TABLE_NAME}
 
   indexer:
     numIndexingThreads: 3
@@ -50,15 +50,6 @@ server:
   adminConnectors:
     - type: http
       port: ${ADMINPORT}
-metrics:
-  reporters:
-    - type: dashbase
-      url: ${MONITOR_URL}
-      includes:
-        - ^jvm.*$
-        - ^dashbase.*$
-      useRegexFilters: true
-      frequency: 5 seconds
 
 logging:
   level: INFO
@@ -68,8 +59,5 @@ logging:
         archive: true
         archivedLogFilenamePattern: /app/logs/dashbase-table-%d.log
         archivedFileCount: 9
-        timeZone: UTC
-      - type: dashbase
-        url: ${MONITOR_URL}
         timeZone: UTC
       - type: console

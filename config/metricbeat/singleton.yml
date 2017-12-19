@@ -56,6 +56,16 @@ metricbeat.modules:
     service: table
     table_name: _metrics
     partition: "0"
+- module: dropwizard
+  metricsets: ["collector"]
+  period: 10s
+  hosts: ["monitor_traces:11988"]
+  metrics_path: /admin/metrics
+  namespace: dashbase
+  fields:
+    service: table
+    table_name: _traces
+    partition: "0"
 
 # The following dashbase components might be replicated.
 # TODO: support replicated services

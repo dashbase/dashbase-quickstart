@@ -19,6 +19,7 @@ dashbase:
   indexer:
     minBufferedSizeMB: 50
     maxBufferDelayInSec: 10
+    storeRawInput: ${STORE_RAW_INPUT}
 
   retention:
     expirationHandler:
