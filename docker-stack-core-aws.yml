@@ -82,3 +82,15 @@ volumes:
       volumetype: "st1"
       size: 500
       encrypted: "true"
+  monitor_kafka_data:
+    driver: rexray/ebs
+    driver_opts:
+      volumetype: "gp2"
+      size: 100
+      encrypted: "true"
+  monitor_index:
+    driver: rexray/ebs
+    driver_opts:
+      volumetype: "gp2"
+      size: 500
+      encrypted: "true"

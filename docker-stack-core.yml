@@ -359,7 +359,7 @@ services:
       - backend
     volumes:
       - logs:/app/logs:rw
-      - monitor_logs_index:/dashbase/index:rw
+      - monitor_index:/dashbase/index:rw
     env_file:
       - env
     environment:
@@ -387,7 +387,7 @@ services:
       - backend
     volumes:
       - logs:/app/logs:rw
-      - monitor_metrics_index:/dashbase/index:rw
+      - monitor_index:/dashbase/index:rw
     env_file:
       - env
     environment:
@@ -415,7 +415,7 @@ services:
       - backend
     volumes:
       - logs:/app/logs:rw
-      - monitor_traces_index:/dashbase/index:rw
+      - monitor_index:/dashbase/index:rw
     env_file:
       - env
     environment:
@@ -432,9 +432,7 @@ services:
 volumes:
   table_index:
   kafka_data:
-  monitor_logs_index:
-  monitor_metrics_index:
-  monitor_traces_index:
+  monitor_index:
   monitor_kafka_data:
   kafka_logs:
   logs:
