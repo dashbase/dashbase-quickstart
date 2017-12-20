@@ -20,6 +20,12 @@ useLocalTimestamp: true
 parser:
   type: filebeat
 
+fieldsToDrop:
+  ".*":
+    - offset
+  "_metrics":
+    - ".*units$"
+
 logging:
   level: INFO
   appenders:
