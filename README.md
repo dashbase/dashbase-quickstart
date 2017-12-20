@@ -69,8 +69,8 @@ Once all services are up, let's run a Filebeat locally to start putting in some 
 ```
 #-------------------------- Elasticsearch output ------------------------------
 
-setup.template.name: "quickstart"
-setup.template.pattern: "quickstart"
+setup.template.name: quickstart
+setup.template.pattern: quickstart
 output.elasticsearch:
   # Array of hosts to connect to.
 
