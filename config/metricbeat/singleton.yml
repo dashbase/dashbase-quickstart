@@ -72,24 +72,6 @@ metricbeat.modules:
 - module: dropwizard
   metricsets: ["collector"]
   period: 10s
-  hosts: ["table:7988"]
-  metrics_path: /admin/metrics
-  namespace: dashbase
-  fields:
-    service: table
-    table_name: table
-    partition: "0"
-- module: dropwizard
-  metricsets: ["collector"]
-  period: 10s
-  hosts: ["warg:8081"]
-  metrics_path: /metrics
-  namespace: dashbase
-  fields:
-    service: warg
-- module: dropwizard
-  metricsets: ["collector"]
-  period: 10s
   hosts: ["proxy:9201"]
   metrics_path: /metrics
   namespace: dashbase

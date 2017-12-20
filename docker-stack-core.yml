@@ -67,23 +67,6 @@ services:
     env_file:
       - env
 
-  warg:
-    image: dashbase/warg:latest
-    depends_on:
-      - kafka
-    networks:
-      - backend
-    configs:
-      - source: warg_config
-        target: /app/config.yml
-    secrets:
-      - keystore
-    command: ["server", "/app/config.yml"]
-    volumes:
-      - logs:/app/logs:rw
-    env_file:
-      - env
-
   api:
     image: dashbase/api:latest
     depends_on:
