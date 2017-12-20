@@ -56,6 +56,8 @@ qtd2ph6mj87a        dashbase-core_api                            replicated     
 ...
 ```
 
+*Note: On the same Cluster Overview UI noted above, you will now see the new table that you just created, ingesting no data.
+
 Once all services are up, let's run a Filebeat locally to start putting in some data.
 
 1. [Get Filebeat](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-installation.html) if you don't have it already.
