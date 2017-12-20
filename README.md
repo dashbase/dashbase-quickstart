@@ -36,6 +36,7 @@ docker stack deploy -c docker-stack-core.yml dashbase-core
 5. Create a table in the Dashbase with 1 partition, 1 replica, and smaller heap size for testing. This command outputs a docker-stack-quickstart.yml that we will use to deploy our table stack.
 
 ```
+docker pull dashbase/create_table
 docker run -v $PWD:/output dashbase/create_table quickstart -p 1 -r 1 --heap-opts "-Xmx4g -Xms2g -XX:NewSize=2g"
 ```
 
@@ -49,7 +50,7 @@ docker stack deploy -c docker-stack-quickstart.yml quickstart
 docker service ls
 ```
 
-Expected output should be similar to below with all REPLICAS as x/x:
+Expected output should be similar to below with all REPLICAS as x/x (except `dashbase-core_grafana_restart_dashbase_app` which is expected to stay as 0/1):
 ```
 ID                  NAME                                         MODE                REPLICAS            IMAGE                                      PORTS
 qtd2ph6mj87a        dashbase-core_api                            replicated          1/1                 dashbase/api:latest                       *:9876->9876/tcp
@@ -119,7 +120,7 @@ If you already have an EC2 instance on AWS that you want to deploy Dashbase onto
 docker swarm init
 ```
 
-**IMPORTANT** the CloudFormation template automatically creates instances with a spread across all available AZs. This could incure Amazon's data-transfer charges. Depending on requirements, you can configure the Auto Scale Group created by the CloudFormation to only create instances in a specific AZ and terminate instances that are not within that AZ. If redundancy or cross-AZ fault tolerance is necessary, then please consult with [on-demand Amazon pricing](https://aws.amazon.com/ec2/pricing/on-demand/) to calculate the cost for data-transfer. 
+**IMPORTANT** the CloudFormation template automatically creates instances with a spread across all available AZs. This could incure Amazon's data-transfer charges. Depending on requirements, you can configure the Auto Scale Group created by the CloudFormation to only create instances in a specific AZ and terminate instances that are not within that AZ. If redundancy or cross-AZ fault tolerance is necessary, then please consult with [on-demand Amazon pricing](https://aws.amazon.com/ec2/pricing/on-demand/) to calculate the cost for data-transfer.
 
 2. Clone this repository to your local machine.
 ```
@@ -140,10 +141,11 @@ For inquiries, please reference their documentation.
 
 4. Create a table with 1 partition, 1 replica, and an automatically attached EBS volume. We will use defaults for all other settings.
 ```
+docker pull dashbase/create_table
 docker run -v $PWD:/output dashbase/create_table quickstart -p 1 -r 1 --ebs-volume 1500
 ```
 
-*Note that this command outputs a yaml file that describes the table stack, with each service mapping directly to a Dashbase partition. The stack is not automatically deployed, but we will do so in the next steps. Since the script uses a Docker image, if SSH tunneling is set up, it may result in the output being produced to the remote instance. The EBS volume(s) are also automatically created by the REX-ray Docker plugin, with a recommended size of 1500 GiB due to the fact that Amazon throttles throughput for HDDs (st1) type which could affect Dashbase's performance. 
+*Note that this command outputs a yaml file that describes the table stack, with each service mapping directly to a Dashbase partition. The stack is not automatically deployed, but we will do so in the next steps. Since the script uses a Docker image, if SSH tunneling is set up, it may result in the output being produced to the remote instance. The EBS volume(s) are also automatically created by the REX-ray Docker plugin, with a recommended size of 1500 GiB due to the fact that Amazon throttles throughput for HDDs (st1) type which could affect Dashbase's performance.
 
 5. Configure your local Docker to use the remote Docker daemon running on the swarm cluster manager.
 
@@ -190,7 +192,7 @@ docker stack deploy -c docker-stack-quickstart.yml quickstart
 docker service ls
 ```
 
-Expected output should be similar to below with all REPLICAS as x/x:
+Expected output should be similar to below with all REPLICAS as x/x (except `dashbase-core_grafana_restart_dashbase_app` which is expected to stay as 0/1):
 ```
 ID                  NAME                                         MODE                REPLICAS            IMAGE                                      PORTS
 qtd2ph6mj87a        dashbase-core_api                            replicated          1/1                 dashbase/api:latest                       *:9876->9876/tcp
@@ -204,3 +206,22 @@ If you created a swarm cluster using Docker for AWS, then it set up an ELB for a
 If you deployed to the existing EC2 instance (without using Docker for AWS), then you can use the public IP/hostname of the instance running the core stack to access the web.
 
 You can access to Dashbase Web page via https://{{ ELB DNS OR PUBLIC IP/HOSTNAME OF CORE }}:8080/.
+
+
+# Scaling
+
+How-to for scaling Dashbase and Kafka
+
+### Increase Kafka Topic Partitions
+
+1. SSH into the dashbase-core host machine that has the dashbase-core_kafka service
+
+2. Get the container and SSH into the container
+```
+docker ps | grep dashbase-core_kafka
+docker exec -it <CONTAINER_ID> sh
+```
+3. Run the topics alter script command to increase number of partitions
+```
+./opt/kafka_2.12-0.11.0.1/bin/kafka-topics.sh --zookeeper zookeeper:2181 --topic {{ TOPIC }} --alter --partitions {{ NUMBER OF PARTITIONS }}
+```
