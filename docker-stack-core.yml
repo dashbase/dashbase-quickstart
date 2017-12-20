@@ -43,7 +43,6 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LOG_DIRS: /dashbase/kafka
       KAFKA_LOG_RETENTION_HOURS: 24
-      JMX_PORT: 9999
       # Change the following to external IP/host to make kafka accessible outside of swarm
       KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_ADVERTISED_PORT: 9094
