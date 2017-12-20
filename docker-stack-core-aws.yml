@@ -12,10 +12,6 @@ services:
     deploy:
       placement:
        constraints: [node.labels.core == true]
-  warg:
-    deploy:
-      placement:
-       constraints: [node.labels.core == true]
   api:
     deploy:
       placement:
