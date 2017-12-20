@@ -152,7 +152,7 @@ export DOCKER_HOST=localhost:2374
 6. Install the REX-ray volume plugin onto the swarm cluster. This command only needs to be ran once if completed with swarm-exec as Docker will automatically re-run on new nodes that join the cluster.
 ```
 # If you used Docker for AWS
-swarm-exec $(cat rexray_cmd)
+ssh -i {{ PATH/TO/SSH/KEY }} -o StrictHostKeyChecking=no docker@{{ Manager node's IP address }} swarm-exec $(cat rexray_cmd)
 
 # If you are using existing EC2 instances, please run this command for every worker node
 ssh -i {{ PATH/TO/SSH/KEY }} {{ EC2 INSTANCE }} "$(cat rexray_cmd)"
