@@ -36,6 +36,7 @@ docker stack deploy -c docker-stack-core.yml dashbase-core
 5. Create a table in the Dashbase with 1 partition, 1 replica, and smaller heap size for testing. This command outputs a docker-stack-quickstart.yml that we will use to deploy our table stack.
 
 ```
+docker pull dashbase/create_table
 docker run -v $PWD:/output dashbase/create_table quickstart -p 1 -r 1 --heap-opts "-Xmx4g -Xms2g -XX:NewSize=2g"
 ```
 
@@ -119,7 +120,7 @@ If you already have an EC2 instance on AWS that you want to deploy Dashbase onto
 docker swarm init
 ```
 
-**IMPORTANT** the CloudFormation template automatically creates instances with a spread across all available AZs. This could incure Amazon's data-transfer charges. Depending on requirements, you can configure the Auto Scale Group created by the CloudFormation to only create instances in a specific AZ and terminate instances that are not within that AZ. If redundancy or cross-AZ fault tolerance is necessary, then please consult with [on-demand Amazon pricing](https://aws.amazon.com/ec2/pricing/on-demand/) to calculate the cost for data-transfer. 
+**IMPORTANT** the CloudFormation template automatically creates instances with a spread across all available AZs. This could incure Amazon's data-transfer charges. Depending on requirements, you can configure the Auto Scale Group created by the CloudFormation to only create instances in a specific AZ and terminate instances that are not within that AZ. If redundancy or cross-AZ fault tolerance is necessary, then please consult with [on-demand Amazon pricing](https://aws.amazon.com/ec2/pricing/on-demand/) to calculate the cost for data-transfer.
 
 2. Clone this repository to your local machine.
 ```
@@ -140,10 +141,11 @@ For inquiries, please reference their documentation.
 
 4. Create a table with 1 partition, 1 replica, and an automatically attached EBS volume. We will use defaults for all other settings.
 ```
+docker pull dashbase/create_table
 docker run -v $PWD:/output dashbase/create_table quickstart -p 1 -r 1 --ebs-volume 1500
 ```
 
-*Note that this command outputs a yaml file that describes the table stack, with each service mapping directly to a Dashbase partition. The stack is not automatically deployed, but we will do so in the next steps. Since the script uses a Docker image, if SSH tunneling is set up, it may result in the output being produced to the remote instance. The EBS volume(s) are also automatically created by the REX-ray Docker plugin, with a recommended size of 1500 GiB due to the fact that Amazon throttles throughput for HDDs (st1) type which could affect Dashbase's performance. 
+*Note that this command outputs a yaml file that describes the table stack, with each service mapping directly to a Dashbase partition. The stack is not automatically deployed, but we will do so in the next steps. Since the script uses a Docker image, if SSH tunneling is set up, it may result in the output being produced to the remote instance. The EBS volume(s) are also automatically created by the REX-ray Docker plugin, with a recommended size of 1500 GiB due to the fact that Amazon throttles throughput for HDDs (st1) type which could affect Dashbase's performance.
 
 5. Configure your local Docker to use the remote Docker daemon running on the swarm cluster manager.
 
@@ -223,5 +225,3 @@ docker exec -it <CONTAINER_ID> sh
 ```
 ./opt/kafka_2.12-0.11.0.1/bin/kafka-topics.sh --zookeeper zookeeper:2181 --topic {{ TOPIC }} --alter --partitions {{ NUMBER OF PARTITIONS }}
 ```
-
-
