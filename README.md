@@ -49,7 +49,7 @@ docker stack deploy -c docker-stack-quickstart.yml quickstart
 docker service ls
 ```
 
-Expected output should be similar to below with all REPLICAS as x/x:
+Expected output should be similar to below with all REPLICAS as x/x (except `dashbase-core_grafana_restart_dashbase_app` which is expected to stay as 0/1):
 ```
 ID                  NAME                                         MODE                REPLICAS            IMAGE                                      PORTS
 qtd2ph6mj87a        dashbase-core_api                            replicated          1/1                 dashbase/api:latest                       *:9876->9876/tcp
@@ -190,7 +190,7 @@ docker stack deploy -c docker-stack-quickstart.yml quickstart
 docker service ls
 ```
 
-Expected output should be similar to below with all REPLICAS as x/x:
+Expected output should be similar to below with all REPLICAS as x/x (except `dashbase-core_grafana_restart_dashbase_app` which is expected to stay as 0/1):
 ```
 ID                  NAME                                         MODE                REPLICAS            IMAGE                                      PORTS
 qtd2ph6mj87a        dashbase-core_api                            replicated          1/1                 dashbase/api:latest                       *:9876->9876/tcp
@@ -204,3 +204,24 @@ If you created a swarm cluster using Docker for AWS, then it set up an ELB for a
 If you deployed to the existing EC2 instance (without using Docker for AWS), then you can use the public IP/hostname of the instance running the core stack to access the web.
 
 You can access to Dashbase Web page via https://{{ ELB DNS OR PUBLIC IP/HOSTNAME OF CORE }}:8080/.
+
+
+# Scaling
+
+How-to for scaling Dashbase and Kafka
+
+### Increase Kafka Topic Partitions
+
+1. SSH into the dashbase-core host machine that has the dashbase-core_kafka service
+
+2. Get the container and SSH into the container
+```
+docker ps | grep dashbase-core_kafka
+docker exec -it <CONTAINER_ID> sh
+```
+3. Run the topics alter script command to increase number of partitions
+```
+./opt/kafka_2.12-0.11.0.1/bin/kafka-topics.sh --zookeeper zookeeper:2181 --topic {{ TOPIC }} --alter --partitions {{ NUMBER OF PARTITIONS }}
+```
+
+
