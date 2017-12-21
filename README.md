@@ -339,6 +339,10 @@ cd /app/logs/
 less ...
 ```
 
+### Service fails to start with error "failed to allocate gateway (x.x.x.x): Address already in use"
+
+This error happens when the `dashbase_backend` network was not deleted properly when the previous core stack was removed. To fix, you can ssh to each worker node, run `docker network ls` to check if it has `dashbase_backend` network, and if it has, delete the network by `docker network rm dashbase_backend`. You can then re-deploy the core stack.
+
 ### SSH to worker nodes in the swarm cluster created by Docker for AWS
 
 Docker for AWS deploys worker nodes with a security group which only allows access within the nodes in the cluster. Therefore, in order to ssh to a worker node, you either need to ssh to a manager node with the ssh agent (e.g., `ssh -A -i {{ KEY }} docker@{{ MANAGER NODE's PUBLIC IP}}`) and then ssh to a worker node via its private IP, or modify the security group of worker nodes to accept port 22 from outside.
