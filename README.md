@@ -107,7 +107,7 @@ This section has reference to Docker swarm mode [node](https://docs.docker.com/e
 
 1. Create a swarm cluster on AWS
 
-To create a swarm on new EC2 instance(s), in a new VPC, Docker provides [a CloudFormation template just for you](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=Docker&templateURL=https://editions-us-east-1.s3.amazonaws.com/aws/stable/Docker.tmpl). 
+To create a swarm on new EC2 instance(s), in a new VPC, Docker provides [a CloudFormation template just for you](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=Docker&templateURL=https://editions-us-east-1.s3.amazonaws.com/aws/stable/Docker.tmpl).
 
 Docker provides a variety of [other CloudFormation templates](https://docs.docker.com/docker-for-aws/#quickstart) that allow you to bring an existing VPC, or use a newer version of Docker. We recommend using the stable build.
 
@@ -218,18 +218,109 @@ You can access to Dashbase Web page via https://{{ ELB DNS OR PUBLIC IP/HOSTNAME
 
 # Scaling
 
-How-to for scaling Dashbase and Kafka
+How-to for scaling Dashbase and Kafka.
 
 ### Increase Kafka Topic Partitions
 
-1. SSH into the dashbase-core host machine that has the dashbase-core_kafka service
+1. SSH into the dashbase-core host machine that has the dashbase-core_kafka service.
 
-2. Get the container and SSH into the container
+2. Get the container and SSH into the container.
 ```
 docker ps | grep dashbase-core_kafka
 docker exec -it <CONTAINER_ID> sh
 ```
-3. Run the topics alter script command to increase number of partitions
+3. Run the topics alter script command to increase number of partitions.
 ```
 ./opt/kafka_2.12-0.11.0.1/bin/kafka-topics.sh --zookeeper zookeeper:2181 --topic {{ TOPIC }} --alter --partitions {{ NUMBER OF PARTITIONS }}
+```
+
+# Shutting Down
+
+Procedure for shutdown and cleanup.
+
+### Shutting down a stack
+1. Get the list of stacks.
+```
+docker stack ls
+```
+
+2. Remove desired stack using name reference. *Note that this does not remove the EBS volumes created by REX-ray nor the Docker volumes for logs. View the next section to do so.
+```
+docker stack rm {{ STACK NAME }}
+# Rerun this command as necessary until output displays:
+Nothing found in stack: {{ STACK NAME }}
+```
+Stack dependencies, e.g. `networks` or `secrets` may not be removed if other stacks are using them. Other errors during stack remove can be ignored.
+
+
+### Cleaning up volumes after shutting down a stack; this will remove all persistent data
+1. Remove REX-ray created EBS volumes by going to the AWS Web Console -> `EC2` -> `Volumes` on the left-hand column -> Select and remove all volumes tagged with REX-ray in `State: Available` filter.
+
+2. SSH to each worker node and run Docker's volume prune command
+```
+ssh -i {{ PATH/TO/SSH/KEY }} docker@{{ EC2 INSTANCE IP }}
+docker volume prune
+```
+Expected output:
+```
+Welcome to Docker!
+~ $ docker volume prune
+WARNING! This will remove all volumes not used by at least one container.
+Are you sure you want to continue? [y/N] y
+Deleted Volumes:
+...
+Total reclaimed space: X
+```
+
+### Cleaning up an instance completely
+1. SSH to the instance.
+```
+ssh -i {{ PATH/TO/SSH/KEY }} docker@{{ EC2 INSTANCE IP }}
+```
+
+2. Run Docker provided prune commands to remove all stopped containers and unused volumes.
+```
+docker system prune
+docker volume prune
+```
+
+# Troubleshooting
+
+Tips on how to troubleshoot various encountered problems.
+
+### Core or table(s) services show 0/1 or x/y replicas or services are x/x but do not seem to be running properly.
+
+*Note that if all core is healthy, you can use Dashbase to diagnose issues with table partitions. Search over the `_logs` or `_metrics` to do so.
+
+
+1. Run service ps with no truncate to see if the Docker service failed to initialize due to a Docker or AWS related issue.
+```
+docker service ps {{ SERVICE NAME }} --no-trunc
+```
+This will output information on the state of the service, or any errors during the service initiation process. Address the issues and redeploy the stack.
+```
+docker stack deploy -c {{ STACK YAML }} {{ STACK NAME }}
+```
+
+2. If there are no results or the error is `task: non-zero exit (1)` or if the status is ready, check the logs for any obvious errors or exceptions:
+```
+docker service logs {{ SERVICE NAME }}
+```
+This will output the latest snippet of stdout and stderr of the internal service by default. If the output is blank, please revisit the first step as the service did not start. Check the [Docker](https://docs.docker.com/engine/reference/commandline/service_logs/#options) documentation for additional options.
+
+3. Manually get the logs (usually not necessary); requires SSH to the host instance the service is running on:
+```
+# If you have trouble finding the IP address of the instance the service is running on, you can get the node hostname the service is running on using the following step, then filter with the AWS EC2 Web Console for the actual instance.
+docker service ps {{ SERVICE NAME }}
+
+# SSH to the remote host instance.
+ssh -i {{ PATH/TO/SSH/KEY }} docker@{{ EC2 INSTANCE IP }}
+
+# Run docker ps to get the container ID then ssh into the container.
+docker ps | grep {{ SERVICE NAME }}
+docker exec -it {{ CONTAINER ID }} sh
+
+# Check the logs in /app/logs for Dashbase services
+cd /app/logs/
+less ...
 ```
