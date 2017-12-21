@@ -10,7 +10,7 @@ metricbeat.modules:
     service: warg
 
 output.kafka:
-  hosts: ['dashbase-core_monitor_kafka:9092']
+  hosts: ['monitor_kafka:9092']
   topic: _metrics
 
   ssl:
