@@ -28,6 +28,11 @@ services:
     deploy:
       placement:
        constraints: [node.labels.core == true]
+  grafana_restart_dashbase_app:
+    deploy:
+      placement:
+       constraints: [node.labels.core == true]
+
 
 ##### The following services are to monitor the above services #####
   monitor_zookeeper:
