@@ -170,11 +170,17 @@ If you are using an existing EC2 instance, you can set up SSH tunneling to the D
 
 7. Choose a worker node to be the designated core stack node.
 ```
+# list all nodes in the swarm
 docker node ls
+
+# add a label to one of the worker nodes. (Choose a node that does not say "Leader")
 docker node update --label-add core=true {{ NODE ID }}
+
 # get and save the IP address of the instance for accessing Dashbase Web UI
 docker node inspect {{ NODE ID }} | grep Hostname
+
 # take the hostname and go to AWS Console to get the public IP of the host instance if necessary.
+# it is useful to edit the name of the ec2 instance in the AWS console to mark that this is the swarm worker running Dashbase's core deployment components (everything that is not a worker dedicated to a partition).
 ```
 
 *Note that you can label worker nodes with the specific table name that it should run, e.g. `docker node update --label-add name=quickstart {{ NODE ID }}` to help Docker Swarm speed up the process of allocating the table's partitions (stack services). However, nodes should not have conflicting labels, such as the worker nodes being labled with `core=true`, as that could cause Docker to run the Dashbase core services on instances that should only be dedicated to Dashbase partitions/replicas.
