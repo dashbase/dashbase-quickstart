@@ -1,9 +1,6 @@
 version: '3.4'
 
 networks:
-  frontend:
-    driver: overlay
-    attachable: true
   dashbase_backend:
     external: true
 
@@ -73,7 +70,6 @@ services:
       - zookeeper
       - zipkin
     networks:
-      - frontend
       - dashbase_backend
     configs:
       - source: api_config
@@ -108,7 +104,7 @@ services:
       - api
       - zipkin
     networks:
-      - frontend
+      - dashbase_backend
     configs:
       - source: web_config
         target: /app/config.yml
@@ -186,7 +182,6 @@ services:
     ports:
       - "9411:9411"
     networks:
-      - frontend
       - dashbase_backend
     volumes:
       - logs:/app/logs:rw
@@ -202,7 +197,7 @@ services:
     depends_on:
       - api
     networks:
-      - frontend
+      - dashbase_backend
     secrets:
       - source: dashbase_cert_pem
         target: /app/cert.pem
@@ -227,7 +222,7 @@ services:
   grafana_restart_dashbase_app:
     image: byrnedo/alpine-curl
     networks:
-      - frontend
+      - dashbase_backend
     configs:
       - grafana_restart_app_sh
     entrypoint: /bin/sh /grafana_restart_app_sh
