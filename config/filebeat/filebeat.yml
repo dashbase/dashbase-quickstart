@@ -22,17 +22,6 @@ filebeat.prospectors:
   multiline.match: after
 
 - type: log
-  paths: [/app/logs/warg*.log]
-  exclude_files: ['[0-9-]+.log$']
-  fields:
-    service: warg
-    log_type: logback
-    log_pattern: "%-5p [%d{ISO8601}] %c: %m%n"
-  multiline.pattern: '^[^A-Z]|^$'
-  multiline.negate: false
-  multiline.match: after
-
-- type: log
   paths: [/app/logs/dashbase-api.log]
   fields:
     service: api
@@ -53,49 +42,21 @@ filebeat.prospectors:
   multiline.match: after
 
 - type: log
-  paths: [/app/logs/dashbase-table.log]
+  paths: [/app/logs/*-warg.log]
   fields:
-    service: table
+    service: warg
     log_type: logback
     log_pattern: "%-5p [%d{ISO8601}] %c: %m%n"
-    table_name: table
-    partition: "0"
   multiline.pattern: '^[^A-Z]|^$'
   multiline.negate: false
   multiline.match: after
 
 - type: log
-  paths: [/app/logs/_logs-logs.log]
+  paths: [/app/logs/*-table.log]
   fields:
     service: table
     log_type: logback
     log_pattern: "%-5p [%d{ISO8601}] %c: %m%n"
-    table_name: _logs
-    partition: "0"
-  multiline.pattern: '^[^A-Z]|^$'
-  multiline.negate: false
-  multiline.match: after
-
-- type: log
-  paths: [/app/logs/_metrics-logs.log]
-  fields:
-    service: table
-    log_type: logback
-    log_pattern: "%-5p [%d{ISO8601}] %c: %m%n"
-    table_name: _metrics
-    partition: "0"
-  multiline.pattern: '^[^A-Z]|^$'
-  multiline.negate: false
-  multiline.match: after
-
-- type: log
-  paths: [/app/logs/_traces-logs.log]
-  fields:
-    service: table
-    log_type: logback
-    log_pattern: "%-5p [%d{ISO8601}] %c: %m%n"
-    table_name: _traces
-    partition: "0"
   multiline.pattern: '^[^A-Z]|^$'
   multiline.negate: false
   multiline.match: after

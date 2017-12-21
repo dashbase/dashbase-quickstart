@@ -65,9 +65,10 @@ logging:
   level: INFO
   appenders:
       - type: file
-        currentLogFilename: /app/logs/${TABLE_NAME}-logs.log
+        currentLogFilename: /app/logs/${TABLE_NAME}-0-table.log
         archive: true
-        archivedLogFilenamePattern: /app/logs/${TABLE_NAME}-logs-%d.log
-        archivedFileCount: 9
+        archivedLogFilenamePattern: /app/logs/${TABLE_NAME}-0-table-%d-%i.log.gz
+        archivedFileCount: 5
+        maxFileSize: 100MB
         timeZone: UTC
       - type: console

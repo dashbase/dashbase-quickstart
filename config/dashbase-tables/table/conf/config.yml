@@ -55,9 +55,10 @@ logging:
   level: INFO
   appenders:
       - type: file
-        currentLogFilename: /app/logs/dashbase-table.log
+        currentLogFilename: /app/logs/${TABLE_NAME}-${DASHBASE_PARTITION}-table.log
         archive: true
-        archivedLogFilenamePattern: /app/logs/dashbase-table-%d.log
-        archivedFileCount: 9
+        archivedLogFilenamePattern: /app/logs/${TABLE_NAME}-${DASHBASE_PARTITION}-table-%d-%i.log.gz
+        archivedFileCount: 5
+        maxFileSize: 100MB
         timeZone: UTC
       - type: console

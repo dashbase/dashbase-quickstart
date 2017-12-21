@@ -4,16 +4,15 @@ networks:
   frontend:
     driver: overlay
     attachable: true
-  backend:
-    driver: overlay
-    attachable: true
+  dashbase_backend:
+    external: true
 
 services:
   zookeeper:
     image: zookeeper
     # hostname: zoo1
     networks:
-      - backend
+      - dashbase_backend
     ports:
       - "2181:2181"
     # environment:
@@ -25,9 +24,10 @@ services:
     depends_on:
       - zookeeper
     networks:
-      - backend
+      - dashbase_backend
     secrets:
-      - keystore
+      - source: dashbase_keystore
+        target: keystore
     volumes:
       - kafka_data:/dashbase/kafka
       - kafka_logs:/opt/kafka/logs
@@ -52,12 +52,13 @@ services:
     depends_on:
       - kafka
     networks:
-      - backend
+      - dashbase_backend
     configs:
       - source: proxy_config
         target: /app/config.yml
     secrets:
-      - keystore
+      - source: dashbase_keystore
+        target: keystore
     ports:
       - "9200:9200"
     command: ["server", "/app/config.yml"]
@@ -73,14 +74,15 @@ services:
       - zipkin
     networks:
       - frontend
-      - backend
+      - dashbase_backend
     configs:
       - source: api_config
         target: /app/config.yml
       - source: dashbase-license
         target: /app/dashbase-license.yml
     secrets:
-      - keystore
+      - source: dashbase_keystore
+        target: keystore
     ports:
       - "9876:9876"
     command: ["server", "/app/config.yml"]
@@ -111,7 +113,8 @@ services:
       - source: web_config
         target: /app/config.yml
     secrets:
-      - keystore
+      - source: dashbase_keystore
+        target: keystore
     ports:
       - "8080:8080"
     command: ["server", "/app/config.yml"]
@@ -168,7 +171,8 @@ services:
     depends_on:
       - kafka
     secrets:
-      - keystore
+      - source: dashbase_keystore
+        target: keystore
     env_file:
       - env
     environment:
@@ -183,7 +187,7 @@ services:
       - "9411:9411"
     networks:
       - frontend
-      - backend
+      - dashbase_backend
     volumes:
       - logs:/app/logs:rw
 #    healthcheck:
@@ -200,9 +204,9 @@ services:
     networks:
       - frontend
     secrets:
-      - source: cert_pem
+      - source: dashbase_cert_pem
         target: /app/cert.pem
-      - source: key_pem
+      - source: dashbase_key_pem
         target: /app/key.pem
     ports:
       - "3000:3000"
@@ -232,20 +236,21 @@ services:
   monitor_zookeeper:
     image: zookeeper
     networks:
-      - backend
+      - dashbase_backend
     ports:
       - 2181
 
   monitor_kafka:
     image: wurstmeister/kafka:0.11.0.1
     networks:
-      - backend
+      - dashbase_backend
     ports:
       - 9092
     volumes:
       - monitor_kafka_data:/opt/kafka/data
     secrets:
-      - keystore
+      - source: dashbase_keystore
+        target: keystore
     env_file:
       - env
     environment:
@@ -268,14 +273,17 @@ services:
       - source: monitor_filebeat_config
         target: /usr/share/filebeat/filebeat.yml
     networks:
-      - backend
+      - dashbase_backend
     volumes:
       - logs:/app/logs
       - kafka_logs:/app/kafka/logs
     secrets:
-      - ca_cert_pem
-      - client_cert_pem
-      - client_key_pem
+      - source: dashbase_ca_cert_pem
+        target: ca_cert_pem
+      - source: dashbase_client_cert_pem
+        target: client_cert_pem
+      - source: dashbase_client_key_pem
+        target: client_key_pem
     deploy:
       mode: global
 
@@ -286,11 +294,14 @@ services:
       - source: monitor_metricbeat_singleton_config
         target: /usr/share/metricbeat/metricbeat.yml
     networks:
-      - backend
+      - dashbase_backend
     secrets:
-      - ca_cert_pem
-      - client_cert_pem
-      - client_key_pem
+      - source: dashbase_ca_cert_pem
+        target: ca_cert_pem
+      - source: dashbase_client_cert_pem
+        target: client_cert_pem
+      - source: dashbase_client_key_pem
+        target: client_key_pem
 
   # global (= per host) metricbeat
   #monitor_metricbeat_global:
@@ -320,10 +331,11 @@ services:
       - source: monitor_warg_config
         target: /app/config.yml
     secrets:
-      - keystore
+      - source: dashbase_keystore
+        target: keystore
     command: ["server", "/app/config.yml"]
     networks:
-      - backend
+      - dashbase_backend
     env_file:
       - env
 
@@ -333,12 +345,13 @@ services:
       - source: monitor_table_config
         target: /app/config.yml
     secrets:
-      - keystore
+      - source: dashbase_keystore
+        target: keystore
     ports:
       - "8888"
       - "8988"
     networks:
-      - backend
+      - dashbase_backend
     volumes:
       - logs:/app/logs:rw
       - monitor_index:/dashbase/index:rw
@@ -361,12 +374,13 @@ services:
       - source: monitor_table_config
         target: /app/config.yml
     secrets:
-      - keystore
+      - source: dashbase_keystore
+        target: keystore
     ports:
       - "10888"
       - "10988"
     networks:
-      - backend
+      - dashbase_backend
     volumes:
       - logs:/app/logs:rw
       - monitor_index:/dashbase/index:rw
@@ -389,12 +403,13 @@ services:
       - source: monitor_table_config
         target: /app/config.yml
     secrets:
-      - keystore
+      - source: dashbase_keystore
+        target: keystore
     ports:
       - "11888"
       - "11988"
     networks:
-      - backend
+      - dashbase_backend
     volumes:
       - logs:/app/logs:rw
       - monitor_index:/dashbase/index:rw
@@ -418,6 +433,7 @@ volumes:
   monitor_kafka_data:
   kafka_logs:
   logs:
+    name: logs
 
 configs:
   table_config:
@@ -461,15 +477,15 @@ configs:
     file: config/grafana/restart_dashbase_app.sh
 
 secrets:
-  cert_pem:
-    file: ./cert.pem
-  key_pem:
-    file: ./key.pem
-  keystore:
-    file: ./keystore
-  ca_cert_pem:
-    file: ./ca-cert.pem
-  client_cert_pem:
-    file: ./client-cert.pem
-  client_key_pem:
-    file: ./client-key.pem
+  dashbase_cert_pem:
+    external: true
+  dashbase_key_pem:
+    external: true
+  dashbase_keystore:
+    external: true
+  dashbase_ca_cert_pem:
+    external: true
+  dashbase_client_cert_pem:
+    external: true
+  dashbase_client_key_pem:
+    external: true

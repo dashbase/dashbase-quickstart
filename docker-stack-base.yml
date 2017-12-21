@@ -1,0 +1,32 @@
+# This stack needs to be deployed as `dashbase`
+# $ docker stack deploy -c docker-stack-base.yml dashbase
+
+version: '3.4'
+
+services:
+  # We need at least one service for docker stack deploy to work.
+  dummy:
+    image: alpine
+    deploy:
+      replicas: 0
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: overlay
+    attachable: true
+
+secrets:
+  cert_pem:
+    file: ./cert.pem
+  key_pem:
+    file: ./key.pem
+  keystore:
+    file: ./keystore
+  ca_cert_pem:
+    file: ./ca-cert.pem
+  client_cert_pem:
+    file: ./client-cert.pem
+  client_key_pem:
+    file: ./client-key.pem

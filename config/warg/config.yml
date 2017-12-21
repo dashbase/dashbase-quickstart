@@ -21,9 +21,9 @@ logging:
   level: INFO
   appenders:
       - type: file
-        currentLogFilename: /app/logs/warg.log
+        currentLogFilename: /app/logs/${KAFKA_TOPIC}-warg.log
         archive: true
-        archivedLogFilenamePattern: /app/logs/warg-%d-%i.log.gz
+        archivedLogFilenamePattern: /app/logs/${KAFKA_TOPIC}-warg-%d-%i.log.gz
         archivedFileCount: 9
         timeZone: UTC
         maxFileSize: 100MB
