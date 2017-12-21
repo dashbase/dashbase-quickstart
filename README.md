@@ -107,7 +107,7 @@ This section has reference to Docker swarm mode [node](https://docs.docker.com/e
 
 1. Create a swarm cluster on AWS
 
-To create a swarm on new EC2 instance(s), in a new VPC, Docker provides [a CloudFormation template just for you](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=Docker&templateURL=https://editions-us-east-1.s3.amazonaws.com/aws/stable/Docker.tmpl). 
+To create a swarm on new EC2 instance(s), in a new VPC, Docker provides [a CloudFormation template just for you](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=Docker&templateURL=https://editions-us-east-1.s3.amazonaws.com/aws/stable/Docker.tmpl).
 
 Docker provides a variety of [other CloudFormation templates](https://docs.docker.com/docker-for-aws/#quickstart) that allow you to bring an existing VPC, or use a newer version of Docker. We recommend using the stable build.
 
@@ -288,7 +288,10 @@ docker volume prune
 
 Tips on how to troubleshoot various encountered problems.
 
-### Core or table(s) services show 0/1 or x/y replicas
+### Core or table(s) services show 0/1 or x/y replicas or services are x/x but do not seem to be running properly.
+
+*Note that if all core is healthy, you can use Dashbase to diagnose issues with table partitions. Search over the `_logs` or `_metrics` to do so.
+
 
 1. Run service ps with no truncate to see if the Docker service failed to initialize due to a Docker or AWS related issue.
 ```
@@ -321,5 +324,3 @@ docker exec -it {{ CONTAINER ID }} sh
 cd /app/logs/
 less ...
 ```
-
-
