@@ -27,30 +27,35 @@ docker swarm init
 # Answer `y` for all prompts if any. Ignore requirement of AWS credentials.
 ```
 
-4. Deploy the core stack first. This stack includes Dashbase Web, API service, and all internal metrics & monitoring as well as Kafka and ZooKeepers.
+4. Deploy the base stack first. This stack deploys a network called `dashbase_backend`, and also deploys a few secret files. This base stack needs to be deployed as `dashbase`.
 ```
-docker stack deploy -c docker-stack-core.yml dashbase-core
+docker stack deploy -c docker-stack-base.yml dashbase
+```
+
+5. Deploy the core stack, which includes Dashbase Web, API service, and all internal metrics & monitoring as well as Kafka and ZooKeepers.
+```
+docker stack deploy -c docker-stack-core.yml {{ STACK NAME e.g., dashbase-core }}
 ```
 *Note: At this point Dashbase is running and you can find the UI on the default port: 8080 of the machine. (On a Mac, it's localhost:8080, and you'll have to click past the security warnings.) You'll be able to click on Cluster Overview and see multiple internal tables (their names prepended with an underscore) that are collecting system metrics.
 
-5. Create a table in the Dashbase with 1 partition, 1 replica, and smaller heap size for testing. This command outputs a docker-stack-quickstart.yml that we will use to deploy our table stack.
+6. Create a table in the Dashbase with 1 partition, 1 replica, and smaller heap size for testing. This command outputs a docker-stack-quickstart.yml that we will use to deploy our table stack.
 
 ```
 docker pull dashbase/create_table
 docker run -v $PWD:/output dashbase/create_table quickstart -p 1 -r 1 --heap-opts "-Xmx4g -Xms2g -XX:NewSize=2g"
 ```
 
-6. Deploy the table stack
+7. Deploy the table stack
 ```
 docker stack deploy -c docker-stack-quickstart.yml quickstart
 ```
 
-7. Wait a few moments, then ensure all services are up and running.
+8. Wait a few moments, then ensure all services are up and running.
 ```
 docker service ls
 ```
 
-Expected output should be similar to below with all REPLICAS as x/x (except `dashbase-core_grafana_restart_dashbase_app` which is expected to stay as 0/1):
+Expected output should be similar to below with all REPLICAS as x/x:
 ```
 ID                  NAME                                         MODE                REPLICAS            IMAGE                                      PORTS
 qtd2ph6mj87a        dashbase-core_api                            replicated          1/1                 dashbase/api:latest                       *:9876->9876/tcp
@@ -185,17 +190,26 @@ docker node inspect {{ NODE ID }} | grep Hostname
 
 *Note that you can label worker nodes with the specific table name that it should run, e.g. `docker node update --label-add name=quickstart {{ NODE ID }}` to help Docker Swarm speed up the process of allocating the table's partitions (stack services). However, nodes should not have conflicting labels, such as the worker nodes being labled with `core=true`, as that could cause Docker to run the Dashbase core services on instances that should only be dedicated to Dashbase partitions/replicas.
 
-8. Compile the core stack yaml with `docker-compose`and deploy it.
+8. Deploy the base stack as `dashbase`.
 ```
-docker-compose -f docker-stack-core.yml -f docker-stack-core-aws.yml config | docker stack deploy -c - dashbase-core
-```
-
-9. Deploy the table stack you generated earlier.
-```
-docker stack deploy -c docker-stack-quickstart.yml quickstart
+docker stack deploy -c docker-stack-base.yml dashbase
 ```
 
-10. Wait a few moments, then ensure all services are up and running.
+9. Compile the core stack yaml with `docker-compose`and deploy it.
+```
+docker-compose -f docker-stack-core.yml -f docker-stack-core-aws.yml config | docker stack deploy -c - {{ STACK NAME e.g., dashbase-core }}
+```
+
+*Note: The name of the core stack must be unique within the EC2 region that you're deploying onto. If there is another core stack with the same name in the same EC2 region, the deploy of `kafka` service will fail.
+
+10. Deploy the table stack you generated earlier.
+```
+docker stack deploy -c docker-stack-quickstart.yml {{ STACK NAME e.g., quickstart }}
+```
+
+*Note: Again, the name of the stack must be unique within the EC2 region that you're deploying onto.
+
+11. Wait a few moments, then ensure all services are up and running.
 ```
 docker service ls
 ```
@@ -290,7 +304,7 @@ Tips on how to troubleshoot various encountered problems.
 
 ### Core or table(s) services show 0/1 or x/y replicas or services are x/x but do not seem to be running properly.
 
-*Note that if all core is healthy, you can use Dashbase to diagnose issues with table partitions. Search over the `_logs` or `_metrics` to do so.
+*Note that if all core is healthy, you can use Dashbase to diagnose issues with table partitions. Search over the `_logs` table to do so.
 
 
 1. Run service ps with no truncate to see if the Docker service failed to initialize due to a Docker or AWS related issue.
@@ -324,3 +338,7 @@ docker exec -it {{ CONTAINER ID }} sh
 cd /app/logs/
 less ...
 ```
+
+### SSH to worker nodes in the swarm cluster created by Docker for AWS
+
+Docker for AWS deploys worker nodes with a security group which only allows access within the nodes in the cluster. Therefore, in order to ssh to a worker node, you either need to ssh to a manager node with the ssh agent (e.g., `ssh -A -i {{ KEY }} docker@{{ MANAGER NODE's PUBLIC IP}}`) and then ssh to a worker node via its private IP, or modify the security group of worker nodes to accept port 22 from outside.
