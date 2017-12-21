@@ -107,7 +107,9 @@ This section has reference to Docker swarm mode [node](https://docs.docker.com/e
 
 1. Create a swarm cluster on AWS
 
-If you want to create a new EC2 instance on AWS, you can use the CloudFormation template(s) provided [by Docker](https://docs.docker.com/docker-for-aws/#quickstart) to set up a Swarm cluster on AWS.
+To create a swarm on new EC2 instance(s), in a new VPC, Docker provides [a CloudFormation template just for you](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=Docker&templateURL=https://editions-us-east-1.s3.amazonaws.com/aws/stable/Docker.tmpl). 
+
+Docker provides a variety of [other CloudFormation templates](https://docs.docker.com/docker-for-aws/#quickstart) that allow you to bring an existing VPC, or use a newer version of Docker. We recommend using the stable build.
 
 Depending on the desired number of Dashbase partitions and replicas per, please add enough worker nodes for each partition or replica to have its own instance. Add an additional worker to your total count for the Dashbase core stack.
 
