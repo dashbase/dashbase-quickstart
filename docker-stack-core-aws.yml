@@ -87,6 +87,6 @@ volumes:
   monitor_index:
     driver: rexray/ebs
     driver_opts:
-      volumetype: "gp2"
+      volumetype: "st1"
       size: 500
       encrypted: "true"
