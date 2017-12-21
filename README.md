@@ -151,11 +151,11 @@ docker run -v $PWD:/output dashbase/create_table quickstart -p 1 -r 1 --ebs-volu
 
 5. Configure your local Docker to use the remote Docker daemon running on the swarm cluster manager.
 
-If you used Docker for AWS, please follow [these instructions](https://docs.docker.com/docker-for-aws/deploy/#manager-nodes) to set up SSH tunneling and set the DOCKER_HOST environmental variable. Here is the example from the instructions:
 ```
 ssh -i {{ PATH/TO/SSH/KEY }} -o StrictHostKeyChecking=no -fNL localhost:2374:/var/run/docker.sock docker@{{ MANAGER NODE IP ADDRESS }}
 export DOCKER_HOST=localhost:2374
 ```
+More info can be found in [Docker docs](https://docs.docker.com/docker-for-aws/deploy/#manager-nodes).
 
 6. Install the REX-ray volume plugin onto the swarm cluster. This command only needs to be ran once if completed with swarm-exec as Docker will automatically re-run on new nodes that join the cluster.
 ```
