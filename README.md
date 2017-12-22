@@ -254,7 +254,7 @@ docker exec -it <CONTAINER_ID> sh
 
 1. Increase the number of worker nodes to match desired number of partitions or replicas. To do so, instead of going to the CloudFormation Stack, we recommend increasing the desired count in the Auto Scaling Group to retain your subnet configurations (if any). From the AWS Web Console -> `EC2` -> `Auto Scaling Groups` on the left-hand column -> Select {{ CFSTACK }}-NodeAsg -> `Action` -> `Edit` -> Increase `Desired` value. Wait for the instance to fully join the cluster.
 
-2. Run the `create_table` tool with desired specifications. *Note that the name must be the same as an existing table if desire is to scale the table.
+2. Run the `create_table` tool with desired specifications. *Note that the name must be the same as an existing table if desire is to scale the table. **IMPORTANT** Kafka partitions must exist for your topic when specifying the `--kafka-partitions` option, otherwise Dashbase will not ingest properly.
 ```
 docker run -v $PWD:/output dashbase/create_table {{ NAME }} {{ OPTION(S) }}
 ```
