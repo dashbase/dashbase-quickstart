@@ -61,6 +61,7 @@ ID                  NAME                                         MODE           
 qtd2ph6mj87a        dashbase-core_api                            replicated          1/1                 dashbase/api:latest                       *:9876->9876/tcp
 ...
 ```
+Check the [Troubleshooting](https://github.com/dashbase/dashbase-quickstart#troubleshooting) section if the output is not as expected.
 
 *Note: On the same Cluster Overview UI noted above, you will now see the new table that you just created, ingesting no data.
 
@@ -220,6 +221,7 @@ ID                  NAME                                         MODE           
 qtd2ph6mj87a        dashbase-core_api                            replicated          1/1                 dashbase/api:latest                       *:9876->9876/tcp
 ...
 ```
+Check the [Troubleshooting](https://github.com/dashbase/dashbase-quickstart#troubleshooting) section if the output is not as expected.
 
 ### How to access
 
@@ -246,6 +248,30 @@ docker exec -it <CONTAINER_ID> sh
 3. Run the topics alter script command to increase number of partitions.
 ```
 ./opt/kafka_2.12-0.11.0.1/bin/kafka-topics.sh --zookeeper zookeeper:2181 --topic {{ TOPIC }} --alter --partitions {{ NUMBER OF PARTITIONS }}
+```
+
+### Increase number of table partitions or replicas
+
+1. Increase the number of worker nodes to match desired number of partitions or replicas. To do so, instead of going to the CloudFormation Stack, we recommend increasing the desired count in the Auto Scaling Group to retain your subnet configurations (if any). From the AWS Web Console -> `EC2` -> `Auto Scaling Groups` on the left-hand column -> Select {{ CFSTACK }}-NodeAsg -> `Action` -> `Edit` -> Increase `Desired` value. Wait for the instance to fully join the cluster.
+
+2. Run the `create_table` tool with desired specifications. *Note that the name must be the same as an existing table if desire is to scale the table.
+```
+docker run -v $PWD:/output dashbase/create_table {{ NAME }} {{ OPTION(S) }}
+```
+
+3. SSH tunnel to the manager. Reference Step 5 of [Instructions](https://github.com/dashbase/dashbase-quickstart#instructions-1) on how to do so. Then ensure that the newly created nodes are live. You can also tag the nodes at this point as desired.
+```
+docker node ls
+```
+
+4. Re-deploy the table stack, with extra option of pruning non-existing services.
+```
+docker stack deploy -c docker-stack-{{ NAME }}.yml {{ EXISTING STACK NAME }} --prune 
+```
+
+5. Verify that new services deployed successfully.
+```
+docker service ls
 ```
 
 # Shutting Down
