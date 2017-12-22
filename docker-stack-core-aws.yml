@@ -77,6 +77,12 @@ services:
         constraints: [node.labels.core == true]
 
 volumes:
+  zookeeper_data:
+    driver: rexray/ebs
+    driver_opts:
+      volumetype: "gp2"
+      size: 10
+      encrypted: "true"
   kafka_data:
     driver: rexray/ebs
     driver_opts:

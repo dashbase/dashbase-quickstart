@@ -12,6 +12,9 @@ services:
       - dashbase_backend
     ports:
       - "2181:2181"
+    volumes:
+      - zookeeper_data:/data
+      - zookeeper_datalog:/datalog
     # environment:
     #   ZOO_MY_ID: 1
     #   ZOO_SERVERS: server.1=zoo1:2888:3888
@@ -427,6 +430,8 @@ volumes:
   monitor_index:
   monitor_kafka_data:
   kafka_logs:
+  zookeeper_data:
+  zookeeper_datalog:
   logs:
     name: logs
 
