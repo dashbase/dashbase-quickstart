@@ -311,7 +311,7 @@ Tips on how to troubleshoot various encountered problems.
 ```
 docker service ps {{ SERVICE NAME }} --no-trunc
 ```
-This will output information on the state of the service, or any errors during the service initiation process. Address the issues and redeploy the stack.
+This will output information on the state of the service, or any errors during the service initiation process. Address the issues and re-deploy the stack.
 ```
 docker stack deploy -c {{ STACK YAML }} {{ STACK NAME }}
 ```
@@ -346,3 +346,9 @@ This error happens when the `dashbase_backend` network was not deleted properly 
 ### SSH to worker nodes in the swarm cluster created by Docker for AWS
 
 Docker for AWS deploys worker nodes with a security group which only allows access within the nodes in the cluster. Therefore, in order to ssh to a worker node, you either need to ssh to a manager node with the ssh agent (e.g., `ssh -A -i {{ KEY }} docker@{{ MANAGER NODE's PUBLIC IP}}`) and then ssh to a worker node via its private IP, or modify the security group of worker nodes to accept port 22 from outside.
+
+### Changing tag to use `nightly`
+
+The `latest` tag is the equivalent to the latest released version of Dashbase. To use the `nightly` tag, change all services in `docker-stack-core.yml` that have the `latest` tag to `nightly` and re-deploy the stack.
+
+To change table tag, you can either specify the `--tag nightly` option when running the `create_table` tool, or you can manually change the tags within your stack yaml from `latest` to `nightly`.
