@@ -34,7 +34,6 @@ services:
       placement:
         constraints:
         - node.labels.core != true
-        - node.role == worker
     entrypoint: /usr/bin/python
     environment:
       HOSTS: tasks.quickstart_p0
@@ -59,7 +58,6 @@ services:
       placement:
         constraints:
         - node.labels.core != true
-        - node.role == worker
     environment:
       HOST: quickstart_warg
     image: docker.elastic.co/beats/metricbeat:6.0.0
@@ -81,7 +79,6 @@ services:
       placement:
         constraints:
         - node.labels.core != true
-        - node.role == worker
         preferences:
         - spread: node.labels.quickstart
       replicas: 1
