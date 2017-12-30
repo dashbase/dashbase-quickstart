@@ -13,6 +13,7 @@ dashbase:
     type: file
     params:
       file: /data/nginx_sample.json
+      numReplications: 1000000
 
   cluster:
     url: zk://${ZOOKEEPER_URL}/dashbase/docker/${TABLE_NAME}
@@ -23,7 +24,7 @@ dashbase:
     maxBufferDelayInSec: 90
 
   retention:
-    numDays: 7
+    numDays: .01
 
   parser:
     type: json
