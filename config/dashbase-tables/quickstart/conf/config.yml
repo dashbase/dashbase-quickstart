@@ -27,6 +27,26 @@ dashbase:
 
   parser:
     type: json
+    params:
+      pattern:
+        timeFormat: now
+        schema:
+          - name: host
+            type: meta
+          - name: request
+            type: text
+          - name: response
+            type: meta
+          - name: bytesSent
+            type: int
+          - name: error
+            type: meta
+          - name: msg
+            type: text
+          - name: level
+            type: meta
+          - name: agent
+            type: text
 
 
 server:
