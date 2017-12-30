@@ -10,7 +10,7 @@ server:
       port: 9201
 
 kafka:
-    hosts: kafka:9092
+    hosts: ${KAFKA_BROKER_URL}
     clientId: dashbase
     kafkaProps:
       security.protocol: SSL

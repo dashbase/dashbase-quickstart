@@ -12,7 +12,7 @@ dashbase:
   firehose:
       type: kafka_10
       params:
-        hosts: kafka:9092
+        hosts: ${KAFKA_BROKER_URL}
         groupId: ${KAFKA_GROUPID}
         topic: ${KAFKA_TOPIC}_avro
         partitions: "${KAFKA_PARTITIONS}"
