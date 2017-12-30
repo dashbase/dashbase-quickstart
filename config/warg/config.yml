@@ -1,6 +1,6 @@
 applicationId: warg-${KAFKA_TOPIC}
 
-kafkaBootstrapServers: kafka:9092
+kafkaBootstrapServers: ${KAFKA_BROKER_URL}
 
 kafkaProps:
   security.protocol: SSL
