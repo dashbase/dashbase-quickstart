@@ -10,19 +10,9 @@ dashbase:
   readerCacheSize: 10000
 
   firehose:
-      type: kafka_10
-      params:
-        hosts: kafka:9092
-        groupId: ${KAFKA_GROUPID}
-        topic: ${KAFKA_TOPIC}_avro
-        partitions: "${KAFKA_PARTITIONS}"
-        kafkaProps:
-          security.protocol: SSL
-          ssl.truststore.location: /run/secrets/keystore
-          ssl.truststore.password: ${KEYSTORE_PASSWORD}
-          ssl.keystore.location: /run/secrets/keystore
-          ssl.keystore.password: ${KEYSTORE_PASSWORD}
-          ssl.key.password: ${KEYSTORE_PASSWORD}
+    type: file
+    params:
+      file: /data/nginx_sample.json
 
   cluster:
     url: zk://${ZOOKEEPER_URL}/dashbase/docker/${TABLE_NAME}
@@ -36,7 +26,8 @@ dashbase:
     numDays: 7
 
   parser:
-    type: avro_native
+    type: json
+
 
 server:
   applicationConnectors:

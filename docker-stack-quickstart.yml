@@ -1,0 +1,117 @@
+configs:
+  metricbeat_prepare_hosts:
+    file: ./bin/metricbeat_prepare_hosts.py
+  metricbeat_table_config:
+    file: ./config/metricbeat/table.yml
+  metricbeat_warg_config:
+    file: ./config/metricbeat/warg.yml
+  table_config:
+    file: ./config/dashbase-tables/quickstart/conf/config.yml
+  warg_config:
+    file: ./config/warg/config.yml
+networks:
+  dashbase_backend:
+    external: true
+secrets:
+  dashbase_ca_cert_pem:
+    external: true
+  dashbase_client_cert_pem:
+    external: true
+  dashbase_client_key_pem:
+    external: true
+  dashbase_keystore:
+    external: true
+services:
+  metricbeat_table_p0:
+    command:
+    - /metricbeat_prepare_hosts.py
+    configs:
+    - source: metricbeat_table_config
+      target: /usr/share/metricbeat/metricbeat.yml
+    - source: metricbeat_prepare_hosts
+      target: /metricbeat_prepare_hosts.py
+    deploy:
+      placement:
+        constraints:
+        - node.labels.core != true
+        - node.role == worker
+    entrypoint: /usr/bin/python
+    environment:
+      HOSTS: tasks.quickstart_p0
+      NUM_REPRICAS: 1
+      PARTITION: 0
+      TABLE_NAME: quickstart
+    image: docker.elastic.co/beats/metricbeat:6.0.0
+    networks:
+    - dashbase_backend
+    secrets:
+    - source: dashbase_ca_cert_pem
+      target: ca_cert_pem
+    - source: dashbase_client_cert_pem
+      target: client_cert_pem
+    - source: dashbase_client_key_pem
+      target: client_key_pem
+  metricbeat_warg:
+    configs:
+    - source: metricbeat_warg_config
+      target: /usr/share/metricbeat/metricbeat.yml
+    deploy:
+      placement:
+        constraints:
+        - node.labels.core != true
+        - node.role == worker
+    environment:
+      HOST: quickstart_warg
+    image: docker.elastic.co/beats/metricbeat:6.0.0
+    networks:
+    - dashbase_backend
+    secrets:
+    - source: dashbase_ca_cert_pem
+      target: ca_cert_pem
+    - source: dashbase_client_cert_pem
+      target: client_cert_pem
+    - source: dashbase_client_key_pem
+      target: client_key_pem
+  quickstart_p0:
+    command: server /app/config.yml
+    configs:
+    - source: table_config
+      target: /app/config.yml
+    deploy:
+      placement:
+        constraints:
+        - node.labels.core != true
+        - node.role == worker
+        preferences:
+        - spread: node.labels.quickstart
+      replicas: 1
+    env_file:
+    - env
+    environment:
+      ADMINPORT: 7988
+      DASHBASE_PARTITION: 0
+      JAVA_OPTS: -Xmx8g -Xms4g -XX:NewSize=2g
+      PORT: 7888
+      TABLE_NAME: quickstart
+      ZIPKIN_URL: http://zipkin:9411/
+      ZOOKEEPER_URL: zookeeper:2181
+    image: dashbase/table:latest
+    networks:
+    - dashbase_backend
+    ports:
+    - '7888'
+    - mode: host
+      published: 12345
+      target: 12345
+    secrets:
+    - source: dashbase_keystore
+      target: keystore
+    volumes:
+    - ${PWD}/sample/nginx_sample.json:/data/nginx_sample.json
+    - logs:/app/logs:rw
+    - p0_index:/dashbase/index:rw
+version: '3.4'
+volumes:
+  logs:
+    external: true
+  p0_index: {}
