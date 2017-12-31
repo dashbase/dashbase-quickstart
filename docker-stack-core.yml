@@ -25,6 +25,8 @@ services:
       - zookeeper
     networks:
       - dashbase_backend
+    deploy:
+      replicas: 0
     secrets:
       - source: dashbase_keystore
         target: keystore
@@ -53,6 +55,8 @@ services:
       - kafka
     networks:
       - dashbase_backend
+    deploy:
+      replicas: 0
     configs:
       - source: proxy_config
         target: /app/config.yml
@@ -95,11 +99,6 @@ services:
       ZOOKEEPER_URL: zookeeper:2181
       JAVA_OPTS: -Xmx1g -Xms512m -XX:NewSize=512m
       ZIPKIN_URL: http://zipkin:9411/
-    # healthcheck:
-    #   test: ["CMD", "curl", "-f", "https://api:9976", "--insecure"]
-    #   interval: 3m
-    #   timeout: 20s
-    #   retries: 3
 
   web:
     image: dashbase/web:latest
@@ -128,11 +127,6 @@ services:
       API_HOST: api
       ZIPKIN_URL: http://zipkin:9411/
       JAVA_OPTS: -Xmx512m -Xms512m -XX:NewSize=512m
-    # healthcheck:
-    #   test: ["CMD", "curl", "-f", "https://web:8180", "--insecure"]
-    #   interval: 3m
-    #   timeout: 20s
-    #   retries: 3
 
   #alerts:
   #  image: dashbase/alerts:latest
@@ -159,11 +153,6 @@ services:
   #    API_PORT: 9876
   #    API_HOST: api
   #    JAVA_OPTS: "-Xmx512m -Xms256m -XX:NewSize=256m"
-    # healthcheck:
-    #   test: ["CMD", "curl", "-f", "https://web:8180", "--insecure"]
-    #   interval: 3m
-    #   timeout: 20s
-    #   retries: 3
 
   zipkin:
     image: dashbase/zipkin:1.0.0-SNAPSHOT
@@ -188,12 +177,6 @@ services:
       - dashbase_backend
     volumes:
       - logs:/app/logs:rw
-#    healthcheck:
-#      test: ["CMD", "curl", "-f", "http://zipkin:9411"]
-#      interval: 3m
-#      timeout: 20s
-#      retries: 3
-
 
   grafana:
     image: dashbase/grafana
