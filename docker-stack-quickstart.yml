@@ -3,12 +3,8 @@ configs:
     file: ./bin/metricbeat_prepare_hosts.py
   metricbeat_table_config:
     file: ./config/metricbeat/table.yml
-  metricbeat_warg_config:
-    file: ./config/metricbeat/warg.yml
   table_config:
     file: ./config/dashbase-tables/quickstart/conf/config.yml
-  warg_config:
-    file: ./config/warg/config.yml
 networks:
   dashbase_backend:
     external: true
