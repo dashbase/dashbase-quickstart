@@ -50,26 +50,6 @@ services:
       target: client_cert_pem
     - source: dashbase_client_key_pem
       target: client_key_pem
-  metricbeat_warg:
-    configs:
-    - source: metricbeat_warg_config
-      target: /usr/share/metricbeat/metricbeat.yml
-    deploy:
-      placement:
-        constraints:
-        - node.labels.core != true
-    environment:
-      HOST: quickstart_warg
-    image: docker.elastic.co/beats/metricbeat:6.0.0
-    networks:
-    - dashbase_backend
-    secrets:
-    - source: dashbase_ca_cert_pem
-      target: ca_cert_pem
-    - source: dashbase_client_cert_pem
-      target: client_cert_pem
-    - source: dashbase_client_key_pem
-      target: client_key_pem
   quickstart_p0:
     command: server /app/config.yml
     configs:
