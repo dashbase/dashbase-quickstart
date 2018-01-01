@@ -1,3 +1,7 @@
+### Welcome to Dashbase Quickstart
+
+Refer to the [Wiki](https://github.com/dashbase/dashbase-quickstart/wiki) to get started!
+
 # Deploy Dashbase onto AWS
 
 Use this guide to start Dashbase on AWS.
@@ -226,55 +230,6 @@ ssh -i {{ PATH/TO/SSH/KEY }} docker@{{ EC2 INSTANCE IP }}
 docker system prune
 docker volume prune
 ```
-
-# Troubleshooting
-
-Tips on how to troubleshoot various encountered problems.
-
-### Core or table(s) services show 0/1 or x/y replicas or services are x/x but do not seem to be running properly.
-
-*Note that if all core is healthy, you can use Dashbase to diagnose issues with table partitions. Search over the `_logs` table to do so.
-
-
-1. Run service ps with no truncate to see if the Docker service failed to initialize due to a Docker or AWS related issue.
-```
-docker service ps {{ SERVICE NAME }} --no-trunc
-```
-This will output information on the state of the service, or any errors during the service initiation process. Address the issues and re-deploy the stack.
-```
-docker stack deploy -c {{ STACK YAML }} {{ STACK NAME }}
-```
-
-2. If there are no results or the error is `task: non-zero exit (1)` or if the status is ready, check the logs for any obvious errors or exceptions:
-```
-docker service logs {{ SERVICE NAME }}
-```
-This will output the latest snippet of stdout and stderr of the internal service by default. If the output is blank, please revisit the first step as the service did not start. Check the [Docker](https://docs.docker.com/engine/reference/commandline/service_logs/#options) documentation for additional options.
-
-3. Manually get the logs (usually not necessary); requires SSH to the host instance the service is running on:
-```
-# If you have trouble finding the IP address of the instance the service is running on, you can get the node hostname the service is running on using the following step, then filter with the AWS EC2 Web Console for the actual instance.
-docker service ps {{ SERVICE NAME }}
-
-# SSH to the remote host instance.
-ssh -i {{ PATH/TO/SSH/KEY }} docker@{{ EC2 INSTANCE IP }}
-
-# Run docker ps to get the container ID then ssh into the container.
-docker ps | grep {{ SERVICE NAME }}
-docker exec -it {{ CONTAINER ID }} sh
-
-# Check the logs in /app/logs for Dashbase services
-cd /app/logs/
-less ...
-```
-
-### Service fails to start with error "failed to allocate gateway (x.x.x.x): Address already in use"
-
-This error happens when the `dashbase_backend` network was not deleted properly when the previous core stack was removed. To fix, you can ssh to each worker node, run `docker network ls` to check if it has `dashbase_backend` network, and if it has, delete the network by `docker network rm dashbase_backend`. You can then re-deploy the core stack.
-
-### SSH to worker nodes in the swarm cluster created by Docker for AWS
-
-Docker for AWS deploys worker nodes with a security group which only allows access within the nodes in the cluster. Therefore, in order to ssh to a worker node, you either need to ssh to a manager node with the ssh agent (e.g., `ssh -A -i {{ KEY }} docker@{{ MANAGER NODE's PUBLIC IP}}`) and then ssh to a worker node via its private IP, or modify the security group of worker nodes to accept port 22 from outside.
 
 ### Changing tag to use `nightly`
 
