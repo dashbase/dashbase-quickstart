@@ -1,100 +1,3 @@
-# Deploy Dashbase locally (onto your laptop or dev machine)
-
-Use this guide to start Dashbase locally and familiarize yourself with a few concepts.
-
-### Requirements
-
-- [Docker Engine 17.06.0+](https://www.docker.com/community-edition#/download)
-- Optionally [Docker Compose 1.17.0+](https://docs.docker.com/compose/install)
-- At least 10GB of memory available to the Docker Engine (For macOS, click the Docker icon in the menu bar. Choose Preferences -> Advanced. Then move the slider of the memory setting to 10 GB or above)
-
-### Instructions
-
-1. Clone this git repo.
-```
-git clone https://github.com/dashbase/dashbase-quickstart.git
-```
-
-2. Initialize a Docker Swarm (Note: if you have done this before, you don't need to run this again.)
-```
-docker swarm init
-```
-
-3. Run our prepare script to automatically download your license and configure SSL support for Dashbase.
-```
-# Execute the following from the dashbase-quickstart directory
-./bin/prepare.sh {{ YOUR REGISTERED DASHBASE.IO EMAIL }}
-# Answer `y` for all prompts if any. Ignore requirement of AWS credentials.
-```
-
-4. Deploy the base stack first. This stack deploys a network called `dashbase_backend`, and also deploys a few secret files. This base stack needs to be deployed as `dashbase`.
-```
-docker stack deploy -c docker-stack-base.yml dashbase
-```
-
-5. Deploy the core stack, which includes Dashbase Web, API service, and all internal metrics & monitoring as well as Kafka and ZooKeepers.
-```
-docker stack deploy -c docker-stack-core.yml {{ STACK NAME e.g., dashbase-core }}
-```
-*Note: At this point Dashbase is running and you can find the UI on the default port: 8080 of the machine. (On a Mac, it's localhost:8080, and you'll have to click past the security warnings.) You'll be able to click on Cluster Overview and see multiple internal tables (their names prepended with an underscore) that are collecting system metrics.
-
-6. Create a table in the Dashbase with 1 partition, 1 replica, and smaller heap size for testing. This command outputs a docker-stack-quickstart.yml that we will use to deploy our table stack.
-
-```
-docker pull dashbase/create_table
-docker run -v $PWD:/output dashbase/create_table quickstart -p 1 -r 1 --heap-opts "-Xmx4g -Xms2g -XX:NewSize=2g"
-```
-
-7. Deploy the table stack
-```
-docker stack deploy -c docker-stack-quickstart.yml quickstart
-```
-
-8. Wait a few moments, then ensure all services are up and running.
-```
-docker service ls
-```
-
-Expected output should be similar to below with all REPLICAS as x/x:
-```
-ID                  NAME                                         MODE                REPLICAS            IMAGE                                      PORTS
-qtd2ph6mj87a        dashbase-core_api                            replicated          1/1                 dashbase/api:latest                       *:9876->9876/tcp
-...
-```
-Check the [Troubleshooting](https://github.com/dashbase/dashbase-quickstart#troubleshooting) section if the output is not as expected.
-
-*Note: On the same Cluster Overview UI noted above, you will now see the new table that you just created, ingesting no data.
-
-Once all services are up, let's run a Filebeat locally to start putting in some data.
-
-1. [Get Filebeat](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-installation.html) if you don't have it already.
-
-2. Edit the `filebeat.yml` Elasticsearch output section, as such:
-
-*Note that your license was retrieved as part of the ./bin/prepare.sh script you executed earlier.
-
-```
-#-------------------------- Elasticsearch output ------------------------------
-
-setup.template.name: quickstart
-setup.template.pattern: quickstart
-output.elasticsearch:
-  # Array of hosts to connect to.
-
-  hosts: ["localhost:9200"]
-
-  index: "quickstart"
-
-  protocol: https
-  ssl.verification_mode: none
-
-  username: ${DASHBASE_EMAIL}
-  password: ${DASHBASE_LICENSE}
-```
-
-3. [Start Filebeat](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-starting.html) and then visit our Dashbase [Web Interface](https://localhost:8080) to begin searching your logs!
-
---------
 # Deploy Dashbase onto AWS
 
 Use this guide to start Dashbase on AWS.
@@ -266,7 +169,7 @@ docker node ls
 
 4. Re-deploy the table stack, with extra option of pruning non-existing services.
 ```
-docker stack deploy -c docker-stack-{{ NAME }}.yml {{ EXISTING STACK NAME }} --prune 
+docker stack deploy -c docker-stack-{{ NAME }}.yml {{ EXISTING STACK NAME }} --prune
 ```
 
 5. Verify that new services deployed successfully.
