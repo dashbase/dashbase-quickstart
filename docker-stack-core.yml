@@ -419,8 +419,6 @@ volumes:
     name: logs
 
 configs:
-  table_config:
-    file: ./config/dashbase-tables/table/conf/config.yml
   web_config:
     file: ./config/dashbase-web/conf/config.yml
   alerts_config:
