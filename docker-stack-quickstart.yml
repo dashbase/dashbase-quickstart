@@ -68,6 +68,9 @@ services:
       TABLE_NAME: quickstart
       ZIPKIN_URL: http://zipkin:9411/
       ZOOKEEPER_URL: zookeeper:2181
+      KAFKA_GROUPID: dashbase-{{.Task.Slot}}
+      KAFKA_PARTITIONS: 0
+      KAFKA_TOPIC: quickstart
     image: dashbase/table:latest
     networks:
     - dashbase_backend
