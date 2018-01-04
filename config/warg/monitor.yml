@@ -3,6 +3,7 @@ applicationId: warg-monitor
 kafkaBootstrapServers: monitor_kafka:9092
 
 kafkaProps:
+  compression.type: lz4
   security.protocol: SSL
   ssl.truststore.location: /run/secrets/keystore
   ssl.truststore.password: ${KEYSTORE_PASSWORD}
