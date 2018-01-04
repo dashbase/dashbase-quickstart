@@ -14,8 +14,8 @@ output.console:
   enabled: false
   pretty: true
 
-setup.template.name: "quickstart"
-setup.template.pattern: "quickstart"
+setup.template.name: quickstart
+setup.template.pattern: quickstart
 
 output.elasticsearch:
   hosts: ["proxy:9200"]
