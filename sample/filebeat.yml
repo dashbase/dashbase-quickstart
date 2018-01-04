@@ -18,7 +18,7 @@ setup.template.name: "quickstart"
 setup.template.pattern: "quickstart"
 
 output.elasticsearch:
-  hosts: ["localhost:9200"]
+  hosts: ["proxy:9200"]
   index: "quickstart"
 
   bulk_max_size: 0
