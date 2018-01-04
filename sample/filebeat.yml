@@ -1,0 +1,30 @@
+filebeat.prospectors:
+- paths:
+   - /data/*.json
+  input_type: log
+  json.keys_under_root: true
+  json.add_error_key: true
+
+queue.mem:
+  events: 4096
+  flush.min_events: 2048
+  flush.timeout: 5s
+
+output.console:
+  enabled: false
+  pretty: true
+
+setup.template.name: "quickstart"
+setup.template.pattern: "quickstart"
+
+output.elasticsearch:
+  hosts: ["proxy:9200"]
+  index: "quickstart"
+
+  bulk_max_size: 0
+
+  username: {{ YOUR EMAIL }}
+  password: {{ YOUR LICENSE }}
+
+  protocol: "https"
+  ssl.verification_mode: "none"

@@ -13,6 +13,7 @@ kafka:
     hosts: ${KAFKA_BROKER_URL}
     clientId: dashbase
     kafkaProps:
+      compression.type: lz4
       security.protocol: SSL
       ssl.truststore.location: /run/secrets/keystore
       ssl.truststore.password: ${KEYSTORE_PASSWORD}
@@ -23,7 +24,7 @@ kafka:
 # Specify the output format
 # 'raw': pass the raw input JSON
 # 'avro': parse the filebeat JSON into Avro DashbaseEvent and sends its binary
-outputFormat: raw
+outputFormat: avro
 
 logging:
   level: INFO

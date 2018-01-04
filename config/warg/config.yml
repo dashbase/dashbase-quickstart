@@ -3,6 +3,7 @@ applicationId: warg-${KAFKA_TOPIC}
 kafkaBootstrapServers: ${KAFKA_BROKER_URL}
 
 kafkaProps:
+  compression.type: lz4
   security.protocol: SSL
   ssl.truststore.location: /run/secrets/keystore
   ssl.truststore.password: ${KEYSTORE_PASSWORD}
