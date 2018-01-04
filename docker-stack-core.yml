@@ -20,7 +20,7 @@ services:
     #   ZOO_SERVERS: server.1=zoo1:2888:3888
 
   kafka:
-    image: wurstmeister/kafka:0.11.0.1
+    image: wurstmeister/kafka:1.0.0
     depends_on:
       - zookeeper
     networks:
@@ -48,28 +48,6 @@ services:
       # Change the following to external IP/host to make kafka accessible outside of swarm
       KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_ADVERTISED_PORT: 9094
-
-  proxy:
-    image: dashbase/proxy:latest
-    depends_on:
-      - kafka
-    networks:
-      - dashbase_backend
-    deploy:
-      replicas: 0
-    configs:
-      - source: proxy_config
-        target: /app/config.yml
-    secrets:
-      - source: dashbase_keystore
-        target: keystore
-    ports:
-      - "9200:9200"
-    command: ["server", "/app/config.yml"]
-    volumes:
-      - logs:/app/logs:rw
-    env_file:
-      - env
 
   api:
     image: dashbase/api:latest
@@ -222,7 +200,7 @@ services:
       - 2181
 
   monitor_kafka:
-    image: wurstmeister/kafka:0.11.0.1
+    image: wurstmeister/kafka:1.0.0
     networks:
       - dashbase_backend
     ports:
@@ -425,10 +403,6 @@ configs:
     file: ./config/dashbase-alerts/conf/config.yml
   api_config:
     file: ./config/dashbase-api/conf/config.yml
-  proxy_config:
-    file: ./config/proxy/config.yml
-  warg_config:
-    file: ./config/warg/config.yml
   dashbase-license:
     file: ./dashbase-license.yml
   monitor_filebeat_config:
