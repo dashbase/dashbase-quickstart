@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: outside-web
+  namespace: dashbase
+spec:
+  selector:
+    app: dashbase-web
+  ports:
+  - protocol: TCP
+    targetPort: 8080
+    port: 32400
+    nodePort: 32400
+  type: NodePort

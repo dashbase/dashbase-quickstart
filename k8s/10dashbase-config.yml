@@ -1,0 +1,137 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: dashbase-config
+  namespace: dashbase
+data:
+  table.yml: |-
+    dashbase:
+      baseDir: /index
+      readerCacheSize: 10000
+
+      firehose:
+        type: file
+        params:
+          file: /data/nginx_sample.json
+          numReplications: 100
+
+      cluster:
+        url: zk://${ZOOKEEPER_URL}/dashbase/docker/${TABLE_NAME}
+
+      indexer:
+        numIndexingThreads: 3
+        #maxNumConcurrentBuilding: 3
+        maxBufferDelayInSec: 30
+
+      retention:
+        numDays:
+
+      parser:
+        type: json
+        params:
+          pattern:
+            timeFormat: now
+            schema:
+              - name: host
+                type: meta
+              - name: request
+                type: text
+              - name: response
+                type: meta
+              - name: bytesSent
+                type: int
+              - name: error
+                type: meta
+              - name: msg
+                type: text
+              - name: level
+                type: meta
+              - name: agent
+                type: text
+
+
+    server:
+      applicationConnectors:
+        - type: http
+          port: ${PORT}
+      applicationContextPath: /
+      adminContextPath: /admin
+      adminConnectors:
+        - type: http
+          port: ${ADMINPORT}
+
+    logging:
+      level: INFO
+      appenders:
+          - type: file
+            currentLogFilename: /index/logs/${TABLE_NAME}-${DASHBASE_PARTITION}-table.log
+            archive: true
+            archivedLogFilenamePattern: /index/logs/${TABLE_NAME}-${DASHBASE_PARTITION}-table-%d-%i.log.gz
+            archivedFileCount: 5
+            maxFileSize: 100MB
+            timeZone: UTC
+          - type: console
+  api.yml: |-
+    cluster:
+      url: zk://${ZOOKEEPER_URL}/dashbase/docker
+
+    license: /config/dashbase-license.yml
+
+    server:
+      applicationConnectors:
+        - type: http
+          port: ${PORT}
+      applicationContextPath: /
+      adminContextPath: /admin
+      adminConnectors:
+          - type: http
+            port: ${ADMINPORT}
+    logging:
+      level: INFO
+      appenders:
+          - type: file
+            currentLogFilename: /app/logs/dashbase-api.log
+            archive: true
+            archivedLogFilenamePattern: /app/logs/dashbase-api-%d.log
+            archivedFileCount: 9
+            timeZone: UTC
+          - type: console
+
+  web.yml: |-
+    server:
+      applicationConnectors:
+        - type: http
+          port: ${PORT}
+      applicationContextPath: /
+      adminContextPath: /admin
+      adminConnectors:
+        - type: http
+          port: ${ADMINPORT}
+
+    website:
+      cdn: "https://cdn.domain.com"
+      domain: "https://www.domain.com"
+      name: "Dashbase Web"
+      renderings:
+        - table: "_logs"
+          kind: "log4j"
+
+    backend:
+      host: ${API_HOST}
+      port: ${API_PORT}
+
+    logging:
+      level: INFO
+      appenders:
+          - type: file
+            currentLogFilename: /app/logs/dashbase-web.log
+            archive: true
+            archivedLogFilenamePattern: /app/logs/dashbase-web-%d.log
+            archivedFileCount: 9
+            timeZone: UTC
+          - type: console
+
+
+  dashbase-license.yml: |-
+    user: {your_user_name}
+    license: {your_license}

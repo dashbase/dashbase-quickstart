@@ -1,0 +1,68 @@
+# a single dashbase table
+# We use zookeeper for service discovery so no need to define a service for table
+# We define a service here for ease of debugging.
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashbase-web
+  namespace: dashbase
+spec:
+  ports:
+    - port: 8080
+      name: table-port
+  selector:
+    app: dashbase-web
+  clusterIP: None
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: dashbase-web
+  namespace: dashbase
+spec:
+  serviceName: "quickstart-web"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: dashbase-web
+    spec:
+      imagePullSecrets:
+      - name: docker-image-secret
+      containers:
+      - name: quickstart-web
+        image: dashbase/web:latest
+        command: ['/dashbase-web-1.0.0-rc14/bin/dashbase-web', 'server', '/config/web.yml']
+        env:
+        - name: API_HOST
+          value: "dashbase-api.dashbase"
+        - name: API_PORT
+          value: "9876"
+        - name: PORT
+          value: "8080"
+        - name: ADMINPORT
+          value: "8180"
+        - name: JAVA_OPTS
+          value: "-Xmx512m -Xms512m -XX:NewSize=512m"
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: dashbase-config
+          mountPath: /config
+        - name: data
+          mountPath: /app
+      volumes:
+      - name: dashbase-config
+        configMap:
+          name: dashbase-config
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 4Gi
+
+
