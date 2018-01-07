@@ -23,8 +23,5 @@ output.elasticsearch:
 
   bulk_max_size: 0
 
-  username: {{ YOUR EMAIL }}
-  password: {{ YOUR LICENSE }}
-
   protocol: "https"
   ssl.verification_mode: "none"
