@@ -27,6 +27,8 @@ services:
       - dashbase_backend
     deploy:
       replicas: 0
+    ports:
+      - "9094:9094"
     secrets:
       - source: dashbase_keystore
         target: keystore
@@ -36,7 +38,7 @@ services:
     env_file:
       - env
     environment:
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:SSL,OUTSIDE:SSL
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:SSL,OUTSIDE:PLAINTEXT
       KAFKA_ADVERTISED_PROTOCOL_NAME: OUTSIDE
       KAFKA_PROTOCOL_NAME: INSIDE
       KAFKA_SSL_KEYSTORE_LOCATION: /run/secrets/keystore
@@ -46,7 +48,7 @@ services:
       KAFKA_LOG_DIRS: /dashbase/kafka
       KAFKA_LOG_RETENTION_HOURS: 24
       # Change the following to external IP/host to make kafka accessible outside of swarm
-      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ADVERTISED_HOST_NAME: localhost # this value needs to be the host machine's private IP address on AWS
       KAFKA_ADVERTISED_PORT: 9094
 
   api:
