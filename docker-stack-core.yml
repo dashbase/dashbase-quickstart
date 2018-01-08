@@ -27,8 +27,6 @@ services:
       - dashbase_backend
     deploy:
       replicas: 0
-    ports:
-      - "9094:9094"
     secrets:
       - source: dashbase_keystore
         target: keystore
