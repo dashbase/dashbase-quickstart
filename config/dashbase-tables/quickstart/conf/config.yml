@@ -21,7 +21,7 @@ dashbase:
   indexer:
     numIndexingThreads: 3
     #maxNumConcurrentBuilding: 3
-    maxBufferDelayInSec: 10
+    maxBufferDelayInSec: 90
 
   retention:
     numDays: .01
