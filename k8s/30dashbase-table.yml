@@ -29,7 +29,7 @@ spec:
       - name: docker-image-secret
       containers:
       - name: dashbase-table-nginx
-        image: dashbase/table:latest
+        image: dashbase/table:1.0.0-rc14
         command: ['/dashbase-table-1.0.0-rc14/bin/dashbase-table', 'server', '/config/table.yml']
         env:
         - name: ZOOKEEPER_URL

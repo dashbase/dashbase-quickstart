@@ -32,7 +32,7 @@ spec:
       - name: docker-image-secret
       containers:
       - name: quickstart-web
-        image: dashbase/web:latest
+        image: dashbase/web:1.0.0-rc14
         command: ['/dashbase-web-1.0.0-rc14/bin/dashbase-web', 'server', '/config/web.yml']
         env:
         - name: API_HOST

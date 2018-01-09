@@ -33,7 +33,7 @@ spec:
       - name: docker-image-secret
       containers:
       - name: quickstart-api
-        image: dashbase/api:latest
+        image: dashbase/api:1.0.0-rc14
         command: ['/dashbase-api-1.0.0-rc14/bin/dashbase-api', 'server', '/config/api.yml']
         env:
         - name: ZOOKEEPER_URL
