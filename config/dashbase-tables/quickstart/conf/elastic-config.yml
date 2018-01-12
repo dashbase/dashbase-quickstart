@@ -17,6 +17,7 @@ dashbase:
       topic: ${KAFKA_TOPIC}
       partitions: "${KAFKA_PARTITIONS}"
       kafkaProps:
+        compression.type: lz4
         security.protocol: SSL
         ssl.truststore.location: /run/secrets/keystore
         ssl.truststore.password: ${KEYSTORE_PASSWORD}
@@ -29,12 +30,12 @@ dashbase:
     url: zk://${ZOOKEEPER_URL}/dashbase/docker/${TABLE_NAME}
 
   indexer:
-    numIndexingThreads: 3
+    numIndexingThreads: ${NUM_INDEXING_THREADS:-3}
     #maxNumConcurrentBuilding: 3
-    maxBufferDelayInSec: 10
+    maxBufferDelayInSec: ${MAX_BUFFER_DELAY_SEC:-10}
 
   retention:
-    numDays: .01
+    numDays: ${RETENTION_NUM_DAYS:-1}
 
   parser:
     type: avro_native
