@@ -1,0 +1,41 @@
+version: '3.4'
+networks:
+  dashbase_backend:
+    external: true
+secrets:
+  dashbase_keystore:
+    external: true
+services:
+  kafka:
+    image: wurstmeister/kafka:1.0.0
+    depends_on:
+      - zookeeper
+    networks:
+      - dashbase_backend
+    deploy:
+      replicas: 1
+    secrets:
+      - source: dashbase_keystore
+        target: keystore
+    volumes:
+      - kafka_data:/dashbase/kafka
+      - kafka_logs:/opt/kafka/logs
+    env_file:
+      - env
+    environment:
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:SSL,OUTSIDE:PLAINTEXT
+      KAFKA_ADVERTISED_PROTOCOL_NAME: OUTSIDE
+      KAFKA_PROTOCOL_NAME: INSIDE
+      KAFKA_SSL_KEYSTORE_LOCATION: /run/secrets/keystore
+      KAFKA_SSL_TRUSTSTORE_LOCATION: /run/secrets/keystore
+      KAFKA_SSL_CLIENT_AUTH: required
+      KAFKA_HEAP_OPTS: -Xmx4G -Xms4G
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LOG_DIRS: /dashbase/kafka
+      KAFKA_LOG_RETENTION_HOURS: 24
+      # Change the following to external IP/host to make kafka accessible outside of swarm
+      KAFKA_ADVERTISED_HOST_NAME: kafka # this value can be the host machine's private IP address on AWS for access from outside of docker network
+      KAFKA_ADVERTISED_PORT: 9094
+volumes:
+  kafka_data:
+  kafka_logs:
