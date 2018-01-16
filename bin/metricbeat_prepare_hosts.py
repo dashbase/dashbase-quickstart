@@ -15,7 +15,7 @@ hosts = os.environ['HOSTS']
 
 ips = []
 
-while len(ips) < int(os.environ['NUM_REPRICAS']):
+while len(ips) < int(os.environ['NUM_REPLICAS']):
     sys.stderr.write("not enough replicas found. will wait for a while and try again.\n")
     time.sleep(10)
     ips = socket.gethostbyname_ex(hosts)[2]
