@@ -76,36 +76,8 @@ services:
       ZIPKIN_URL: http://zipkin:9411/
       JAVA_OPTS: -Xmx512m -Xms512m -XX:NewSize=512m
 
-  #alerts:
-  #  image: dashbase/alerts:latest
-  #  depends_on:
-  #    - api
-  #  networks:
-  #    - backend
-  #  configs:
-  #    - source: alerts_config
-  #      target: /app/config.yml
-  #  secrets:
-  #    - source: keystore
-  #      target: /app/keystore
-  #  ports:
-  #    - "9898:9898"
-  #  command: ["server", "/app/config.yml"]
-  #  volumes:
-  #    - logs:/app/logs:rw
-  #  env_file:
-  #    - env
-  #  environment:
-  #    PORT: 9898
-  #    ADMINPORT: 9998
-  #    API_PORT: 9876
-  #    API_HOST: api
-  #    JAVA_OPTS: "-Xmx512m -Xms256m -XX:NewSize=256m"
-
   zipkin:
     image: dashbase/zipkin:1.0.0-SNAPSHOT
-    depends_on:
-      - kafka
     secrets:
       - source: dashbase_keystore
         target: keystore
