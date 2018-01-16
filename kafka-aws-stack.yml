@@ -1,5 +1,12 @@
 version: '3.4'
 services:
+  kafka_zookeeper:
+    deploy:
+      placement:
+        constraints:
+          - node.labels.core == true
+      preferences:
+          - spread: node.labels.kafka
   kafka:
     deploy:
       placement:
@@ -8,9 +15,15 @@ services:
         preferences:
           - spread: node.labels.kafka
 volumes:
+  kafka_zookeeper_data:
+    driver: rexray/ebs
+    driver_opts:
+      volumetype: "gp2"
+      size: 30
+      encrypted: "true"
   kafka_data:
     driver: rexray/ebs
     driver_opts:
       volumetype: "st1"
-      size: 500
+      size: 1500
       encrypted: "true"

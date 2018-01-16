@@ -6,6 +6,19 @@ secrets:
   dashbase_keystore:
     external: true
 services:
+  kafka_zookeeper:
+    image: zookeeper
+    # hostname: zoo1
+    networks:
+      - dashbase_backend
+    ports:
+      - "2181"
+    volumes:
+      - kafka_zookeeper_data:/data
+      - kafka_zookeeper_datalog:/datalog
+    # environment:
+    #   ZOO_MY_ID: 1
+    #   ZOO_SERVERS: server.1=zoo1:2888:3888
   kafka:
     image: wurstmeister/kafka:1.0.0
     depends_on:
@@ -30,7 +43,7 @@ services:
       KAFKA_SSL_TRUSTSTORE_LOCATION: /run/secrets/keystore
       KAFKA_SSL_CLIENT_AUTH: required
       KAFKA_HEAP_OPTS: -Xmx4G -Xms4G
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ZOOKEEPER_CONNECT: kafka_zookeeper:2181
       KAFKA_LOG_DIRS: /dashbase/kafka
       KAFKA_LOG_RETENTION_HOURS: 24
       # Change the following to external IP/host to make kafka accessible outside of swarm
@@ -39,3 +52,5 @@ services:
 volumes:
   kafka_data:
   kafka_logs:
+  kafka_zookeeper_data:
+  kafka_zookeeper_datalog:
