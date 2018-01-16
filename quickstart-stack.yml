@@ -33,7 +33,7 @@ services:
     entrypoint: /usr/bin/python
     environment:
       HOSTS: tasks.quickstart_p0
-      NUM_REPRICAS: 1
+      NUM_REPLICAS: 1
       PARTITION: 0
       TABLE_NAME: quickstart
     image: docker.elastic.co/beats/metricbeat:6.0.0
