@@ -4,14 +4,6 @@ services:
     deploy:
       placement:
         constraints: [node.labels.core == true]
-  kafka:
-    deploy:
-      placement:
-        constraints: [node.labels.core == true]
-  proxy:
-    deploy:
-      placement:
-       constraints: [node.labels.core == true]
   api:
     deploy:
       placement:
@@ -32,7 +24,6 @@ services:
     deploy:
       placement:
        constraints: [node.labels.core == true]
-
 
 ##### The following services are to monitor the above services #####
   monitor_zookeeper:
@@ -82,12 +73,6 @@ volumes:
     driver_opts:
       volumetype: "gp2"
       size: 30
-      encrypted: "true"
-  kafka_data:
-    driver: rexray/ebs
-    driver_opts:
-      volumetype: "st1"
-      size: 500
       encrypted: "true"
   monitor_kafka_data:
     driver: rexray/ebs

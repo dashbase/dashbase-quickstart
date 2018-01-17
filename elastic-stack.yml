@@ -1,3 +1,4 @@
+version: '3.4'
 configs:
   proxy_config:
     file: ./config/proxy/config.yml
@@ -16,8 +17,6 @@ secrets:
 services:
   proxy:
     image: dashbase/proxy:latest
-    depends_on:
-      - kafka
     networks:
       - dashbase_backend
     deploy:
@@ -35,7 +34,6 @@ services:
       - logs:/app/logs:rw
     env_file:
       - env
-version: '3.4'
 volumes:
   logs:
     external: true
