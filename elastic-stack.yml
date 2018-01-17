@@ -17,8 +17,6 @@ secrets:
 services:
   proxy:
     image: dashbase/proxy:latest
-    depends_on:
-      - kafka
     networks:
       - dashbase_backend
     deploy:

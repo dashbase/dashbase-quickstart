@@ -5,7 +5,7 @@ services:
       placement:
         constraints:
           - node.labels.core == true
-      preferences:
+        preferences:
           - spread: node.labels.kafka
   kafka:
     deploy:
