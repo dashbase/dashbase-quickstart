@@ -1,0 +1,93 @@
+version: '3.4'
+services:
+  zookeeper:
+    deploy:
+      placement:
+        constraints: [node.labels.core == true]
+    volumes:
+      - type: bind
+        source: /data/dashbase/zookeeper_data
+        target: /data
+  kafka:
+    deploy:
+      placement:
+        constraints: [node.labels.core == true]
+    volumes:
+      - type: bind
+        source: /data/dashbase/kafka_data
+        target: /dashbase/kafka
+  proxy:
+    deploy:
+      placement:
+       constraints: [node.labels.core == true]
+  api:
+    deploy:
+      placement:
+       constraints: [node.labels.core == true]
+  web:
+    deploy:
+      placement:
+       constraints: [node.labels.core == true]
+  zipkin:
+    deploy:
+      placement:
+        constraints: [node.labels.core == true]
+  grafana:
+    deploy:
+      placement:
+       constraints: [node.labels.core == true]
+  grafana_restart_dashbase_app:
+    deploy:
+      placement:
+       constraints: [node.labels.core == true]
+
+
+##### The following services are to monitor the above services #####
+  monitor_zookeeper:
+    deploy:
+      placement:
+        constraints: [node.labels.core == true]
+  monitor_kafka:
+    deploy:
+      placement:
+        constraints: [node.labels.core == true]
+    volumes:
+      - type: bind
+        source: /data/dashbase/monitor_kafka_data
+        target: /opt/kafka/data
+  monitor_filebeat:
+    deploy:
+      mode: global
+      placement:
+        constraints: [node.role == worker]
+  # a single metricbeat for a cluster
+  monitor_metricbeat_singleton:
+    deploy:
+      placement:
+        constraints: [node.labels.core == true]
+  # global (= per host) metricbeat
+  # monitor_metricbeat_global:
+  #  deploy:
+  #    mode: global
+  #    placement:
+  #      constraints: [node.role == worker]
+  monitor_warg:
+    deploy:
+      placement:
+        constraints: [node.labels.core == true]
+  monitor_logs:
+    deploy:
+      placement:
+        constraints: [node.labels.core == true]
+    volumes:
+      - type: bind
+        source: /data/dashbase/monitor_index
+        target: /dashbase/index
+  monitor_metrics:
+    deploy:
+      placement:
+        constraints: [node.labels.core == true]
+  monitor_traces:
+    deploy:
+      placement:
+        constraints: [node.labels.core == true]
