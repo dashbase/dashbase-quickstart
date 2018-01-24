@@ -2,9 +2,6 @@ server:
   applicationConnectors:
     - type: http
       port: 9200
-      keyStorePath: /run/secrets/keystore
-      keyStorePassword: ${KEYSTORE_PASSWORD}
-      validateCerts: false
   adminConnectors:
     - type: http
       port: 9201
