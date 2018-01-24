@@ -26,5 +26,5 @@ output.elasticsearch:
   username: {{ YOUR EMAIL }}
   password: {{ YOUR LICENSE }}
 
-  protocol: "https"
+  protocol: "http"
   ssl.verification_mode: "none"
