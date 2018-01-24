@@ -9,15 +9,11 @@ cluster:
   url: zk://${ZOOKEEPER_URL}/dashbase/docker
 
 license: /app/dashbase-license.yml
-https: true
 
 server:
   applicationConnectors:
-    - type: https
+    - type: http
       port: ${PORT}
-      keyStorePath: /run/secrets/keystore
-      keyStorePassword: ${KEYSTORE_PASSWORD}
-      validateCerts: false
   applicationContextPath: /
   adminContextPath: /admin
   adminConnectors:

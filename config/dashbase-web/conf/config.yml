@@ -7,11 +7,8 @@ zipkinFactory:
 
 server:
   applicationConnectors:
-    - type: https
+    - type: http
       port: ${PORT}
-      keyStorePath: /run/secrets/keystore
-      keyStorePassword: ${KEYSTORE_PASSWORD}
-      validateCerts: false
   applicationContextPath: /
   adminContextPath: /admin
   adminConnectors:
@@ -19,8 +16,8 @@ server:
       port: ${ADMINPORT}
 
 website:
-  cdn: "https://cdn.domain.com"
-  domain: "https://www.domain.com"
+  cdn: "http://cdn.domain.com"
+  domain: "http://www.domain.com"
   name: "Dashbase Web"
   renderings:
     - table: "_logs"
@@ -29,7 +26,6 @@ website:
 backend:
   host: ${API_HOST}
   port: ${API_PORT}
-  https: true
 
 logging:
   level: INFO

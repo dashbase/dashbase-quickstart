@@ -52,11 +52,8 @@ dashbase:
 
 server:
   applicationConnectors:
-    - type: https
+    - type: http
       port: ${PORT}
-      keyStorePath: /run/secrets/keystore
-      keyStorePassword: ${KEYSTORE_PASSWORD}
-      validateCerts: false
   applicationContextPath: /
   adminContextPath: /admin
   adminConnectors:

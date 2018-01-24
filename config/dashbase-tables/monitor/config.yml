@@ -34,13 +34,6 @@ dashbase:
         groupId: dashbase
         topic: ${KAFKA_TOPIC}_avro
         partitions: 0
-        kafkaProps:
-          security.protocol: SSL
-          ssl.truststore.location: /run/secrets/keystore
-          ssl.truststore.password: ${KEYSTORE_PASSWORD}
-          ssl.keystore.location: /run/secrets/keystore
-          ssl.keystore.password: ${KEYSTORE_PASSWORD}
-          ssl.key.password: ${KEYSTORE_PASSWORD}
 
   parser:
     type: avro_native
@@ -48,11 +41,8 @@ dashbase:
 
 server:
   applicationConnectors:
-    - type: https
+    - type: http
       port: ${PORT}
-      keyStorePath: /run/secrets/keystore
-      keyStorePassword: ${KEYSTORE_PASSWORD}
-      validateCerts: false
   applicationContextPath: /
   adminContextPath: /admin
   adminConnectors:

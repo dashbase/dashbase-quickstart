@@ -64,11 +64,3 @@ filebeat.prospectors:
 output.kafka:
   hosts: ['monitor_kafka:9092']
   topic: _logs
-
-  ssl:
-    certificate_authorities: ["/run/secrets/ca_cert_pem"]
-    certificate: /run/secrets/client_cert_pem
-    key: /run/secrets/client_key_pem
-    # CN of the above cert must be the domain of Kafka broker.
-    # Disabling verification mode to skip the above domain check.
-    verification_mode: none
