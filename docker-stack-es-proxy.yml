@@ -4,15 +4,6 @@ configs:
 networks:
   dashbase_backend:
     external: true
-secrets:
-  dashbase_ca_cert_pem:
-    external: true
-  dashbase_client_cert_pem:
-    external: true
-  dashbase_client_key_pem:
-    external: true
-  dashbase_keystore:
-    external: true
 services:
   proxy:
     image: dashbase/proxy:latest
@@ -25,9 +16,6 @@ services:
     configs:
       - source: proxy_config
         target: /app/config.yml
-    secrets:
-      - source: dashbase_keystore
-        target: keystore
     ports:
       - "9200:9200"
     command: ["server", "/app/config.yml"]

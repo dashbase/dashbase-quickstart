@@ -27,21 +27,15 @@ services:
       - dashbase_backend
     deploy:
       replicas: 0
-    secrets:
-      - source: dashbase_keystore
-        target: keystore
     volumes:
       - kafka_data:/dashbase/kafka
       - kafka_logs:/opt/kafka/logs
     env_file:
       - env
     environment:
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:SSL,OUTSIDE:PLAINTEXT
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
       KAFKA_ADVERTISED_PROTOCOL_NAME: OUTSIDE
       KAFKA_PROTOCOL_NAME: INSIDE
-      KAFKA_SSL_KEYSTORE_LOCATION: /run/secrets/keystore
-      KAFKA_SSL_TRUSTSTORE_LOCATION: /run/secrets/keystore
-      KAFKA_SSL_CLIENT_AUTH: required
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LOG_DIRS: /dashbase/kafka
       KAFKA_LOG_RETENTION_HOURS: 24
@@ -61,9 +55,6 @@ services:
         target: /app/config.yml
       - source: dashbase-license
         target: /app/dashbase-license.yml
-    secrets:
-      - source: dashbase_keystore
-        target: keystore
     ports:
       - "9876:9876"
     command: ["server", "/app/config.yml"]
@@ -88,9 +79,6 @@ services:
     configs:
       - source: web_config
         target: /app/config.yml
-    secrets:
-      - source: dashbase_keystore
-        target: keystore
     ports:
       - "8080:8080"
     command: ["server", "/app/config.yml"]
@@ -136,9 +124,6 @@ services:
     image: dashbase/zipkin:1.0.0-SNAPSHOT
     depends_on:
       - kafka
-    secrets:
-      - source: dashbase_keystore
-        target: keystore
     env_file:
       - env
     environment:
@@ -162,11 +147,6 @@ services:
       - api
     networks:
       - dashbase_backend
-    secrets:
-      - source: dashbase_cert_pem
-        target: /app/cert.pem
-      - source: dashbase_key_pem
-        target: /app/key.pem
     ports:
       - "3000:3000"
     volumes:
@@ -207,19 +187,13 @@ services:
       - 9092
     volumes:
       - monitor_kafka_data:/opt/kafka/data
-    secrets:
-      - source: dashbase_keystore
-        target: keystore
     env_file:
       - env
     environment:
       KAFKA_ZOOKEEPER_CONNECT: monitor_zookeeper:2181
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:SSL,OUTSIDE:SSL
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
       KAFKA_ADVERTISED_PROTOCOL_NAME: OUTSIDE
       KAFKA_PROTOCOL_NAME: INSIDE
-      KAFKA_SSL_KEYSTORE_LOCATION: /run/secrets/keystore
-      KAFKA_SSL_TRUSTSTORE_LOCATION: /run/secrets/keystore
-      KAFKA_SSL_CLIENT_AUTH: required
       KAFKA_ADVERTISED_HOST_NAME: monitor_kafka
       KAFKA_ADVERTISED_PORT: 9094
       KAFKA_LOG_DIRS: /opt/kafka/data
@@ -236,13 +210,6 @@ services:
     volumes:
       - logs:/app/logs
       - kafka_logs:/app/kafka/logs
-    secrets:
-      - source: dashbase_ca_cert_pem
-        target: ca_cert_pem
-      - source: dashbase_client_cert_pem
-        target: client_cert_pem
-      - source: dashbase_client_key_pem
-        target: client_key_pem
     deploy:
       mode: global
 
@@ -254,13 +221,6 @@ services:
         target: /usr/share/metricbeat/metricbeat.yml
     networks:
       - dashbase_backend
-    secrets:
-      - source: dashbase_ca_cert_pem
-        target: ca_cert_pem
-      - source: dashbase_client_cert_pem
-        target: client_cert_pem
-      - source: dashbase_client_key_pem
-        target: client_key_pem
 
   # global (= per host) metricbeat
   #monitor_metricbeat_global:
@@ -289,9 +249,6 @@ services:
     configs:
       - source: monitor_warg_config
         target: /app/config.yml
-    secrets:
-      - source: dashbase_keystore
-        target: keystore
     command: ["server", "/app/config.yml"]
     networks:
       - dashbase_backend
@@ -303,9 +260,6 @@ services:
     configs:
       - source: monitor_table_config
         target: /app/config.yml
-    secrets:
-      - source: dashbase_keystore
-        target: keystore
     ports:
       - "8888"
       - "8988"
@@ -332,9 +286,6 @@ services:
     configs:
       - source: monitor_table_config
         target: /app/config.yml
-    secrets:
-      - source: dashbase_keystore
-        target: keystore
     ports:
       - "10888"
       - "10988"
@@ -361,9 +312,6 @@ services:
     configs:
       - source: monitor_table_config
         target: /app/config.yml
-    secrets:
-      - source: dashbase_keystore
-        target: keystore
     ports:
       - "11888"
       - "11988"
@@ -430,17 +378,3 @@ configs:
     file: config/grafana/dashboards/dashboard-zookeeper.json
   grafana_restart_app_sh:
     file: config/grafana/restart_dashbase_app.sh
-
-secrets:
-  dashbase_cert_pem:
-    external: true
-  dashbase_key_pem:
-    external: true
-  dashbase_keystore:
-    external: true
-  dashbase_ca_cert_pem:
-    external: true
-  dashbase_client_cert_pem:
-    external: true
-  dashbase_client_key_pem:
-    external: true

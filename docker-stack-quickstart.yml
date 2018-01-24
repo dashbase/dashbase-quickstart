@@ -8,15 +8,6 @@ configs:
 networks:
   dashbase_backend:
     external: true
-secrets:
-  dashbase_ca_cert_pem:
-    external: true
-  dashbase_client_cert_pem:
-    external: true
-  dashbase_client_key_pem:
-    external: true
-  dashbase_keystore:
-    external: true
 services:
   metricbeat_table_p0:
     command:
@@ -39,13 +30,6 @@ services:
     image: docker.elastic.co/beats/metricbeat:6.0.0
     networks:
     - dashbase_backend
-    secrets:
-    - source: dashbase_ca_cert_pem
-      target: ca_cert_pem
-    - source: dashbase_client_cert_pem
-      target: client_cert_pem
-    - source: dashbase_client_key_pem
-      target: client_key_pem
   quickstart_p0:
     command: server /app/config.yml
     configs:
@@ -79,9 +63,6 @@ services:
     - mode: host
       published: 12345
       target: 12345
-    secrets:
-    - source: dashbase_keystore
-      target: keystore
     volumes:
     - ${PWD}/sample/nginx_sample.json:/data/nginx_sample.json
     - logs:/app/logs:rw
