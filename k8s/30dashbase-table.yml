@@ -1,0 +1,72 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashbase-table
+  namespace: dashbase
+spec:
+  ports:
+  - port: 7888
+    name: table-port
+  clusterIP: None
+  selector:
+    app: dashbase-table
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: dashbase-table
+  namespace: dashbase
+spec:
+  serviceName: "quickstart-table"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: dashbase-table
+    spec:
+      imagePullSecrets:
+      - name: docker-image-secret
+      containers:
+      - name: dashbase-table-nginx
+        image: dashbase/table:1.0.0-rc14
+        command: ['/dashbase-table-1.0.0-rc14/bin/dashbase-table', 'server', '/config/table.yml']
+        env:
+        - name: ZOOKEEPER_URL
+          value: "zookeeper.zookeeper.svc.cluster.local:2181"
+        - name: TABLE_NAME
+          value: "quickstart"
+        - name: PORT
+          value: "7888"
+        - name: ADMINPORT
+          value: "7988"
+        - name: DASHBASE_PARTITION
+          value: "0"
+        - name: JAVA_OPTS
+          value: "-Xmx2g -Xms1g -XX:NewSize=512m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/app/heapdump"
+        ports:
+        - containerPort: 7888
+        volumeMounts:
+        - name: dashbase-config
+          mountPath: /config
+        - name: dashbase-sample-data
+          mountPath: /data
+        - name: data
+          mountPath: /index
+      volumes:
+      - name: dashbase-config
+        configMap:
+          name: dashbase-config
+      - name: dashbase-sample-data
+        configMap:
+          name: dashbase-sample-data
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 20Gi
+
+

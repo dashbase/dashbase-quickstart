@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: outside-table
+  namespace: dashbase
+spec:
+  selector:
+    app: dashbase-table
+  ports:
+  - protocol: TCP
+    targetPort: 7888
+    port: 32402
+    nodePort: 32402
+  type: NodePort
