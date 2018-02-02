@@ -21,10 +21,10 @@ kafka:
       ssl.keystore.password: ${KEYSTORE_PASSWORD}
       ssl.key.password: ${KEYSTORE_PASSWORD}
 
-# Specify the output format
-# 'raw': pass the raw input JSON
-# 'avro': parse the filebeat JSON into Avro DashbaseEvent and sends its binary
-outputFormat: avro
+parser:
+  type: filebeat
+  params:
+    useTimestampInLogMessage: true
 
 logging:
   level: INFO

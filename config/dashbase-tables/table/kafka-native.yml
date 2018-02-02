@@ -1,0 +1,66 @@
+zipkinFactory:
+  enabled: true
+  collector: http
+  baseUrl: ${ZIPKIN_URL}
+  servicePort: ${PORT}
+  serviceName: "${TABLE_NAME}"
+
+dashbase:
+  baseDir: /dashbase/index
+  readerCacheSize: 10000
+
+  firehose:
+    type: kafka_10
+    params:
+      hosts: ${KAFKA_BROKER_URL}
+      groupId: ${KAFKA_GROUPID}
+      topic: ${KAFKA_TOPIC}
+      partitions: "${KAFKA_PARTITIONS}"
+      kafkaProps:
+        security.protocol: SSL
+        ssl.truststore.location: /run/secrets/keystore
+        ssl.truststore.password: ${KEYSTORE_PASSWORD}
+        ssl.keystore.location: /run/secrets/keystore
+        ssl.keystore.password: ${KEYSTORE_PASSWORD}
+        ssl.key.password: ${KEYSTORE_PASSWORD}
+
+
+  cluster:
+    url: zk://${ZOOKEEPER_URL}/dashbase/docker/${TABLE_NAME}
+
+  indexer:
+    numIndexingThreads: 3
+    #maxNumConcurrentBuilding: 3
+    maxBufferDelayInSec: 10
+
+  retention:
+    numDays: .01
+
+  parser:
+    type: avro_native
+
+
+server:
+  applicationConnectors:
+    - type: https
+      port: ${PORT}
+      keyStorePath: /run/secrets/keystore
+      keyStorePassword: ${KEYSTORE_PASSWORD}
+      validateCerts: false
+  applicationContextPath: /
+  adminContextPath: /admin
+  adminConnectors:
+    - type: http
+      port: ${ADMINPORT}
+
+logging:
+  level: INFO
+  appenders:
+      - type: file
+        currentLogFilename: /app/logs/${TABLE_NAME}-${DASHBASE_PARTITION}-table.log
+        archive: true
+        archivedLogFilenamePattern: /app/logs/${TABLE_NAME}-${DASHBASE_PARTITION}-table-%d-%i.log.gz
+        archivedFileCount: 5
+        maxFileSize: 100MB
+        timeZone: UTC
+      - type: console

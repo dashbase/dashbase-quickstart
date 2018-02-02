@@ -67,17 +67,6 @@ metricbeat.modules:
     table_name: _traces
     partition: "0"
 
-# The following dashbase components might be replicated.
-# TODO: support replicated services
-- module: dropwizard
-  metricsets: ["collector"]
-  period: 10s
-  hosts: ["proxy:9201"]
-  metrics_path: /metrics
-  namespace: dashbase
-  fields:
-    service: proxy
-
 output.console:
   enabled: false # change to true for debugging
   pretty: true

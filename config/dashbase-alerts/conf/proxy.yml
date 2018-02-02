@@ -1,0 +1,53 @@
+dashbaseURL: ${API_URL}
+
+notifiers:
+  - name: Console
+    type: console
+#  - name: Slack
+#    type: slack
+#    url:
+
+alerts:
+  - name: proxy_cpu_percent
+    sql: "SELECT avg('jvm.cpu.usage.percent.value') as 'value' FROM _metrics WHERE service='proxy' LIMIT 0"
+    description: "Dashbase Proxy CPU usage percent"
+    times: 5
+    type: higher_than
+    threshold: 0.80
+    periodInSeconds: 300
+
+  - name: proxy_heap_percent
+    sql: "SELECT avg('jvm.memory.heap.usage.value') as 'value' FROM _metrics WHERE service='proxy' LIMIT 0"
+    description: "Dashbase Proxy heap usage percent"
+    times: 5
+    type: higher_than
+    threshold: 0.80
+    periodInSeconds: 300
+
+  - name: proxy_kafka_error_ratio
+    sql: "SELECT avg('dashbase.proxy.kafka.error_ratio.value') as 'value' FROM _metrics where service='proxy' LIMIT 0"
+    description: "Dashbase Proxy Kafka error ratio (% of Kafka requests which failed in one minute)"
+    times: 5
+    type: higher_than
+    threshold: 0.80
+    periodInSeconds: 300
+
+server:
+  applicationConnectors:
+    - type: https
+      port: ${PORT}
+      keyStorePath: /run/secrets/keystore
+      keyStorePassword: ${KEYSTORE_PASSWORD}
+      validateCerts: false
+  applicationContextPath: /
+  adminContextPath: /admin
+  adminConnectors:
+    - type: http
+      port: ${ADMINPORT}
+  requestLog:
+    appenders: []
+
+logging:
+  level: INFO
+  appenders:
+    - type: console

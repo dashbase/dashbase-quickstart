@@ -62,7 +62,7 @@
                     "targets": [
                         {
                             "from": "_metrics",
-                            "target": "avg('dropwizard.dashbase.jvm.cpu.usage.percent.value')",
+                            "target": "avg('jvm.cpu.usage.percent.value')",
                             "alias": "CPU usage",
                             "limit": "0",
                             "query": "'partition'=$partition@split@AND@split@'table_name'=$table@split@AND@split@service=table",
@@ -103,7 +103,7 @@
                     "targets": [
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dropwizard.dashbase.jvm.cpu.usage.percent.value'))",
+                            "target": "ts($granularity,avg('jvm.cpu.usage.percent.value'))",
                             "alias": "cpu_ts_p0",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'table_name'=$table@split@AND@split@'partition'=$partition",
@@ -219,7 +219,7 @@
                     "targets": [
                         {
                             "from": "_metrics",
-                            "target": "max('dropwizard.dashbase.jvm.attribute.uptime.value')",
+                            "target": "max('jvm.attribute.uptime.value')",
                             "alias": "uptime",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -271,7 +271,7 @@
                     "targets": [
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dropwizard.dashbase.jvm.memory.non-heap.used.value'))",
+                            "target": "ts($granularity,avg('jvm.memory.non-heap.used.value'))",
                             "alias": "offheap usage",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -280,7 +280,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dropwizard.dashbase.jvm.memory.heap.used.value'))",
+                            "target": "ts($granularity,avg('jvm.memory.heap.used.value'))",
                             "alias": "heap usage",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -369,7 +369,7 @@
                     "targets": [
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.search.reader.cache.count.value'))",
+                            "target": "ts($granularity,avg('dashbase.search.reader.cache.count.value'))",
                             "alias": "reader (cached)",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'table_name'=$table@split@AND@split@'partition'=$partition",
@@ -378,7 +378,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.search.payload.cache.count.value'))",
+                            "target": "ts($granularity,avg('dashbase.search.payload.cache.count.value'))",
                             "alias": "payload (cache)",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'table_name'=$table@split@AND@split@'partition'=$partition",
@@ -387,7 +387,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.index.timeslice.count.value'))",
+                            "target": "ts($granularity,avg('dashbase.index.timeslice.count.value'))",
                             "alias": "timeslice (total)",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'table_name'=$table@split@AND@split@'partition'=$partition",
@@ -464,7 +464,7 @@
                     "targets": [
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.search.reader.cache.mem.total.bytes.value'))",
+                            "target": "ts($granularity,avg('dashbase.search.reader.cache.mem.total.bytes.value'))",
                             "alias": "reader cache",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'table_name'=$table@split@AND@split@'partition'=$partition",
@@ -592,7 +592,7 @@
                     "targets": [
                         {
                             "from": "_metrics",
-                            "target": "min('dropwizard.dashbase.dashbase.disk.available.bytes.percent.value')",
+                            "target": "min('dashbase.disk.available.bytes.percent.value')",
                             "alias": "disk availability",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition",
@@ -633,7 +633,7 @@
                     "targets": [
                         {
                             "hide": false,
-                            "target": "ts(minute,avg('dropwizard.dashbase.dashbase.index.total.usage.bytes.value'))",
+                            "target": "ts(minute,avg('dashbase.index.total.usage.bytes.value'))",
                             "alias": "used (total)",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'table_name'=$table@split@AND@split@'partition'=$partition",
@@ -643,7 +643,7 @@
                         },
                         {
                             "hide": false,
-                            "target": "ts(minute,avg('dropwizard.dashbase.dashbase.index.store.usage.bytes.value'))",
+                            "target": "ts(minute,avg('dashbase.index.store.usage.bytes.value'))",
                             "alias": "used (index)",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'table_name'=$table@split@AND@split@'partition'=$partition",
@@ -653,7 +653,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts(minute,avg('dropwizard.dashbase.dashbase.index.payload.usage.bytes.value'))",
+                            "target": "ts(minute,avg('dashbase.index.payload.usage.bytes.value'))",
                             "alias": "used (raw)",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'table_name'=$table@split@AND@split@'partition'=$partition",
@@ -662,7 +662,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts(minute,avg('dropwizard.dashbase.dashbase.index.temp.usage.bytes.value'))",
+                            "target": "ts(minute,avg('dashbase.index.temp.usage.bytes.value'))",
                             "alias": "used (temp)",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'table_name'=$table@split@AND@split@'partition'=$partition@split@AND@split@partition=$partition",
@@ -671,7 +671,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts(minute,avg('dropwizard.dashbase.dashbase.disk.total.bytes.value'))",
+                            "target": "ts(minute,avg('dashbase.disk.total.bytes.value'))",
                             "alias": "total disk",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'table_name'=$table@split@AND@split@'partition'=$partition",
@@ -760,7 +760,7 @@
                     "targets": [
                         {
                             "from": "_metrics",
-                            "target": "ts(minute,avg('dropwizard.dashbase.dashbase.ingestion.event.bytes.m1_rate'))",
+                            "target": "ts(minute,avg('dashbase.ingestion.event.bytes.m1_rate'))",
                             "alias": "1min rate",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -769,7 +769,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts(minute,avg('dropwizard.dashbse.dashbase.ingestion.event.bytes.m5_rate'))",
+                            "target": "ts(minute,avg('dashbase.ingestion.event.bytes.m5_rate'))",
                             "alias": "5 min rate",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -778,7 +778,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts(minute,avg('dropwizard.dashbase.dashbase.ingestion.event.bytes.m15_rate'))",
+                            "target": "ts(minute,avg('dashbase.ingestion.event.bytes.m15_rate'))",
                             "alias": "15 min rate",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -855,7 +855,7 @@
                     "targets": [
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.ingestion.events.m1_rate'))",
+                            "target": "ts($granularity,avg('dashbase.ingestion.events.m1_rate'))",
                             "alias": "1 min rate",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -864,7 +864,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.ingestion.events.m5_rate'))",
+                            "target": "ts($granularity,avg('dashbase.ingestion.events.m5_rate'))",
                             "alias": "5 min rate",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -873,7 +873,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.ingestion.events.m15_rate'))",
+                            "target": "ts($granularity,avg('dashbase.ingestion.events.m15_rate'))",
                             "alias": "15 min rate",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -989,7 +989,7 @@
                     "targets": [
                         {
                             "from": "_metrics",
-                            "target": "min('dropwizard.dashbase.dashbase.indexer.delayInSec.value')",
+                            "target": "min('dashbase.indexer.delayInSec.value')",
                             "alias": "",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -1069,7 +1069,7 @@
                     "targets": [
                         {
                             "from": "_metrics",
-                            "target": "min('dropwizard.dashbase.dashbase.search.reader.delayInSec.value')",
+                            "target": "min('dashbase.search.reader.delayInSec.value')",
                             "alias": "",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -1110,7 +1110,7 @@
                     "targets": [
                         {
                             "from": "_metrics",
-                            "target": "ts(minute,min('dropwizard.dashbase.dashbase.indexer.delayInSec.value'))",
+                            "target": "ts(minute,min('dashbase.indexer.delayInSec.value'))",
                             "alias": "ingestion delay",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -1119,7 +1119,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts(minute,min('dropwizard.dashbase.dashbase.search.reader.delayInSec.value'))",
+                            "target": "ts(minute,min('dashbase.search.reader.delayInSec.value'))",
                             "alias": "indexing delay",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -1208,7 +1208,7 @@
                     "targets": [
                         {
                             "from": "_metrics",
-                            "target": "ts(minute,avg('dropwizard.dashbase.dashbase.indexing.duration.m1_rate'))",
+                            "target": "ts(minute,avg('dashbase.indexing.duration.m1_rate'))",
                             "alias": "1 min rate",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -1217,7 +1217,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts(minute,avg('dropwizard.dashbase.dashbase.indexing.duration.m5_rate'))",
+                            "target": "ts(minute,avg('dashbase.indexing.duration.m5_rate'))",
                             "alias": "5 min rate",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -1226,7 +1226,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts(minute,avg('dropwizard.dashbase.dashbase.indexing.duration.m15_rate'))",
+                            "target": "ts(minute,avg('dashbase.indexing.duration.m15_rate'))",
                             "alias": "15 min rate",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -1303,7 +1303,7 @@
                     "targets": [
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.indexing.duration.mean'))",
+                            "target": "ts($granularity,avg('dashbase.indexing.duration.mean'))",
                             "alias": "mean",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -1312,7 +1312,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.indexing.duration.min'))",
+                            "target": "ts($granularity,avg('dashbase.indexing.duration.min'))",
                             "alias": "min",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -1321,7 +1321,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.indexing.duration.max'))",
+                            "target": "ts($granularity,avg('dashbase.indexing.duration.max'))",
                             "alias": "max",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -1330,7 +1330,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.indexing.duration.median'))",
+                            "target": "ts($granularity,avg('dashbase.indexing.duration.median'))",
                             "alias": "median",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -1339,7 +1339,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.indexing.duration.p99'))",
+                            "target": "ts($granularity,avg('dashbase.indexing.duration.p99'))",
                             "alias": "p99",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -1348,7 +1348,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.indexing.duration.p999'))",
+                            "target": "ts($granularity,avg('dashbase.indexing.duration.p999'))",
                             "alias": "p999",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -1437,7 +1437,7 @@
                     "targets": [
                         {
                             "from": "_metrics",
-                            "target": "ts(minute,avg('dropwizard.dashbase.dashbase.ingestion.parse.error.m1_rate'))",
+                            "target": "ts(minute,avg('dashbase.ingestion.parse.error.m1_rate'))",
                             "alias": "errors",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -1446,7 +1446,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts(minute,avg('dropwizard.dashbase.dashbase.ingestion.parse.skipped.m5_rate'))",
+                            "target": "ts(minute,avg('dashbase.ingestion.parse.skipped.m5_rate'))",
                             "alias": "failed",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -1545,7 +1545,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.search.query.latency.min'))",
+                            "target": "ts($granularity,avg('dashbase.search.query.latency.min'))",
                             "alias": "min",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -1554,7 +1554,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.search.query.latency.median'))",
+                            "target": "ts($granularity,avg('dashbase.search.query.latency.median'))",
                             "alias": "median",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -1563,7 +1563,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.search.query.latency.p99'))",
+                            "target": "ts($granularity,avg('dashbase.search.query.latency.p99'))",
                             "alias": "p99",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -1572,7 +1572,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.search.query.latency.p999'))",
+                            "target": "ts($granularity,avg('dashbase.search.query.latency.p999'))",
                             "alias": "p999",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -1649,7 +1649,7 @@
                     "targets": [
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.search.query.latency.m1_rate'))",
+                            "target": "ts($granularity,avg('dashbase.search.query.latency.m1_rate'))",
                             "alias": "1 min rate",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -1658,7 +1658,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.search.query.latency.m5_rate'))",
+                            "target": "ts($granularity,avg('dashbase.search.query.latency.m5_rate'))",
                             "alias": "5 min rate",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",
@@ -1667,7 +1667,7 @@
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dropwizard.dashbase.dashbase.search.query.latency.m15_rate'))",
+                            "target": "ts($granularity,avg('dashbase.search.query.latency.m15_rate'))",
                             "alias": "15 min rate",
                             "limit": "0",
                             "query": "service=table@split@AND@split@'partition'=$partition@split@AND@split@'table_name'=$table",

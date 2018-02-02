@@ -20,12 +20,16 @@ useLocalTimestamp: true
 
 parser:
   type: filebeat
+  params:
+    prefixesToTrim: fields,dropwizard.dashbase,jolokia
 
 fieldsToDrop:
   ".*":
     - offset
   "_metrics":
     - ".*units$"
+    - ".*p75$"
+    - ".*stddev"
 
 logging:
   level: INFO

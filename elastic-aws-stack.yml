@@ -1,0 +1,12 @@
+version: '3.4'
+services:
+  proxy:
+    deploy:
+      placement:
+        constraints:
+          - node.labels.core == true
+  proxy_metricbeat:
+    deploy:
+      placement:
+        constraints:
+          - node.labels.core == true

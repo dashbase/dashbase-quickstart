@@ -1,0 +1,62 @@
+dashbaseURL: ${API_URL}
+
+notifiers:
+  - name: Console
+    type: console
+#  - name: Slack
+#    type: slack
+#    url:
+
+alerts:
+## alerts for internal tables
+  - name: "table_${TABLE_NAME}_cpu_percent"
+    sql: "SELECT avg('jvm.cpu.usage.percent.value') as 'value' FROM _metrics WHERE service='table' AND table_name='${TABLE_NAME}' LIMIT 0"
+    description: "table ${TABLE_NAME} CPU usage percent"
+    times: 5
+    type: higher_than
+    threshold: 80
+    periodInSeconds: 300
+
+  - name: "table_${TABLE_NAME}_heap_percent"
+    sql: "SELECT avg('jvm.memory.heap.usage.value') as 'value' FROM _metrics WHERE service='table' AND table_name='${TABLE_NAME}' LIMIT 0"
+    description: "table ${TABLE_NAME} heap usage percent"
+    times: 5
+    type: higher_than
+    threshold: 0.80
+    periodInSeconds: 300
+
+  - name: "tables_${TABLE_NAME}_disk_percent"
+    sql: "SELECT avg('dashbase.disk.available.bytes.percent.value') as 'value' FROM _metrics WHERE service='table' AND table_name='${TABLE_NAME}' LIMIT 0"
+    description: "table ${TABLE_NAME} disk usage percent"
+    times: 5
+    type: lower_than
+    threshold: 10.00
+    periodInSeconds: 300
+
+  - name: "${TABLE_NAME}_table_ingestion_rate"
+    sql: "SELECT avg('dashbase.ingestion.event.bytes.m1_rate') as 'value' FROM _metrics WHERE service='table' AND table_name='${TABLE_NAME}' LIMIT 0"
+    description: "${TABLE_NAME} table ingested bytes for a one minute rate"
+    times: 5
+    type: lower_than
+    threshold: 100
+    periodInSeconds: 300
+
+server:
+  applicationConnectors:
+    - type: https
+      port: ${PORT}
+      keyStorePath: /run/secrets/keystore
+      keyStorePassword: ${KEYSTORE_PASSWORD}
+      validateCerts: false
+  applicationContextPath: /
+  adminContextPath: /admin
+  adminConnectors:
+    - type: http
+      port: ${ADMINPORT}
+  requestLog:
+    appenders: []
+
+logging:
+  level: INFO
+  appenders:
+    - type: console

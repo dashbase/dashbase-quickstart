@@ -1,0 +1,75 @@
+# This is a sample configuration for Dashbase Auth service,
+# which authenticate users already have accounts on dashbase.io.
+
+auth:
+  callbackUrl: /callback
+  clientsProperties:
+
+    # sample SAML authentication
+#    saml.keystorePath: conf/samlKeystore.jks
+#    saml.keystorePassword: pac4j-demo-passwd
+#    saml.privateKeyPassword: pac4j-demo-passwd
+#    saml.identityProviderMetadataPath: conf/metadata-gsuite.xml
+#    saml.maximumAuthenticationLifetime: 31536000
+#    saml.serviceProviderEntityId: https://localhost:8443/callback?client_name=SAML2Client
+#    saml.serviceProviderMetadataPath: sp-metadata.xml
+
+#     sample LDAP authentication
+#    ldap.type: direct
+#    ldap.url: ldaps://ldap.jumpcloud.com:636
+#    ldap.useStartTls: false
+#    ldap.useSsl: true
+#    ldap.dnFormat: uid=%s,ou=Users,o=58cb8e42876d97bd3e2092d6,dc=jumpcloud,dc=com
+#    ldap.usersDn: ou=Users,o=58cb8e42876d97bd3e2092d6,dc=jumpcloud,dc=com
+#    ldap.principalAttributeId: uid
+#    ldap.principalAttributes: mail
+#    ldap.enhanceWithEntryResolver: false
+
+     anonymous: fakevalue
+     directBasicAuthClient.authenticator: rest
+     rest.url: https://dashbase.io/login/basic
+     formClient.loginUrl: loginRest
+     formClient.authenticator: rest
+
+  authorizers:
+    mustBeAuth:
+      class: org.pac4j.core.authorization.authorizer.IsAuthenticatedAuthorizer
+      redirectionUrl: /
+    mustBeAnon:
+      class: org.pac4j.core.authorization.authorizer.IsAnonymousAuthorizer
+      redirectionUrl: /
+
+# defines the url that user will be taking after authentication completes.
+# This needs to be modified if deploying this service on production or staging.
+dashbaseWebURL: https://localhost:8080
+
+# authorization tokens are stored in this file, make sure it's protected on your server.
+database:
+  driverClass: org.hsqldb.jdbc.JDBCDriver
+  url: "jdbc:hsqldb:file:/data/auth/auth.db"
+  validationQuery: SELECT * FROM INFORMATION_SCHEMA.SYSTEM_TABLES
+  properties:
+    charSet: UTF-8
+
+# SAML requires HTTPS
+# unless you want user's to see a warning message on their browsers, setup an internal SSL provider inside your network
+server:
+  applicationContextPath: /
+  adminContextPath: /admin
+  applicationConnectors:
+  - keyStorePassword: ${KEYSTORE_PASSWORD}
+    keyStorePath: /run/secrets/keystore
+    type: https
+    port: ${HTTPS_PORT:-9678}
+    validateCerts: false
+  adminConnectors:
+  - keyStorePassword: ${KEYSTORE_PASSWORD}
+    keyStorePath: /run/secrets/keystore
+    type: https
+    port: ${HTTPS_ADMINPORT:-9778}
+    validateCerts: false
+
+logging:
+  level: INFO
+  appenders:
+    - type: console

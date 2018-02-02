@@ -42,16 +42,6 @@ filebeat.prospectors:
   multiline.match: after
 
 - type: log
-  paths: [/app/logs/*-warg.log]
-  fields:
-    service: warg
-    log_type: logback
-    log_pattern: "%-5p [%d{ISO8601}] %c: %m%n"
-  multiline.pattern: '^[^A-Z]|^$'
-  multiline.negate: false
-  multiline.match: after
-
-- type: log
   paths: [/app/logs/*-table.log]
   fields:
     service: table

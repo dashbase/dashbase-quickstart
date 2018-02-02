@@ -3,10 +3,10 @@
     "rows": [
         {
             "repeat": null,
-            "titleSize": "h4",
+            "titleSize": "h6",
             "repeatIteration": null,
             "title": "CPU",
-            "height": 307,
+            "height": 269,
             "repeatRowId": null,
             "panels": [
                 {
@@ -20,7 +20,6 @@
                             "value": 2
                         }
                     ],
-                    "timeFrom": "1m",
                     "links": [],
                     "valueMaps": [
                         {
@@ -29,7 +28,6 @@
                             "op": "="
                         }
                     ],
-                    "tableColumn": "",
                     "thresholds": "",
                     "rangeMaps": [
                         {
@@ -47,12 +45,12 @@
                         "maxValue": 100,
                         "minValue": 0
                     },
-                    "id": 1,
+                    "id": 2,
                     "maxDataPoints": 100,
                     "mappingType": 1,
                     "span": 4,
                     "colorBackground": false,
-                    "title": "CPU Usage",
+                    "title": "CPU",
                     "sparkline": {
                         "full": false,
                         "fillColor": "rgba(31, 118, 189, 0.18)",
@@ -62,10 +60,9 @@
                     "targets": [
                         {
                             "from": "_metrics",
-                            "target": "avg('jvm.cpu.usage.percent.value')", 
-                            "alias": "cpu_usage",
-                            "limit": "0",
-                            "query": "service=api",
+                            "target": "avg('jvm.cpu.usage.percent.value')",
+                            "alias": "CPU usage",
+                            "query": "service=proxy",
                             "type": "timeseries",
                             "refId": "A"
                         }
@@ -80,9 +77,9 @@
                     "decimals": 2,
                     "interval": null,
                     "colors": [
-                        "rgba(50, 172, 45, 0.97)",
+                        "rgba(245, 54, 54, 0.9)",
                         "rgba(237, 129, 40, 0.89)",
-                        "rgba(245, 54, 54, 0.9)"
+                        "rgba(50, 172, 45, 0.97)"
                     ],
                     "datasource": null,
                     "nullText": null,
@@ -94,26 +91,25 @@
                     "timeFrom": null,
                     "links": [],
                     "thresholds": [],
-                    "spaceLength": 10,
                     "nullPointMode": "null",
                     "renderer": "flot",
-                    "id": 12,
+                    "id": 1,
                     "linewidth": 1,
                     "steppedLine": false,
                     "targets": [
                         {
                             "from": "_metrics",
                             "target": "ts($granularity,avg('jvm.cpu.usage.percent.value'))",
-                            "alias": "cpu",
-                            "limit": "0",
-                            "query": "service=api",
+                            "alias": "cpu_ts",
+                            "limit": "",
+                            "query": "service=proxy",
                             "type": "timeseries",
                             "refId": "A"
                         }
                     ],
                     "fill": 1,
                     "span": 4,
-                    "title": "CPU over time (per $granularity)",
+                    "title": "CPU over time",
                     "tooltip": {
                         "sort": 0,
                         "shared": true,
@@ -133,9 +129,9 @@
                             "logBase": 1,
                             "show": true,
                             "max": null,
-                            "format": "percent",
+                            "format": "short",
                             "min": null,
-                            "label": ""
+                            "label": null
                         },
                         {
                             "logBase": 1,
@@ -147,7 +143,6 @@
                         }
                     ],
                     "xaxis": {
-                        "buckets": null,
                         "show": true,
                         "values": [],
                         "mode": "time",
@@ -156,8 +151,6 @@
                     "seriesOverrides": [],
                     "percentage": false,
                     "type": "graph",
-                    "dashes": false,
-                    "dashLength": 10,
                     "stack": false,
                     "timeShift": null,
                     "aliasColors": {},
@@ -177,7 +170,6 @@
                             "value": 2
                         }
                     ],
-                    "timeFrom": "1m",
                     "links": [],
                     "valueMaps": [
                         {
@@ -186,7 +178,6 @@
                             "op": "="
                         }
                     ],
-                    "tableColumn": "",
                     "thresholds": "",
                     "rangeMaps": [
                         {
@@ -204,7 +195,7 @@
                         "maxValue": 100,
                         "minValue": 0
                     },
-                    "id": 29,
+                    "id": 3,
                     "maxDataPoints": 100,
                     "mappingType": 1,
                     "span": 4,
@@ -221,7 +212,7 @@
                             "from": "_metrics",
                             "target": "max('jvm.attribute.uptime.value')",
                             "alias": "uptime",
-                            "query": "service=api",
+                            "query": "service=proxy",
                             "type": "timeseries",
                             "refId": "A"
                         }
@@ -250,10 +241,10 @@
         },
         {
             "repeat": null,
-            "titleSize": "h4",
+            "titleSize": "h6",
             "repeatIteration": null,
-            "title": "Heap",
-            "height": 275,
+            "title": "Memory",
+            "height": 250,
             "repeatRowId": null,
             "panels": [
                 {
@@ -261,28 +252,25 @@
                     "timeFrom": null,
                     "links": [],
                     "thresholds": [],
-                    "spaceLength": 10,
                     "nullPointMode": "null",
                     "renderer": "flot",
-                    "id": 14,
+                    "id": 4,
                     "linewidth": 1,
                     "steppedLine": false,
                     "targets": [
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('jvm.memory.heap.used.value'))",
-                            "alias": "heap usage",
-                            "limit": "0",
-                            "query": "service=api",
+                            "target": "ts($granularity,avg('jvm.memory.non-heap.used.value'))",
+                            "alias": "offheap usage",
+                            "query": "service=proxy",
                             "type": "timeseries",
                             "refId": "A"
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('jvm.memory.non-heap.used.value'))",
-                            "alias": "offheap usage",
-                            "limit": "0",
-                            "query": "service=api",
+                            "target": "ts($granularity,avg('jvm.memory.heap.used.value'))",
+                            "alias": "heap usage",
+                            "query": "service=proxy",
                             "type": "timeseries",
                             "refId": "B"
                         }
@@ -323,7 +311,6 @@
                         }
                     ],
                     "xaxis": {
-                        "buckets": null,
                         "show": true,
                         "values": [],
                         "mode": "time",
@@ -332,8 +319,6 @@
                     "seriesOverrides": [],
                     "percentage": false,
                     "type": "graph",
-                    "dashes": false,
-                    "dashLength": 10,
                     "stack": false,
                     "timeShift": null,
                     "aliasColors": {},
@@ -348,10 +333,10 @@
         },
         {
             "repeat": null,
-            "titleSize": "h4",
+            "titleSize": "h6",
             "repeatIteration": null,
-            "title": "Query Latency",
-            "height": 298,
+            "title": "Input/Output Overview",
+            "height": 250,
             "repeatRowId": null,
             "panels": [
                 {
@@ -359,44 +344,32 @@
                     "timeFrom": null,
                     "links": [],
                     "thresholds": [],
-                    "spaceLength": 10,
                     "nullPointMode": "null",
                     "renderer": "flot",
-                    "id": 17,
+                    "id": 7,
                     "linewidth": 1,
                     "steppedLine": false,
                     "targets": [
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dashbase.dashbase-service.query.latency.m1_rate'))",
-                            "alias": "qps 1min rate",
-                            "limit": "0",
-                            "query": "service=api",
+                            "target": "ts($granularity,avg('dashbase.proxy.bytes.received.m1_rate'))",
+                            "alias": "bytes received",
+                            "query": "service=proxy",
                             "type": "timeseries",
                             "refId": "A"
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dashbase.dashbase-service.query.latency.m5_rate'))",
-                            "alias": "qps 5min rate",
-                            "limit": "0",
-                            "query": "service=api",
-                            "type": "timeseries",
-                            "refId": "B"
-                        },
-                        {
-                            "from": "_metrics",
-                            "target": "ts($granularity,avg('dashbase.dashbase-service.query.latency.m15_rate'))",
-                            "alias": "qps 15min rate",
-                            "limit": "0",
-                            "query": "service=api",
+                            "target": "ts($granularity,avg('dashbase.proxy.bytes.sent.m1_rate'))",
+                            "alias": "bytes sent",
+                            "query": "service=proxy",
                             "type": "timeseries",
                             "refId": "C"
                         }
                     ],
                     "fill": 1,
                     "span": 6,
-                    "title": "Queries Per Second",
+                    "title": "Bytes sent/received (1 min rate)",
                     "tooltip": {
                         "sort": 0,
                         "shared": true,
@@ -416,7 +389,7 @@
                             "logBase": 1,
                             "show": true,
                             "max": null,
-                            "format": "short",
+                            "format": "Bps",
                             "min": null,
                             "label": null
                         },
@@ -430,7 +403,6 @@
                         }
                     ],
                     "xaxis": {
-                        "buckets": null,
                         "show": true,
                         "values": [],
                         "mode": "time",
@@ -439,8 +411,6 @@
                     "seriesOverrides": [],
                     "percentage": false,
                     "type": "graph",
-                    "dashes": false,
-                    "dashLength": 10,
                     "stack": false,
                     "timeShift": null,
                     "aliasColors": {},
@@ -454,62 +424,32 @@
                     "timeFrom": null,
                     "links": [],
                     "thresholds": [],
-                    "spaceLength": 10,
                     "nullPointMode": "null",
                     "renderer": "flot",
-                    "id": 20,
+                    "id": 8,
                     "linewidth": 1,
                     "steppedLine": false,
                     "targets": [
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dashbase.dashbase-service.query.latency.max'))",
-                            "alias": "max",
-                            "limit": "0",
-                            "query": "service=api",
+                            "target": "ts($granularity,avg('dashbase.proxy.events.received.m1_rate'))",
+                            "alias": "bytes received",
+                            "query": "service=proxy",
                             "type": "timeseries",
                             "refId": "A"
                         },
                         {
                             "from": "_metrics",
-                            "target": "ts($granularity,avg('dashbase.dashbase-service.query.latency.min'))",
-                            "alias": "min",
-                            "limit": "0",
-                            "query": "service=api",
+                            "target": "ts($granularity,avg('dashbase.proxy.events.sent.m1_rate'))",
+                            "alias": "bytes sent",
+                            "query": "service=proxy",
                             "type": "timeseries",
-                            "refId": "B"
-                        },
-                        {
-                            "from": "_metrics",
-                            "target": "ts($granularity,avg('dashbase.dashbase-service.query.latency.mean'))",
-                            "alias": "mean",
-                            "limit": "0",
-                            "query": "service=api",
-                            "type": "timeseries",
-                            "refId": "D"
-                        },
-                        {
-                            "from": "_metrics",
-                            "target": "ts($granularity,avg('dashbase.dashbase-service.query.latency.p99'))",
-                            "alias": "p99",
-                            "limit": "0",
-                            "query": "service=api",
-                            "type": "timeseries",
-                            "refId": "E"
-                        },
-                        {
-                            "from": "_metrics",
-                            "target": "ts($granularity,avg('dashbase.dashbase-service.query.latency.p999'))",
-                            "alias": "p999",
-                            "limit": "0",
-                            "query": "service=api",
-                            "type": "timeseries",
-                            "refId": "F"
+                            "refId": "C"
                         }
                     ],
                     "fill": 1,
                     "span": 6,
-                    "title": "Query Latency",
+                    "title": "Events sent/received (1 min rate)",
                     "tooltip": {
                         "sort": 0,
                         "shared": true,
@@ -529,9 +469,9 @@
                             "logBase": 1,
                             "show": true,
                             "max": null,
-                            "format": "ns",
+                            "format": "short",
                             "min": null,
-                            "label": null
+                            "label": "events/sec"
                         },
                         {
                             "logBase": 1,
@@ -543,7 +483,6 @@
                         }
                     ],
                     "xaxis": {
-                        "buckets": null,
                         "show": true,
                         "values": [],
                         "mode": "time",
@@ -552,8 +491,6 @@
                     "seriesOverrides": [],
                     "percentage": false,
                     "type": "graph",
-                    "dashes": false,
-                    "dashLength": 10,
                     "stack": false,
                     "timeShift": null,
                     "aliasColors": {},
@@ -568,37 +505,239 @@
         },
         {
             "repeat": null,
-            "titleSize": "h4",
+            "titleSize": "h6",
             "repeatIteration": null,
-            "title": "Logs",
-            "height": 250,
+            "title": "Input (HTTP  request)",
+            "height": 255,
             "repeatRowId": null,
             "panels": [
                 {
-                    "bars": true,
+                    "bars": false,
                     "timeFrom": null,
                     "links": [],
                     "thresholds": [],
-                    "spaceLength": 10,
                     "nullPointMode": "null",
                     "renderer": "flot",
-                    "id": 22,
+                    "id": 5,
                     "linewidth": 1,
                     "steppedLine": false,
                     "targets": [
                         {
-                            "from": "_logs",
-                            "target": "ts($granularity)",
-                            "alias": "logs",
-                            "limit": "0",
-                            "query": "service=\"api\"",
+                            "from": "_metrics",
+                            "target": "ts($granularity, avg('io.dashbase.esproxy.ElasticsearchProxy.bulk.m1_rate'))",
+                            "alias": "1 min rate",
+                            "query": "service=proxy",
                             "type": "timeseries",
                             "refId": "A"
+                        },
+                        {
+                            "from": "_metrics",
+                            "target": "ts($granularity, avg('io.dashbase.esproxy.ElasticsearchProxy.bulk.m5_rate'))",
+                            "alias": "5 min rate",
+                            "query": "service=proxy",
+                            "type": "timeseries",
+                            "refId": "B"
+                        },
+                        {
+                            "from": "_metrics",
+                            "target": "ts($granularity, avg('io.dashbase.esproxy.ElasticsearchProxy.bulk.m15_rate'))",
+                            "alias": "15 min rate",
+                            "query": "service=proxy",
+                            "type": "timeseries",
+                            "refId": "C"
+                        },
+                        {
+                            "from": "_metrics",
+                            "target": "ts($granularity, avg('io.dashbase.esproxy.ElasticsearchProxy.bulk.exceptions.m1_rate'))",
+                            "alias": "exceptions (1 min rate)",
+                            "query": "service=proxy",
+                            "type": "timeseries",
+                            "refId": "D"
+                        }
+                    ],
+                    "fill": 1,
+                    "span": 6,
+                    "title": "Request Rate",
+                    "tooltip": {
+                        "sort": 0,
+                        "shared": true,
+                        "value_type": "individual"
+                    },
+                    "legend": {
+                        "total": false,
+                        "show": true,
+                        "max": false,
+                        "min": false,
+                        "current": false,
+                        "values": false,
+                        "avg": false
+                    },
+                    "yaxes": [
+                        {
+                            "logBase": 1,
+                            "show": true,
+                            "max": null,
+                            "format": "short",
+                            "min": null,
+                            "label": "calls/second"
+                        },
+                        {
+                            "logBase": 1,
+                            "show": true,
+                            "max": null,
+                            "format": "short",
+                            "min": null,
+                            "label": null
+                        }
+                    ],
+                    "xaxis": {
+                        "show": true,
+                        "values": [],
+                        "mode": "time",
+                        "name": null
+                    },
+                    "seriesOverrides": [],
+                    "percentage": false,
+                    "type": "graph",
+                    "stack": false,
+                    "timeShift": null,
+                    "aliasColors": {},
+                    "lines": true,
+                    "points": false,
+                    "datasource": null,
+                    "pointradius": 5
+                },
+                {
+                    "bars": false,
+                    "timeFrom": null,
+                    "links": [],
+                    "thresholds": [],
+                    "nullPointMode": "null",
+                    "renderer": "flot",
+                    "id": 6,
+                    "linewidth": 1,
+                    "steppedLine": false,
+                    "targets": [
+                        {
+                            "from": "_metrics",
+                            "target": "ts($granularity,avg('io.dashbase.esproxy.ElasticsearchProxy.bulk.p50'))",
+                            "alias": "p50",
+                            "query": "service=proxy",
+                            "type": "timeseries",
+                            "refId": "A"
+                        },
+                        {
+                            "from": "_metrics",
+                            "target": "ts($granularity,avg('io.dashbase.esproxy.ElasticsearchProxy.bulk.p95'))",
+                            "alias": "p95",
+                            "query": "service=proxy",
+                            "type": "timeseries",
+                            "refId": "B"
+                        },
+                        {
+                            "from": "_metrics",
+                            "target": "ts($granularity,avg('io.dashbase.esproxy.ElasticsearchProxy.bulk.p99'))",
+                            "alias": "p99",
+                            "query": "service=proxy",
+                            "type": "timeseries",
+                            "refId": "C"
+                        }
+                    ],
+                    "fill": 1,
+                    "span": 6,
+                    "title": "Latency",
+                    "tooltip": {
+                        "sort": 0,
+                        "shared": true,
+                        "value_type": "individual"
+                    },
+                    "legend": {
+                        "total": false,
+                        "show": true,
+                        "max": false,
+                        "min": false,
+                        "current": false,
+                        "values": false,
+                        "avg": false
+                    },
+                    "yaxes": [
+                        {
+                            "logBase": 1,
+                            "show": true,
+                            "max": null,
+                            "format": "s",
+                            "min": null,
+                            "label": null
+                        },
+                        {
+                            "logBase": 1,
+                            "show": true,
+                            "max": null,
+                            "format": "short",
+                            "min": null,
+                            "label": null
+                        }
+                    ],
+                    "xaxis": {
+                        "show": true,
+                        "values": [],
+                        "mode": "time",
+                        "name": null
+                    },
+                    "seriesOverrides": [],
+                    "percentage": false,
+                    "type": "graph",
+                    "stack": false,
+                    "timeShift": null,
+                    "aliasColors": {},
+                    "lines": true,
+                    "points": false,
+                    "datasource": null,
+                    "pointradius": 5
+                }
+            ],
+            "showTitle": true,
+            "collapse": false
+        },
+        {
+            "repeat": null,
+            "titleSize": "h6",
+            "repeatIteration": null,
+            "title": "Output (Kafka)",
+            "height": 250,
+            "repeatRowId": null,
+            "panels": [
+                {
+                    "bars": false,
+                    "timeFrom": null,
+                    "links": [],
+                    "thresholds": [],
+                    "nullPointMode": "null",
+                    "renderer": "flot",
+                    "id": 9,
+                    "linewidth": 1,
+                    "steppedLine": false,
+                    "targets": [
+                        {
+                            "from": "_metrics",
+                            "target": "ts($granularity, avg('dashbase.proxy.kafka.success.m1_rate'))",
+                            "alias": "success (1 min rate)",
+                            "query": "service=proxy",
+                            "type": "timeseries",
+                            "refId": "A"
+                        },
+                        {
+                            "from": "_metrics",
+                            "target": "ts($granularity, avg('dashbase.proxy.kafka.error.m1_rate'))",
+                            "alias": "error (1 min rate)",
+                            "query": "service=proxy",
+                            "type": "timeseries",
+                            "refId": "B"
                         }
                     ],
                     "fill": 1,
                     "span": 12,
-                    "title": "Log Histogram",
+                    "title": "Kafka Success / Error rate",
                     "tooltip": {
                         "sort": 0,
                         "shared": true,
@@ -632,7 +771,6 @@
                         }
                     ],
                     "xaxis": {
-                        "buckets": null,
                         "show": true,
                         "values": [],
                         "mode": "time",
@@ -641,93 +779,13 @@
                     "seriesOverrides": [],
                     "percentage": false,
                     "type": "graph",
-                    "dashes": false,
-                    "dashLength": 10,
                     "stack": false,
                     "timeShift": null,
                     "aliasColors": {},
-                    "lines": false,
+                    "lines": true,
                     "points": false,
                     "datasource": null,
                     "pointradius": 5
-                },
-                {
-                    "sort": {
-                        "col": null,
-                        "desc": false
-                    },
-                    "styles": [
-                        {
-                            "pattern": "DATE",
-                            "type": "date",
-                            "dateFormat": "MM/DD/YY h:mm:ss a"
-                        },
-                        {
-                            "colorMode": null,
-                            "thresholds": [],
-                            "colors": [
-                                "rgba(245, 54, 54, 0.9)",
-                                "rgba(237, 129, 40, 0.89)",
-                                "rgba(50, 172, 45, 0.97)"
-                            ],
-                            "type": "string",
-                            "pattern": "LOG_NAME",
-                            "decimals": 2,
-                            "unit": "short"
-                        },
-                        {
-                            "type": "string",
-                            "dateFormat": "YYYY-MM-DD HH:mm:ss",
-                            "colorMode": null,
-                            "thresholds": [],
-                            "colors": [
-                                "rgba(245, 54, 54, 0.9)",
-                                "rgba(237, 129, 40, 0.89)",
-                                "rgba(50, 172, 45, 0.97)"
-                            ],
-                            "pattern": "LOG_LEVEL",
-                            "decimals": 2,
-                            "unit": "short"
-                        },
-                        {
-                            "type": "string",
-                            "dateFormat": "YYYY-MM-DD HH:mm:ss",
-                            "colorMode": null,
-                            "thresholds": [],
-                            "colors": [
-                                "rgba(245, 54, 54, 0.9)",
-                                "rgba(237, 129, 40, 0.89)",
-                                "rgba(50, 172, 45, 0.97)"
-                            ],
-                            "pattern": "HOST",
-                            "decimals": 2,
-                            "unit": "short"
-                        }
-                    ],
-                    "span": 12,
-                    "pageSize": null,
-                    "links": [],
-                    "title": "Logs",
-                    "transform": "table",
-                    "showHeader": true,
-                    "scroll": false,
-                    "targets": [
-                        {
-                            "from": "_logs",
-                            "target": "message",
-                            "alias": "",
-                            "limit": "10",
-                            "query": "service=\"api\"",
-                            "type": "table",
-                            "refId": "A"
-                        }
-                    ],
-                    "fontSize": "80%",
-                    "datasource": null,
-                    "filterNull": false,
-                    "type": "table",
-                    "id": 21,
-                    "columns": []
                 }
             ],
             "showTitle": true,
@@ -741,11 +799,11 @@
                 "hide": 0,
                 "name": "granularity",
                 "allValue": null,
-                "label": null,
+                "label": "",
                 "current": {
                     "text": "minute",
-                    "selected": true,
-                    "value": "minute"
+                    "value": "minute",
+                    "tags": []
                 },
                 "datasource": null,
                 "query": "minute,hour",
@@ -770,12 +828,8 @@
     "gnetId": null,
     "graphTooltip": 0,
     "hideControls": false,
-    "tags": [
-        "dashbase-app",
-        "imported"
-    ],
+    "tags": [],
     "editable": true,
-    "refresh": "10s",
     "id": null,
     "timepicker": {
         "time_options": [
@@ -802,11 +856,11 @@
             "1d"
         ]
     },
-    "title": "Dashbase API Monitor",
+    "title": "Dashbase Proxy Monitor",
     "version": 0,
     "time": {
         "to": "now",
-        "from": "now-5m"
+        "from": "now-15m"
     },
     "timezone": "browser",
     "schemaVersion": 14,

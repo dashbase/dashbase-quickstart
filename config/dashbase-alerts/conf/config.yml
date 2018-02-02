@@ -1,32 +1,91 @@
-dashbaseURL: https://${API_HOST}:${API_PORT}
+dashbaseURL: ${API_URL}
 
-notifications:
+notifiers:
+  - name: Console
+    type: console
 #  - name: Slack
 #    type: slack
-#    url: 
+#    url:
 
 alerts:
-#  - name: service_cpu_percent
-#    sql: "SELECT avg('metric_data.number_value') as 'value' FROM _metrics WHERE metric_name='jvm.cpu.usage.percent' AND type='dashbase-service' LIMIT 0"
-#    description: "Dashbase Service CPU usage percent"
-#    times: 5
-#    type: higher_than
-#    threshold: 0.80
-#    periodInSeconds: 300
+  - name: api_cpu_percent
+    sql: "SELECT avg('jvm.cpu.usage.percent.value') as 'value' FROM _metrics WHERE service='api' LIMIT 0"
+    description: "Dashbase API CPU usage percent"
+    times: 5
+    type: higher_than
+    threshold: 80
+    periodInSeconds: 300
 
-#  - name: table_ingestion_rate
-#    sql: "SELECT avg('metric_data.oneMinuteRate') as 'value' FROM _metrics WHERE name='nginx_json' AND metric_name='dashbase.ingestion.event.bytes' AND type='dashbase-node' AND partition=0 LIMIT 0"
-#    description: "nginx_json table ingested bytes for a one minute rate"
-#    times: 5
-#    type: lower_than
-#    threshold: 100
-#    periodInSeconds: 300
+  - name: api_heap_percent
+    sql: "SELECT avg('jvm.memory.heap.usage.value') as 'value' FROM _metrics WHERE service='api' LIMIT 0"
+    description: "Dashbase API heap usage percent"
+    times: 5
+    type: higher_than
+    threshold: 0.80
+    periodInSeconds: 300
+
+## alerts for internal tables
+  - name: table_metrics_cpu_percent
+    sql: "SELECT avg('jvm.cpu.usage.percent.value') as 'value' FROM _metrics WHERE service='table' AND table_name='_metrics' LIMIT 0"
+    description: "_metrics table CPU usage percent"
+    times: 5
+    type: higher_than
+    threshold: 80
+    periodInSeconds: 300
+
+  - name: table_metrics_heap_percent
+    sql: "SELECT avg('jvm.memory.heap.usage.value') as 'value' FROM _metrics WHERE service='table' AND table_name='_metrics' LIMIT 0"
+    description: "_metrics table heap usage percent"
+    times: 5
+    type: higher_than
+    threshold: 0.80
+    periodInSeconds: 300
+
+  - name: table_logs_cpu_percent
+    sql: "SELECT avg('jvm.cpu.usage.percent.value') as 'value' FROM _metrics WHERE service='table' AND table_name='_logs' LIMIT 0"
+    description: "_logs table CPU usage percent"
+    times: 5
+    type: higher_than
+    threshold: 80
+    periodInSeconds: 300
+
+  - name: table_logs_heap_percent
+    sql: "SELECT avg('jvm.memory.heap.usage.value') as 'value' FROM _metrics WHERE service='table' AND table_name='_logs' LIMIT 0"
+    description: "_logs table heap usage percent"
+    times: 5
+    type: higher_than
+    threshold: 0.80
+    periodInSeconds: 300
+
+  - name: table_traces_cpu_percent
+    sql: "SELECT avg('jvm.cpu.usage.percent.value') as 'value' FROM _metrics WHERE service='table' AND table_name='_traces' LIMIT 0"
+    description: "_traces table CPU usage percent"
+    times: 5
+    type: higher_than
+    threshold: 80
+    periodInSeconds: 300
+
+  - name: table_traces_heap_percent
+    sql: "SELECT avg('jvm.memory.heap.usage.value') as 'value' FROM _metrics WHERE service='table' AND table_name='_traces' LIMIT 0"
+    description: "_traces table heap usage percent"
+    times: 5
+    type: higher_than
+    threshold: 0.80
+    periodInSeconds: 300
+
+  - name: monitor_tables_disk_percent
+    sql: "SELECT avg('dashbase.disk.available.bytes.percent.value') as 'value' FROM _metrics WHERE service='table' AND table_name='_metrics' LIMIT 0"
+    description: "internal monitor tables disk usage percent"
+    times: 5
+    type: lower_than
+    threshold: 10.00
+    periodInSeconds: 300
 
 server:
   applicationConnectors:
     - type: https
       port: ${PORT}
-      keyStorePath: /app/keystore
+      keyStorePath: /run/secrets/keystore
       keyStorePassword: ${KEYSTORE_PASSWORD}
       validateCerts: false
   applicationContextPath: /
@@ -40,10 +99,4 @@ server:
 logging:
   level: INFO
   appenders:
-    - type: file
-      currentLogFilename: /app/logs/dashbase-alerts.log
-      archive: true
-      archivedLogFilenamePattern: /app/logs/dashbase-alerts-%d.log
-      archivedFileCount: 9
-      timeZone: UTC
     - type: console

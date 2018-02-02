@@ -41,6 +41,11 @@
       "type": "dashboard",
       "name": "Dashbase Kafka Monitor Dashboard",
       "path": "dashboards/dashboard-kafka.json"
+    },
+    {
+      "type": "dashboard",
+      "name": "Dashbase Proxy Monitor Dashboard",
+      "path": "dashboards/dashboard-proxy.json"
     }
   ],
   "dependencies": {

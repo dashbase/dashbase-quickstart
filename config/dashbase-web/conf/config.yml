@@ -30,6 +30,15 @@ backend:
   host: ${API_HOST}
   port: ${API_PORT}
   https: true
+  overallIngestionTimeSeriesQuery: SELECT ts(minute, avg('dashbase.ingestion.event.bytes.m1_rate')) as 'value' FROM _metrics WHERE service='table' LIMIT 0
+  clusterIngestionTimeSeriesQuery: SELECT ts(minute, avg('dashbase.ingestion.event.bytes.m1_rate')) as 'value' FROM _metrics WHERE service='table' and table_name='%s' LIMIT 0
+
+# To enable authentication, uncomment the following and modify the host section
+# with the URL of the dashbase-auth https endpoint.
+# e.g., https://{IP address of your machine}:9678/ or
+# https://{AWS load balaner's DNS}:9678/
+#auth:
+#  host: {URL of the dashbase-auth https endpoint}
 
 logging:
   level: INFO

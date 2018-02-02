@@ -1,0 +1,55 @@
+dashbaseURL: ${API_URL}
+
+notifiers:
+  - name: Console
+    type: console
+#  - name: Slack
+#    type: slack
+#    url:
+
+alerts:
+  - name: kafka_cpu_percent
+    sql: "SELECT avg('kafka.cpu.load') as 'value' FROM _metrics WHERE service='kafka' LIMIT 0"
+    description: "Kafka CPU usage percent"
+    times: 5
+    type: higher_than
+    threshold: 0.80
+    periodInSeconds: 300
+
+  - name: kafka_disk_usage
+    sql: "SELECT max('system.filesystem.used.pct') as 'value' FROM _metrics WHERE system.filesystem.mount_point='/dashbase/kafka' LIMIT 0"
+    description: "Kafka Disk usage percent"
+    times: 5
+    type: higher_than
+    threshold: 0.90
+    periodInSeconds: 300
+
+  - name: kafka_max_lag
+    sql: "SELECT avg('kafka.max_lag') as 'value' FROM _metrics WHERE service='kafka' LIMIT 0"
+    description: "Kafka max lag"
+    times: 5
+    type: higher_than
+    threshold: 10000
+    periodInSeconds: 300
+
+  # TODO: add memory alert once SQL supports arithmetic operations
+
+server:
+  applicationConnectors:
+    - type: https
+      port: ${PORT}
+      keyStorePath: /run/secrets/keystore
+      keyStorePassword: ${KEYSTORE_PASSWORD}
+      validateCerts: false
+  applicationContextPath: /
+  adminContextPath: /admin
+  adminConnectors:
+    - type: http
+      port: ${ADMINPORT}
+  requestLog:
+    appenders: []
+
+logging:
+  level: INFO
+  appenders:
+    - type: console

@@ -1,0 +1,117 @@
+version: '3.4'
+configs:
+  kafka_metricbeat_config:
+    file: config/metricbeat/kafka.yml
+  alerts_config:
+    file: ./config/dashbase-alerts/conf/kafka.yml
+networks:
+  dashbase_backend:
+    external: true
+secrets:
+  dashbase_ca_cert_pem:
+    external: true
+  dashbase_client_cert_pem:
+    external: true
+  dashbase_client_key_pem:
+    external: true
+  dashbase_keystore:
+    external: true
+  jolokia_agent:
+    file: ./lib/jolokia-jvm-1.3.7-agent.jar
+services:
+  kafka_zookeeper:
+    image: zookeeper
+    # hostname: zoo1
+    networks:
+      - dashbase_backend
+    ports:
+      - "2181"
+    volumes:
+      - kafka_zookeeper_data:/data
+      - kafka_zookeeper_datalog:/datalog
+    # environment:
+    #   ZOO_MY_ID: 1
+    #   ZOO_SERVERS: server.1=zoo1:2888:3888
+  kafka:
+    image: wurstmeister/kafka:1.0.0
+    depends_on:
+      - kafka_zookeeper
+    networks:
+      - dashbase_backend
+    deploy:
+      replicas: 1
+    secrets:
+      - source: dashbase_keystore
+        target: keystore
+      - source: jolokia_agent
+        target: jolokia_agent.jar
+    volumes:
+      - kafka_data:/dashbase/kafka
+      - kafka_logs:/opt/kafka/logs
+    ports:
+      - 8778 # Jolokia port
+    env_file:
+      - env
+    environment:
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:SSL,OUTSIDE:PLAINTEXT
+      KAFKA_ADVERTISED_PROTOCOL_NAME: OUTSIDE
+      KAFKA_PROTOCOL_NAME: INSIDE
+      KAFKA_SSL_KEYSTORE_LOCATION: /run/secrets/keystore
+      KAFKA_SSL_TRUSTSTORE_LOCATION: /run/secrets/keystore
+      KAFKA_SSL_CLIENT_AUTH: required
+      KAFKA_HEAP_OPTS: -Xmx4G -Xms4G
+      KAFKA_ZOOKEEPER_CONNECT: kafka_zookeeper:2181
+      KAFKA_LOG_DIRS: /dashbase/kafka
+      KAFKA_LOG_RETENTION_HOURS: 24
+      # Change the following to external IP/host to make kafka accessible outside of swarm
+      KAFKA_ADVERTISED_HOST_NAME: kafka # this value can be the host machine's private IP address on AWS for access from outside of docker network
+      KAFKA_ADVERTISED_PORT: 9094
+      KAFKA_JMX_OPTS: "-javaagent:/run/secrets/jolokia_agent.jar=port=8778,host=0.0.0.0"
+      # Use the following to also connect JMX via jconsole
+      #KAFKA_JMX_OPTS: "-javaagent:/run/secrets/jolokia_agent.jar=port=8778,host=0.0.0.0 -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=9999"
+      #JMX_PORT: 9999
+  kafka_metricbeat:
+    image: docker.elastic.co/beats/metricbeat:6.1.2
+    deploy:
+      replicas: 1
+    configs:
+      - source: kafka_metricbeat_config
+        target: /usr/share/metricbeat/metricbeat.yml
+    networks:
+      - dashbase_backend
+    volumes:
+      - kafka_data:/dashbase/kafka
+      - kafka_logs:/opt/kafka/logs
+    secrets:
+      - source: dashbase_ca_cert_pem
+        target: ca_cert_pem
+      - source: dashbase_client_cert_pem
+        target: client_cert_pem
+      - source: dashbase_client_key_pem
+        target: client_key_pem
+  kafka_alerts:
+    image: dashbase/alerts:nightly
+    networks:
+      - dashbase_backend
+    ports:
+      - 9898
+    configs:
+      - source: alerts_config
+        target: /app/config.yml
+    secrets:
+      - source: dashbase_keystore
+        target: keystore
+    command: ["server", "/app/config.yml"]
+    env_file:
+      - env
+    environment:
+      PORT: 9898
+      ADMINPORT: 9998
+      API_URL: https://api:9876
+      JAVA_OPTS: "-Xmx512m -Xms256m -XX:NewSize=256m"
+
+volumes:
+  kafka_data:
+  kafka_logs:
+  kafka_zookeeper_data:
+  kafka_zookeeper_datalog:

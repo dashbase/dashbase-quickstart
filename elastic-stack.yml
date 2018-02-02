@@ -1,0 +1,76 @@
+version: '3.4'
+configs:
+  proxy_config:
+    file: ./config/proxy/config.yml
+  proxy_metricbeat_config:
+    file: config/metricbeat/proxy.yml
+  alerts_config:
+    file: ./config/dashbase-alerts/conf/proxy.yml
+networks:
+  dashbase_backend:
+    external: true
+secrets:
+  dashbase_ca_cert_pem:
+    external: true
+  dashbase_client_cert_pem:
+    external: true
+  dashbase_client_key_pem:
+    external: true
+  dashbase_keystore:
+    external: true
+services:
+  proxy:
+    image: dashbase/proxy:latest
+    networks:
+      - dashbase_backend
+    configs:
+      - source: proxy_config
+        target: /app/config.yml
+    secrets:
+      - source: dashbase_keystore
+        target: keystore
+    ports:
+      - "9200:9200"
+    command: ["server", "/app/config.yml"]
+    volumes:
+      - logs:/app/logs:rw
+    env_file:
+      - env
+  proxy_metricbeat:
+    image: docker.elastic.co/beats/metricbeat:6.1.2
+    configs:
+      - source: proxy_metricbeat_config
+        target: /usr/share/metricbeat/metricbeat.yml
+    networks:
+      - dashbase_backend
+    secrets:
+      - source: dashbase_ca_cert_pem
+        target: ca_cert_pem
+      - source: dashbase_client_cert_pem
+        target: client_cert_pem
+      - source: dashbase_client_key_pem
+        target: client_key_pem
+  proxy_alerts:
+    image: dashbase/alerts:latest
+    networks:
+      - dashbase_backend
+    ports:
+      - 9898
+    configs:
+      - source: alerts_config
+        target: /app/config.yml
+    secrets:
+      - source: dashbase_keystore
+        target: keystore
+    command: ["server", "/app/config.yml"]
+    env_file:
+      - env
+    environment:
+      PORT: 9898
+      ADMINPORT: 9998
+      API_URL: https://api:9876
+      JAVA_OPTS: "-Xmx512m -Xms256m -XX:NewSize=256m"
+
+volumes:
+  logs:
+    external: true

@@ -1,0 +1,140 @@
+metricbeat.modules:
+
+# Monitor kafka disk utilization
+- module: system
+  period: 1m
+  metricsets:
+    - filesystem
+  filesystem.ignore_types: [nfs, smbfs, autofs, tmpfs, proc, overlay]
+  processors:
+    - drop_event:
+        when:
+          not:
+            equals:
+              system.filesystem.mount_point: '/dashbase/kafka'
+
+- module: jolokia
+  metricsets: ["jmx"]
+  hosts: ["kafka:8778"]
+  namespace: kafka
+  fields:
+    service: kafka
+  period: 10s
+  jmx.mappings:
+    - mbean: 'java.lang:type=Runtime'
+      attributes:
+        - attr: Uptime
+          field: uptime
+    - mbean: 'java.lang:name=G1 Old Generation,type=GarbageCollector'
+      attributes:
+        - attr: CollectionTime
+          field: gc.old_gen_collection_time
+        - attr: CollectionCount
+          field: gc.old_gen_collection_count
+    - mbean: 'java.lang:name=G1 Young Generation,type=GarbageCollector'
+      attributes:
+        - attr: CollectionTime
+          field: gc.young_gen_collection_time
+        - attr: CollectionCount
+          field: gc.young_gen_collection_count
+    - mbean: 'java.lang:type=Memory'
+      attributes:
+        - attr: HeapMemoryUsage
+          field: memory.heap_usage
+        - attr: NonHeapMemoryUsage
+          field: memory.non_heap_usage
+    - mbean: 'java.lang:type=OperatingSystem'
+      attributes:
+        - attr: ProcessCpuLoad
+          field: cpu.load
+    - mbean: 'kafka.server:name=BytesInPerSec,type=BrokerTopicMetrics'
+      attributes:
+        - attr: Count
+          field: bytes_in.count
+        - attr: OneMinuteRate
+          field: bytes_in.m1_rate
+        - attr: FiveMinuteRate
+          field: bytes_in.m5_rate
+        - attr: FifteenMinuteRate
+          field: bytes_in.m15_rate
+    - mbean: 'kafka.server:name=BytesOutPerSec,type=BrokerTopicMetrics'
+      attributes:
+        - attr: Count
+          field: bytes_out.count
+        - attr: OneMinuteRate
+          field: bytes_out.m1_rate
+        - attr: FiveMinuteRate
+          field: bytes_out.m5_rate
+        - attr: FifteenMinuteRate
+          field: bytes_out.m15_rate
+    - mbean: 'kafka.server:name=BytesRejectedPerSec,type=BrokerTopicMetrics'
+      attributes:
+        - attr: Count
+          field: bytes_rejected.count
+        - attr: OneMinuteRate
+          field: bytes_rejected.m1_rate
+        - attr: FiveMinuteRate
+          field: bytes_rejected.m5_rate
+        - attr: FifteenMinuteRate
+          field: bytes_rejected.m15_rate
+    - mbean: 'kafka.server:name=TotalProduceRequestsPerSec,type=BrokerTopicMetrics'
+      attributes:
+        - attr: Count
+          field: produce_requests.count
+        - attr: OneMinuteRate
+          field: produce_requests.m1_rate
+        - attr: FiveMinuteRate
+          field: produce_requests.m5_rate
+        - attr: FifteenMinuteRate
+          field: produce_requests.m15_rate
+    - mbean: 'kafka.server:name=FailedProduceRequestsPerSec,type=BrokerTopicMetrics'
+      attributes:
+        - attr: Count
+          field: produce_requests.failed.count
+        - attr: OneMinuteRate
+          field: produce_requests.failed.m1_rate
+        - attr: FiveMinuteRate
+          field: produce_requests.failed.m5_rate
+        - attr: FifteenMinuteRate
+          field: produce_requests.failed.m15_rate
+    - mbean: 'kafka.server:name=TotalFetchRequestsPerSec,type=BrokerTopicMetrics'
+      attributes:
+        - attr: Count
+          field: fetch_requests.count
+        - attr: OneMinuteRate
+          field: fetch_requests.m1_rate
+        - attr: FiveMinuteRate
+          field: fetch_requests.m5_rate
+        - attr: FifteenMinuteRate
+          field: fetch_requests.m15_rate
+    - mbean: 'kafka.server:name=FailedFetchRequestsPerSec,type=BrokerTopicMetrics'
+      attributes:
+        - attr: Count
+          field: fetch_requests.failed.count
+        - attr: OneMinuteRate
+          field: fetch_requests.failed.m1_rate
+        - attr: FiveMinuteRate
+          field: fetch_requests.failed.m5_rate
+        - attr: FifteenMinuteRate
+          field: fetch_requests.failed.m15_rate
+    - mbean: 'kafka.server:clientId=Replica,name=MaxLag,type=ReplicaFetcherManager'
+      attributes:
+        - attr: Value
+          field: max_lag
+
+#logging.level: debug
+#output.console:
+#  enabled: true
+
+output.kafka:
+#  enabled: false
+  hosts: ['monitor_kafka:9092']
+  topic: _metrics
+
+  ssl:
+    certificate_authorities: ["/run/secrets/ca_cert_pem"]
+    certificate: /run/secrets/client_cert_pem
+    key: /run/secrets/client_key_pem
+    # CN of the above cert must be the domain of Kafka broker.
+    # Disabling verification mode to skip the above domain check.
+    verification_mode: none

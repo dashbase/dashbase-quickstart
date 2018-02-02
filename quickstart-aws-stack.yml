@@ -1,0 +1,29 @@
+version: '3.4'
+services:
+  metricbeat_table_p0:
+    deploy:
+      placement:
+        constraints:
+        - node.labels.core != true
+        - node.role == worker
+  quickstart_p0:
+    deploy:
+      placement:
+        constraints:
+        - node.labels.core != true
+        - node.role == worker
+        preferences:
+        - spread: node.labels.quickstart
+      replicas: 1
+    volumes:
+    - logs:/app/logs:rw
+    - p0_index:/dashbase/index:rw
+volumes:
+  logs:
+    external: true
+  p0_index:
+    driver: rexray/ebs
+    driver_opts:
+      volumetype: "st1"
+      size: 500
+      encrypted: "true"
