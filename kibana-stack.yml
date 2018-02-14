@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+  elasticsearch:
+    image: dashbase/es-query-proxy:latest
+    ports:
+      - "9200:9200"
+    networks:
+      - dashbase_backend
+    environment:
+      COMMAND: "java -jar es-query-proxy.jar server config.yml"
+      PORT: 9200
+      ADMINPORT: 9001
+      API_URL: http://api:9876
+    volumes:
+      - kibana_db:/data/kibana:rw
+      - logs:/app/logs:rw
+  kibana:
+     image: docker.elastic.co/kibana/kibana-oss:6.1.1
+     ports:
+       - "5601:5601"
+     networks:
+       - dashbase_backend
+
+volumes:
+  kibana_db:
+  logs:
+    external: true
+networks:
+  dashbase_backend:
+    external: true

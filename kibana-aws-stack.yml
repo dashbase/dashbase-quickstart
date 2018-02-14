@@ -1,0 +1,24 @@
+version: '3.4'
+
+services:
+  elasticsearch:
+    deploy:
+      placement:
+        constraints:
+          - node.labels.core == true
+  kibana:
+     deploy:
+      placement:
+        constraints:
+          - node.labels.core == true
+
+volumes:
+  kibana_db:
+    driver: rexray/ebs
+    driver_opts:
+      volumetype: "gp2"
+      size: 30
+      encrypted: "true"
+networks:
+  dashbase_backend:
+    external: true
