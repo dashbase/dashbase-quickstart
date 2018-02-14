@@ -5,13 +5,13 @@ services:
     image: dashbase/es-query-proxy:latest
     ports:
       - "9200:9200"
+    configs:
+      - source: es-query-proxy-config
+        target: /config.yml
     networks:
       - dashbase_backend
     environment:
       COMMAND: "java -jar es-query-proxy.jar server config.yml"
-      PORT: 9200
-      ADMINPORT: 9001
-      API_URL: http://api:9876
     volumes:
       - kibana_db:/data/kibana:rw
       - logs:/app/logs:rw
@@ -29,3 +29,7 @@ volumes:
 networks:
   dashbase_backend:
     external: true
+
+configs:
+  es-query-proxy-config:
+    file: ./config/dashbase-query-proxy/conf/config.yml

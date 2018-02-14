@@ -1,0 +1,27 @@
+apiUrl: https://api:9876
+
+database:
+  driverClass: org.hsqldb.jdbc.JDBCDriver
+  url: "jdbc:hsqldb:file:/data/kibana/kibana.db;sql.syntax_mys=true"
+  validationQuery: SELECT * FROM INFORMATION_SCHEMA.SYSTEM_TABLES
+  properties:
+    charSet: UTF-8
+
+logging:
+  level: INFO
+  appenders:
+    - type: file
+      currentLogFilename: /app/logs/dashbase-es-query-proxy.log
+      archive: true
+      archivedLogFilenamePattern: /app/logs/dashbase-es-query-proxy-%d.log
+      archivedFileCount: 9
+      timeZone: UTC
+    - type: console
+
+server:
+  applicationConnectors:
+  - type: http
+    port: 9200
+  adminConnectors:
+  - type: http
+    port: 9001
