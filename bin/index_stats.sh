@@ -11,9 +11,9 @@ fi
 RAW_SIZE_KB=$(find $ROOTDIR/store -name dashbase_segment_info -exec grep "rawSizeKB=" '{}' \; | grep -o [0-9]* | awk '{ sum += $1 } END { print sum }')
 let RAW_SIZE_MB=RAW_SIZE_KB/1024
 echo "Raw size: $RAW_SIZE_MB MB"
-INDEX_SIZE_MB=$(du -s -BM $ROOTDIR/store | grep -o "^[0-9]*")
+INDEX_SIZE_MB=$(du -s -m $ROOTDIR/store | grep -o "^[0-9]*")
 echo "Index size: $INDEX_SIZE_MB MB"
-PAYLOAD_SIZE_MB=$(du -s -BM $ROOTDIR/payload | grep -o "^[0-9]*")
+PAYLOAD_SIZE_MB=$(du -s -m $ROOTDIR/payload | grep -o "^[0-9]*")
 echo "Payload size: $PAYLOAD_SIZE_MB MB"
 
 let TOTAL_DISK=INDEX_SIZE_MB+PAYLOAD_SIZE_MB
